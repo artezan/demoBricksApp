@@ -1,0 +1,12 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "window.zoomLevel": 1,
+    "editor.minimap.enabled": true,
+    "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "vsicons.projectDetection.disableDetect": true,
+    "prettier.singleQuote": true,
+    "prettier.eslintIntegration": true,
+    "prettier.tabWidth": 2,
+     "editor.formatOnSave": true,
+    "explorer.confirmDelete": false
+}

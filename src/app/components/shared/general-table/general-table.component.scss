@@ -1,0 +1,37 @@
+.data-table {
+  height: 87%;
+  margin: 3%;
+}
+.colum-size datatable-header-cell > div {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+.sort-hide
+  datatable-header-cell
+  > div
+  > span.sort-btn.sort-desc.datatable-icon-down::before {
+  display: none;
+}
+.sort-hide
+  datatable-header-cell
+  > div
+  > span.sort-btn.sort-asc.datatable-icon-up::before {
+  display: none;
+}
+.sortable .sort-btn:after {
+  font-family: data-table;
+  content: 'c';
+}
+.sortable .sort-btn.datatable-icon-down:after {
+  content: 'f';
+}
+.sort-btn.datatable-icon-up:after {
+  content: 'e';
+}
+
+.table datatable-row-wrapper {
+  border-bottom: 1px solid #ddd;
+}
+.input-responsive datatable-header-cell > input {
+  max-width: 100%;
+}
