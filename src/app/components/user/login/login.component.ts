@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +13,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {}
   login() {
-    this.router.navigate(['list-condo', /*data._id*/]);
+    const user: NavigationExtras = {
+      queryParams: {
+      'correo': 'asdf',
+      'contra': '3da541559918a808c2402bba5012f6c60b27661c'
+      }
+    };
+    this.router.navigate(['list-condo'], user);
   }
 }
