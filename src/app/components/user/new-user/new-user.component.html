@@ -1,0 +1,96 @@
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Nuevo Usuario</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+<mat-card style="margin: 5%">
+    <mat-card-title>Complete los campos</mat-card-title>
+  <div class="flex-container">
+    <!-- Nombre -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="" [(ngModel)]="nameInput" #name="ngModel" id="name" name="name" required>
+      <mat-error *ngIf="name.dirty || name.touched">Anotar Nombre</mat-error>
+    </mat-form-field>
+    <!-- Apellido Paterno -->
+    <mat-form-field appearance="outline">
+      <mat-label>Apellido Paterno</mat-label>
+      <input matInput [(ngModel)]="lastNameInput" #lastName="ngModel" id="lastName" name="lastName" required>
+      <mat-error *ngIf="lastName.dirty || lastName.touched">Anotar Apellido</mat-error>
+    </mat-form-field>
+    <!-- Materno -->
+    <mat-form-field appearance="outline">
+      <mat-label>Apellido Materno</mat-label>
+      <input matInput [(ngModel)]="lastName2Input" #lastName2="ngModel" id="lastName2" name="lastName2" required>
+      <mat-error *ngIf="lastName2.dirty || lastName2.touched">Anotar Apellido</mat-error>
+    </mat-form-field>
+    <!-- Email -->
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [(ngModel)]="emailInput" #email="ngModel" id="email" name="email" required>
+      <mat-error *ngIf="email.dirty || email.touched">Anotar Email</mat-error>
+    </mat-form-field>
+
+    <!-- Empresa -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Empresa</mat-label>
+      <input matInput [(ngModel)]="companyInput" #company="ngModel" id="company" name="company" required>
+      <mat-error *ngIf="company.dirty || company.touched">Anotar Email</mat-error>
+
+
+    </mat-form-field>
+    <!-- Tel depa -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono Depa</mat-label>
+      <input matInput type="number" [(ngModel)]="telApartInput" #telApart="ngModel" id="telApart" name="telApart" required>
+      <mat-error *ngIf="telApart.dirty || telApart.touched">Anotar Teléfono</mat-error>
+
+
+    </mat-form-field>
+    <!-- tel cel -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono Cel</mat-label>
+      <input type="number" matInput [(ngModel)]="telCelInput" #telCel="ngModel" id="telCel" name="telCel" required>
+      <mat-error *ngIf="telCel.dirty || telCel.touched">Anotar Teléfono</mat-error>
+
+
+    </mat-form-field>
+    <!-- tel ofi -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono Oficina</mat-label>
+      <input matInput type="number" [(ngModel)]="telOficInput" #telOfic="ngModel" id="telOfic" name="telOfic" required>
+      <mat-error *ngIf="telOfic.dirty || telOfic.touched">Anotar Teléfono</mat-error>
+
+
+    </mat-form-field>
+    <!-- password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" [(ngModel)]="passwordInput" #password="ngModel" id="password" name="password" required>
+      <mat-error *ngIf="password.dirty || password.touched">Anotar Teléfono</mat-error>
+
+
+    </mat-form-field>
+    <!-- password 2 -->
+    <mat-form-field appearance="outline">
+      <mat-label>Repetir Contraseña</mat-label>
+      <input matInput type="password" [(ngModel)]="passwor2dInput" #password2="ngModel" id="password2" name="password2" required>
+      <mat-error *ngIf="password2.dirty || password2.touched">Anotar Teléfono</mat-error>
+
+
+    </mat-form-field>
+  </div>
+  <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow (mouseenter)="getPopMessage($event)">
+            <button id="submitUser" mat-raised-button color="primary" (click)="login()" [disabled]="!newUserForm.form.valid">Aceptar</button>
+        </span>
+        <button  mat-raised-button color="warn" routerLink="/login">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+</mat-card>
+</form>

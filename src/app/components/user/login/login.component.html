@@ -1,0 +1,39 @@
+<div class="grandParentContaniner">
+  <div class="parentContainer">
+    <form #loginForm="ngForm">
+      <mat-card class="card">
+        <!-- <mat-toolbar color="primary" [class.mat-elevation-z8]=true>
+          <span>Bricks App</span>
+        </mat-toolbar> -->
+        <img src="https://golemtechnology.com/bricks/assets/shutterstock_679938151-[Convertido].png" class="img-bricks" width="250">
+        <p>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Placeholder" [(ngModel)]="emailInput" #email="ngModel" id="email" name="email" required>
+            <mat-icon matSuffix color="primary">account_circle
+            </mat-icon>
+            <mat-error *ngIf="email.dirty || email.touched">Anotar Email</mat-error>
+          </mat-form-field>
+        </p>
+
+        <p>
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" placeholder="" [(ngModel)]="passInput" #pass="ngModel" id="pass" name="pass" required>
+            <mat-icon matSuffix color="primary">lock</mat-icon>
+            <mat-error *ngIf="pass.dirty || pass.touched">Anotar Contraseña</mat-error>
+          </mat-form-field>
+        </p>
+          <div align="end">
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="login()">Registrarse</button>
+            <button mat-raised-button color="accent" routerLink="/new-user">Nuevo</button>
+          </mat-card-actions>
+        </div>
+        
+
+      </mat-card>
+    </form>
+
+  </div>
+</div>
