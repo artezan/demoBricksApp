@@ -1,18 +1,22 @@
 <div *ngIf="rows">
   <ngx-datatable 
+  
+
   [rows]="rows"  
   [columnMode]="'force'"
   [headerHeight]="70"
   [footerHeight]="50"
-  [rowHeight]="'50'"
+  [scrollbarH]="true"
     (inputChange)="change($event)" 
     [loadingIndicator]="loadingIndicator"
   [columns]="columns"  
-  
     class="material data-table colum-size sort-hide data-header table input-responsive"
-  [limit]="10"
-    
+  [rowHeight]="50"
+  [scrollbarV]="true"
     >
   </ngx-datatable>
 
 </div>
+<!-- [columnMode]="'force'" [headerHeight]="70" [rows]="rows" [columns]="columns" class="material data-table colum-size sort-hide data-header table input-responsive"
+  [footerHeight]="50" [rowHeight]="50" [scrollbarV]="true" (inputChange)="change($event)" [loadingIndicator]="loadingIndicator"
+  [limit]="15" -->
