@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@swimlane/ngx-datatable/release/index.css';
-@import '~@swimlane/ngx-datatable/release/themes/material.css';
-@import '~@swimlane/ngx-datatable/release/themes/material.css';
-@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+@import '~cesar-table-artezan/release/index.css';
+@import '~cesar-table-artezan/release/themes/material.css';
+@import '~cesar-table-artezan/release/themes/material.css';
+@import '~cesar-table-artezan/release/assets/icons.css';
 
 
 
@@ -13,4 +13,7 @@ body {
 
 body {
   margin: 0;
+}
+.tooltip-size {
+  font-size: 1em;
 }

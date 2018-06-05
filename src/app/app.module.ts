@@ -22,7 +22,10 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatSelectModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatButtonToggleModule,
+  MatChipsModule,
+  MatBottomSheetModule
 } from '@angular/material';
 // component
 import { GeneralMenuComponent } from './components/shared/general-menu/general-menu.component';
@@ -63,7 +66,10 @@ import { CondominiosListComponent } from './components/condominios/condominios-l
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonToggleModule,
+    MatChipsModule,
+    MatBottomSheetModule
   ],
   providers: [],
   bootstrap: [AppComponent]

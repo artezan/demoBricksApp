@@ -1,22 +1,22 @@
-<div *ngIf="rows">
   <ngx-datatable 
-  
-
+  *ngIf="rows"
   [rows]="rows"  
   [columnMode]="'force'"
   [headerHeight]="70"
   [footerHeight]="50"
   [scrollbarH]="true"
-    (inputChange)="change($event)" 
-    [loadingIndicator]="loadingIndicator"
+  (inputChange)="change($event)" 
+  [loadingIndicator]="loadingIndicator"
   [columns]="columns"  
-    class="material data-table colum-size sort-hide data-header table input-responsive"
+  class="material data-table colum-size sort-hide data-header table input-responsive"
   [rowHeight]="50"
   [scrollbarV]="true"
+  [selected]="selected"
+   [selectionType]="'single'"
+   (select)='onSelect($event)'>
     >
   </ngx-datatable>
 
-</div>
 <!-- [columnMode]="'force'" [headerHeight]="70" [rows]="rows" [columns]="columns" class="material data-table colum-size sort-hide data-header table input-responsive"
   [footerHeight]="50" [rowHeight]="50" [scrollbarV]="true" (inputChange)="change($event)" [loadingIndicator]="loadingIndicator"
   [limit]="15" -->

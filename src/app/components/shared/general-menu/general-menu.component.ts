@@ -7,6 +7,8 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ControllerMenuService } from './controller-menu.service';
+import { Router, NavigationExtras } from '@angular/router';
+
 
 @Component({
   selector: 'app-general-menu',
@@ -21,6 +23,10 @@ export class GeneralMenuComponent {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    public controllerMenu: ControllerMenuService
+    public controllerMenu: ControllerMenuService,
+    private router: Router
   ) {}
+  logout() {
+    this.router.navigate(['login']);
+  }
 }

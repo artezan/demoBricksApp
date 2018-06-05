@@ -4,7 +4,9 @@ import {
   ViewEncapsulation,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  Output,
+  EventEmitter
 } from '@angular/core';
 
 @Component({
@@ -17,10 +19,13 @@ export class GeneralTableComponent implements OnInit, OnChanges {
   @Input() rows = [];
   @Input() columns = [{ name: '' }];
   @Input() loadingIndicator: boolean;
+  @Output() select = new EventEmitter<Array<any>>();
   dataTemp = [];
   rows2;
+  selected = [];
   constructor() {}
   change(event: { value: string; name: string }) {
+    this.rows = this.rows2;
     this.dataTemp = this.rows;
     const val = event.value;
     const colName = event.name;
@@ -28,7 +33,12 @@ export class GeneralTableComponent implements OnInit, OnChanges {
     if (val && val.trim() !== '') {
       this.rows = this.dataTemp.filter(d => {
         if (d[colName] !== '') {
-          return d[colName].toString().toLowerCase().indexOf(val) !== -1 || !val;
+          return (
+            d[colName]
+              .toString()
+              .toLowerCase()
+              .indexOf(val) !== -1 || !val
+          );
         }
       });
     } else {
@@ -43,5 +53,11 @@ export class GeneralTableComponent implements OnInit, OnChanges {
       this.rows = [...changes.rows.currentValue];
       this.rows2 = this.rows;
     }
+  }
+  onSelect(event) {
+    this.select.emit(event.selected);
+  }
+
+  onActivate(event) {
   }
 }

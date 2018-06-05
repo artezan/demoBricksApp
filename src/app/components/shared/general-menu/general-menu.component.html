@@ -1,7 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav *ngIf="!isHide$ | async" #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
-    <mat-toolbar color="primary"  >Menu</mat-toolbar>
+    <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item href="#">Link 1</a>
       <a mat-list-item href="#">Link 2</a>
@@ -9,11 +9,20 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary" [class.mat-elevation-z8]=true class="top-bar" >
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"   *ngIf="(isHandset$ | async) && (!isHide$ | async) ">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <span>BricksApp</span>
+    <mat-toolbar color="primary" [class.mat-elevation-z8]=true class="top-bar">
+      <mat-toolbar-row>
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async) && (!isHide$ | async) ">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <span>BricksApp</span>
+
+        <span class="example-spacer"></span>
+        <button mat-icon-button >
+          <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
+        </button><span>Salir</span>
+        
+      </mat-toolbar-row>
+
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>

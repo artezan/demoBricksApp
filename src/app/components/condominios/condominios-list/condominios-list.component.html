@@ -1,3 +1,29 @@
-<!-- <div *ngIf="!loadingIndicator"> -->
-    <app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" ></app-general-table>
-<!-- </div> -->
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+        <span>Condominios seleccione uno </span>
+      </mat-toolbar>
+<div class="toogle-btns">
+    <span [matTooltip]=errorToShow (mouseenter)="getPopMessage($event)" [matTooltipClass]="'tooltip-size'">
+        <button mat-raised-button id="details" [disabled]="!userSelect" class="btn " color="primary">Detalles</button>
+    </span>
+    <button mat-raised-button class="btn" color="accent">Nuevo</button>
+    <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+        <button mat-raised-button id="edit" [disabled]="!userSelect" class="btn" color="primary">Editar</button>
+    </span>
+    <button mat-raised-button class="btn" style="background-color: green; color: white" (click)="link()">Excel</button>
+    <input id="fileInput" name="file" type="file" hidden multiple>
+</div>
+
+<!-- Tabla -->
+<app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)"></app-general-table>
+
+
+
+
+<!-- Botones -->
+<!-- 
+<div class="btn-fixed-right" >
+    <button mat-raised-button class="btn" color="primary" >Detalles</button>
+    <button mat-raised-button class="btn" color="accent" >Nuevo</button>
+    <button mat-raised-button class="btn" color="primary" >Editar</button>
+    <button mat-raised-button class="btn" style="background-color: green; color: white" >Excel</button>
+</div> -->

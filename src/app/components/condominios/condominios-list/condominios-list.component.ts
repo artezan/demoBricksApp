@@ -1,23 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CondoService } from '../../../services/condo.service';
 import { Condo } from '../../../models/condo';
-import { TableControllerService } from '../../shared/general-table/table-controller.service';
 
 @Component({
   selector: 'app-condominios-list',
   templateUrl: './condominios-list.component.html',
-  styleUrls: ['./condominios-list.component.scss']
+  styleUrls: ['./condominios-list.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CondominiosListComponent implements OnInit {
   loadingIndicator = true;
   columns: any;
   rows: any;
   rows2: any;
+  userSelect: Condo;
+  errorToShow = '';
   constructor(
     private route: ActivatedRoute,
-    public condoService: CondoService,
-    public controllerTable: TableControllerService
+    public condoService: CondoService
   ) {}
 
   ngOnInit() {
@@ -52,7 +53,6 @@ export class CondominiosListComponent implements OnInit {
       }
     ];
     this.route.queryParams.subscribe(params => {
-      console.log(params);
       this.getData(params['correo'], params['contra']);
     });
   }
@@ -64,116 +64,6 @@ export class CondominiosListComponent implements OnInit {
     });
   }
   generateRows(data: Condo[]) {
-    // this.rows = [
-    //   {
-    //     Direccion: 'Real de Los Reyes 87',
-    //     Id_Condominio: 0,
-    //     Ciudad: 'CDMX',
-    //     Colonia: 'Los Reyes',
-    //     Saldo: '401500.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: 'Cuenta'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    //   {
-    //     Id_Condominio: 1,
-    //     Direccion: 'Real de los Reyes 88',
-    //     Ciudad: 'Los Reyes',
-    //     Colonia: 'CDMX',
-    //     Saldo: '85061.00',
-    //     Banco: 'HSBC',
-    //     Cuenta: '1203491834092'
-    //   },
-    // ];
     const arrRows: Condo[] = [];
     data.forEach(item => {
       if (item.error !== '') {
@@ -188,7 +78,31 @@ export class CondominiosListComponent implements OnInit {
         });
       }
     });
-    console.log(arrRows);
     this.rows = arrRows;
+  }
+  link() {
+    const input = document.getElementById('fileInput').click();
+  }
+  select(event) {
+    this.userSelect = event;
+  }
+  getPopMessage(event) {
+    const isDisabledDetails = (<HTMLInputElement>(
+      document.getElementById('details')
+    )).disabled;
+    if (isDisabledDetails) {
+      this.errorToShow = 'Seleccione un condominio';
+    } else {
+      this.errorToShow = '';
+    }
+  }
+  getPopMessage2(event) {
+    const isDisabledEdit = (<HTMLInputElement>document.getElementById('edit'))
+      .disabled;
+    if (isDisabledEdit) {
+      this.errorToShow = 'Seleccione un condominio';
+    } else {
+      this.errorToShow = '';
+    }
   }
 }
