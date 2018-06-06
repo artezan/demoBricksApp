@@ -8,6 +8,7 @@ import { Apartment } from '../models/apartment';
   providedIn: 'root'
 })
 export class ApartmentService {
+  apartementSelect: Apartment[] = [];
   constructor(private http: HttpClient) {}
 
   getData(id): Observable<Apartment[]> {
@@ -19,13 +20,35 @@ export class ApartmentService {
     const data = JSON.stringify([dataReq]);
     return this.http.get<Apartment[]>(END_POINT.APART_GET + data);
   }
+  newApartment(apart) {
+    const data = this.makeReq(apart);
+    return this.http.get(encodeURI(END_POINT.APART_NEW + data));
+  }
+
+  editApartment(apart: Apartment) {
+    const data = this.makeReqEdit(apart);
+    console.log(END_POINT.APART_EDIT + data)
+    return this.http.get(encodeURI(END_POINT.APART_EDIT + data));
+  }
   // helper
   private makeReq(dataReq: any) {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
-    dataReq.ciudad = dataReq.Ciudad;
-    delete dataReq.Ciudad;
+    dataReq.DiaExtemporaneo = dataReq.DiaExtemporanea;
+    delete dataReq.DiaExtemporanea;
+    const data = JSON.stringify([dataReq]);
+    return data;
+  }
+  private makeReqEdit(dataReq: any) {
+    const userData = localStorage.getItem('userKey');
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.Id_Departamento = dataReq.Id_Depa;
+    delete dataReq.Id_Depa;
+    dataReq.Accion = 'Modificacion';
+    dataReq.DiaExtemporaneo = dataReq.DiaExtemporanea.toString();
+    delete dataReq.DiaExtemporanea;
     const data = JSON.stringify([dataReq]);
     return data;
   }

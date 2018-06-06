@@ -1,3 +1,15 @@
-<p>
-  list-renter works!
-</p>
+<mat-toolbar class="secondary-color" [class.mat-elevation-z2]=true>
+  <mat-chip-list>
+    <mat-chip color="primary"  class="chips-font" selected="true">Condominio: {{condoName}}</mat-chip>
+    <mat-chip color="accent"  class="chips-font" selected="true">Saldo: ${{condoBalance}}</mat-chip>
+  </mat-chip-list>
+</mat-toolbar>
+<div class="toogle-btns">
+  <button mat-raised-button class="btn" routerLink="/new-edit-condo" color="accent">Nuevo</button>
+  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+      <button mat-raised-button (click)="edit()" id="edit" [disabled]="!userSelect" class="btn" color="primary">Editar</button>
+  </span>
+</div>
+
+
+<app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" ></app-general-table>

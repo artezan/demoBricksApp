@@ -4,7 +4,8 @@ import { UserService } from '../../../services/user.service';
 import { ApartmentService } from '../../../services/apartment.service';
 import { Apartment } from '../../../models/apartment';
 import { map } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-list-depa',
@@ -20,12 +21,22 @@ export class ListDepaComponent implements OnInit {
   rows: any;
   id: string;
   sub: any;
+  depaSelect: Apartment[];
+  realData: Apartment[];
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
     private apartmentService: ApartmentService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private router: Router,
+    public snackBar: MatSnackBar
+  ) {
+    this.route.queryParams.subscribe((params) => {
+      if (Object.keys(params).length !== 0) {
+        this.openSnackBar(params.res.toString());
+      }
+    });
+  }
 
   ngOnInit() {
     this.columns = [
@@ -96,13 +107,17 @@ export class ListDepaComponent implements OnInit {
   getData(id) {
     this.loadingIndicator = true;
     this.apartmentService.getData(id).subscribe(data => {
-      this.loadingIndicator = false;
       this.generateRows(data);
     });
   }
   generateRows(data: Apartment[]) {
+    this.realData = data;
+    console.log(data);
     const arrRows: Apartment[] = [];
     data.forEach(item => {
+      if (item.DiaExtemporanea === '0') {
+        item.DiaExtemporanea = 'Sin recargo';
+      }
       if (item.error !== '') {
         arrRows.push({
           Id_Depa: item.Id_Depa,
@@ -141,5 +156,24 @@ export class ListDepaComponent implements OnInit {
     } else {
       this.errorToShow = '';
     }
+  }
+  edit() {
+    const depa: NavigationExtras = {
+      queryParams: this.depaSelect[0]
+    };
+    this.router.navigate(['new-edit-depa']);
+    this.apartmentService.apartementSelect = this.depaSelect;
+  }
+  select(event: Apartment[]) {
+    this.depaSelect = this.realData.filter(item => {
+      if (item.Id_Depa === event[0].Id_Depa) {
+        return item;
+      }
+    });
+  }
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000
+    });
   }
 }

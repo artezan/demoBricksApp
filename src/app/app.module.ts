@@ -26,7 +26,8 @@ import {
   MatButtonToggleModule,
   MatChipsModule,
   MatBottomSheetModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatAutocompleteModule
 } from '@angular/material';
 // component
 import { GeneralMenuComponent } from './components/shared/general-menu/general-menu.component';
@@ -39,6 +40,9 @@ import { ListDepaComponent } from './components/depa/list-depa/list-depa.compone
 import { ListPropietariesComponent } from './components/propietaries/list-propietaries/list-propietaries.component';
 import { ListRenterComponent } from './components/renter/list-renter/list-renter.component';
 import { UserService } from './services/user.service';
+import { NewEditDepaComponent } from './components/depa/new-edit-depa/new-edit-depa.component';
+import { NewEditPropietariesComponent } from './components/propietaries/new-edit-propietaries/new-edit-propietaries.component';
+import { NewEditRenterComponent } from './components/renter/new-edit-renter/new-edit-renter.component';
 // npm
 
 @NgModule({
@@ -52,7 +56,10 @@ import { UserService } from './services/user.service';
     NuevoEditCondoComponent,
     ListDepaComponent,
     ListPropietariesComponent,
-    ListRenterComponent
+    ListRenterComponent,
+    NewEditDepaComponent,
+    NewEditPropietariesComponent,
+    NewEditRenterComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +87,8 @@ import { UserService } from './services/user.service';
     MatButtonToggleModule,
     MatChipsModule,
     MatBottomSheetModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatAutocompleteModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

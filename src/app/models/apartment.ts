@@ -15,4 +15,5 @@ export interface Apartment {
   Referencia?: string;
   SaldoDepartamento?: string;
   error?: string;
+  condominio?: string;
 }

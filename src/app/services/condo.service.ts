@@ -8,6 +8,7 @@ import { END_POINT } from '../_config/api.end-points';
   providedIn: 'root'
 })
 export class CondoService {
+  selectCondo = {};
   constructor(private http: HttpClient) {}
 
   getCondoData(): Observable<Condo[]> {
@@ -19,9 +20,13 @@ export class CondoService {
     return this.http.get(encodeURI(END_POINT.CONDO_NEW + data));
   }
 
-  editCondo(condo: Condo) {
-    const data = this.makeReq(condo);
-    return this.http.get(END_POINT.CONDO_EDIT + data);
+  editCondo(condo: any) {
+    const userData = localStorage.getItem('userKey');
+    condo.correo = JSON.parse(userData)[0].correo;
+    condo.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([condo]);
+    console.log(END_POINT.CONDO_EDIT + data)
+    return this.http.get(encodeURI(END_POINT.CONDO_EDIT + data));
   }
   // helper
   private makeReq(condo: any) {

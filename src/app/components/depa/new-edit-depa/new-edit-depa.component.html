@@ -1,0 +1,83 @@
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Registrar Departamento</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+<mat-card class="margin-form">
+    <mat-card-title>Complete los campos</mat-card-title>
+  <div class="flex-container">
+    <!-- select prop -->
+    <mat-form-field appearance="outline">
+    <mat-select [(value)]="apartment.Id_Propietario" placeholder=" Seleccione Propietarios" aria-label="State"  [(ngModel)]="apartment.Id_Propietario" #Id_Propietario="ngModel" id="Id_Propietario" name="Id_Propietario" required>
+      <span *ngFor="let state of propietaries | async">
+        <mat-option   *ngIf="state.error !==''"  [value]="state.Id_Propietario" >{{ state.NombrePropietario }}</mat-option>
+        <!-- <mat-option     value="cesar" >cesar</mat-option>
+        <mat-option     value="state.NombrePropietario" >a</mat-option> -->
+      </span>
+      </mat-select>
+      <mat-error *ngIf="Id_Propietario.dirty || Id_Propietario.touched">Selecciona Propietario</mat-error>
+    </mat-form-field>
+    <!-- departamento -->
+    <mat-form-field appearance="outline">
+      <mat-label>Departamento</mat-label>
+      <input matInput [(ngModel)]="apartment.Interior" #Interior="ngModel" id="Interior" name="Interior" required pattern="[a-zA-Z0-9- ,\.]{1,255}" (keyup)="getMatError($event)">
+      <mat-error *ngIf="Interior.dirty || Interior.touched || errorToShowMat">{{errorToShowMat}}</mat-error>
+    </mat-form-field>
+    <!-- Cuota mensual -->
+    <mat-form-field appearance="outline">
+      <mat-label>Cuota Mensual</mat-label>
+      <input matInput type="number" [(ngModel)]="apartment.CuotaMensual" #CuotaMensual="ngModel" id="CuotaMensual" name="CuotaMensual" required>
+      <mat-error *ngIf="CuotaMensual.dirty || CuotaMensual.touched">Anotar Cuota Mensual</mat-error>
+    </mat-form-field>
+    <!-- Cuata Extra -->
+    <mat-form-field appearance="outline">
+      <mat-label>Cuota Extraordinario </mat-label>
+      <input matInput type="number" [(ngModel)]="apartment.CuotaExtraordinario" #CuotaExtraordinario="ngModel" id="CuotaExtraordinario" name="CuotaExtraordinario" required>
+      <mat-error *ngIf="CuotaExtraordinario.dirty || CuotaExtraordinario.touched">Anotar Cuota</mat-error>
+    </mat-form-field>
+
+    <!-- Luagres de Esta -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Lugares Estacionamiento</mat-label>
+      <input matInput type="number" [(ngModel)]="apartment.LugaresEstacionamiento" #LugaresEstacionamiento="ngModel" id="LugaresEstacionamiento" name="LugaresEstacionamiento" required>
+      <mat-error *ngIf="LugaresEstacionamiento.dirty || LugaresEstacionamiento.touched">Anotar Lugares Estacionamiento</mat-error>
+
+
+    </mat-form-field>
+    <!-- Ref -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Referencia</mat-label>
+      <input matInput type="number" [(ngModel)]="apartment.Referencia" #Referencia="ngModel" id="Referencia" name="Referencia" required>
+      <mat-error *ngIf="Referencia.dirty || Referencia.touched">Anotar Referencia</mat-error>
+
+
+    </mat-form-field>
+    <!-- Dia de recargo selct -->
+    <mat-form-field appearance="outline"   >
+        <mat-select  [(value)]="apartment.DiaExtemporanea" placeholder=" Seleccione Dia de Recargo" [(ngModel)]="apartment.DiaExtemporanea"  #DiaExtemporanea="ngModel" id="DiaExtemporanea" name="DiaExtemporanea" required>
+            <mat-option    value="Sin recargo" >Sin recargo</mat-option>
+            <mat-option    value="1" >Primer día del mes</mat-option>
+            <mat-option   value="other"  >Otro dia</mat-option>
+          </mat-select>
+          <mat-error *ngIf="DiaExtemporanea.dirty || DiaExtemporanea.touched">Selecciona Dia Extemporanea</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="DiaExtemporanea.value === 'other' || extra2 "  appearance="outline">
+            <mat-label>Anote día en específico</mat-label>
+            <input matInput type="number" placeholder=" " [(ngModel)]="extra2"  #DiaExtemporanea2="ngModel"  id="DiaExtemporanea2" name="DiaExtemporanea2" required>
+            <mat-error *ngIf="DiaExtemporanea2.dirty || DiaExtemporanea2.touched">Selecciona Dia Extemporanea</mat-error>
+            </mat-form-field>
+  </div>
+  <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
+            <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
+            <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
+        </span>
+        <button  mat-raised-button color="warn" routerLink="/list-depa">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+</mat-card>
+</form>

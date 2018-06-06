@@ -16,7 +16,7 @@ const providerGet = 'mostrarProveedores.php?json=';
 const servicesGet = 'mostrarServicios.php?json=';
 const expensesGet = 'mostrarEgresos.php?json=';
 
-export const END_POINT = Object.freeze({
+export const END_POINT = ({
   // condo
   CONDO_GET: urlAPI + condoGet,
   CONDO_NEW: urlAPI + condoNew,

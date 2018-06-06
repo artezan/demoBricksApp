@@ -53,12 +53,14 @@ export class GeneralTableComponent implements OnInit, OnChanges {
     if (changes.rows.currentValue) {
       this.rows = [...changes.rows.currentValue];
       this.rows2 = this.rows;
+      setTimeout(() => {
+        this.loadingIndicator = false;
+      }, 1000);
     }
   }
   onSelect(event) {
     this.select.emit(event.selected);
   }
 
-  onActivate(event) {
-  }
+  onActivate(event) {}
 }

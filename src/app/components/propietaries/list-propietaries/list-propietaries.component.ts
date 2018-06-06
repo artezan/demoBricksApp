@@ -79,7 +79,6 @@ export class ListPropietariesComponent implements OnInit {
   getData(id) {
     this.loadingIndicator = true;
     this.porpietariesService.getData(id).subscribe(data => {
-      this.loadingIndicator = false;
       this.generateRows(data);
     });
   }

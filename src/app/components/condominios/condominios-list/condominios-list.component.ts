@@ -110,6 +110,7 @@ export class CondominiosListComponent implements OnInit {
       queryParams: this.userSelect[0]
     };
     this.router.navigate(['new-edit-condo'], condo);
+    // this.condoService.selectCondo = this.userSelect[0];
   }
   details() {
     const condo: NavigationExtras = {

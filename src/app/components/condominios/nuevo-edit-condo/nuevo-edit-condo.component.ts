@@ -12,8 +12,6 @@ export class NuevoEditCondoComponent implements OnInit {
   errorToShow = '';
   errorToShowMat = 'Dato obligatorio';
   condo: Condo = {};
-  // **Chobe**
-  recInput: number;
   isNew: boolean;
   constructor(
     private route: ActivatedRoute,
@@ -24,12 +22,31 @@ export class NuevoEditCondoComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params: Condo) => {
       if (Object.keys(params).length !== 0) {
-        this.condo = params;
+        this.condo = {
+          Id_Condominio: params.Id_Condominio,
+          Direccion: params.Direccion,
+          Ciudad: params.Ciudad,
+          Colonia: params.Colonia,
+          FechaRegistro: params.FechaRegistro,
+          HoraRegistro: params.HoraRegistro,
+          Saldo: params.Saldo,
+          Banco: params.Banco,
+          Cuenta: params.Cuenta,
+          NumeroRecibo: params.NumeroRecibo
+        };
+        console.log(params);
         this.isNew = false;
       } else {
         this.isNew = true;
       }
     });
+    // if (Object.keys(this.condoService.selectCondo).length !== 0) {
+    //   this.condo = this.condoService.selectCondo;
+    //   this.condoService.selectCondo = {};
+    //   this.isNew = false;
+    // } else {
+    //   this.isNew = true;
+    // }
   }
   getPopMessage(event) {
     const isDisabled = (<HTMLInputElement>document.getElementById('submitUser'))
@@ -66,6 +83,7 @@ export class NuevoEditCondoComponent implements OnInit {
     });
   }
   editCondo() {
+    console.log(this.condo);
     const condoEdit: Condo = {
       Id_Condominio: this.condo.Id_Condominio,
       Direccion: this.condo.Direccion,
@@ -76,7 +94,7 @@ export class NuevoEditCondoComponent implements OnInit {
       Saldo: this.condo.Saldo,
       Banco: this.condo.Banco,
       Cuenta: this.condo.Cuenta,
-      NumeroRecibo: this.condo.NumeroRecibo
+      NumeroRecibo: this.condo.NumeroRecibo.toString()
     };
     this.condoService.editCondo(condoEdit).subscribe((res: any) => {
       const toast: NavigationExtras = {

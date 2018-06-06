@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   BreakpointObserver,
   Breakpoints,
@@ -16,10 +16,12 @@ import { UserService } from '../../../services/user.service';
   styleUrls: ['./general-menu.component.css']
 })
 export class GeneralMenuComponent {
+  @ViewChild('drawer')drawer;
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
-  isHide: boolean;
+  isHide;
+  openMenu: boolean;
   isHideExit: boolean;
   menuSelect = '';
 
@@ -29,13 +31,27 @@ export class GeneralMenuComponent {
     private router: Router,
     public userService: UserService
   ) {
-    controllerMenu.menuSettings$.subscribe(data => {
+    this.controllerMenu.menuSettings$.subscribe(data => {
       this.isHide = data.hideMenu;
       this.isHideExit = data.hideExit;
       this.menuSelect = data.selectSection;
+      this.isHandset$.subscribe(isHan => {
+        if (isHan || this.isHide) {
+          this.openMenu = false;
+        } else {
+          this.openMenu = true;
+        }
+      });
     });
   }
   logout() {
     this.router.navigate(['login']);
+  }
+  close () {
+    this.isHandset$.subscribe(han => {
+      if (han) {
+        this.drawer.close();
+      }
+    });
   }
 }
