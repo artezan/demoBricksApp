@@ -14,7 +14,14 @@
   [selected]="selected"
    [selectionType]="'single'"
    (select)='onSelect($event)'>
-    >
+    
+    <ngx-datatable-column
+    *ngFor="let colum of columns"
+          name="{{colum.name}}"
+          prop="{{colum.prop}}"
+          [width]="colum.width"
+          >
+        </ngx-datatable-column>
   </ngx-datatable>
 
 <!-- [columnMode]="'force'" [headerHeight]="70" [rows]="rows" [columns]="columns" class="material data-table colum-size sort-hide data-header table input-responsive"

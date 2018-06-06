@@ -19,3 +19,17 @@
 .example-spacer {
   flex: 1 1 auto;
 }
+.example-spacer1 {
+  flex: .8 .8 auto;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end
+}
+.a-active {
+  background-color: #e8eaf6 !important;
+}
+a:hover {
+  background-color: #e8eaf6 !important;
+}

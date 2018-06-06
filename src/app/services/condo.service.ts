@@ -9,8 +9,28 @@ import { END_POINT } from '../_config/api.end-points';
 })
 export class CondoService {
   constructor(private http: HttpClient) {}
-  getCondoData(email: string, password: any): Observable<Condo[]> {
-    const data = JSON.stringify([{ correo: email, contra: password }]);
+
+  getCondoData(): Observable<Condo[]> {
+    const data = localStorage.getItem('userKey');
     return this.http.get<Condo[]>(END_POINT.CONDO_GET + data);
+  }
+  newCondo(condo) {
+    const data = this.makeReq(condo);
+    return this.http.get(encodeURI(END_POINT.CONDO_NEW + data));
+  }
+
+  editCondo(condo: Condo) {
+    const data = this.makeReq(condo);
+    return this.http.get(END_POINT.CONDO_EDIT + data);
+  }
+  // helper
+  private makeReq(condo: any) {
+    const userData = localStorage.getItem('userKey');
+    condo.correo = JSON.parse(userData)[0].correo;
+    condo.contra = JSON.parse(userData)[0].contra;
+    condo.ciudad = condo.Ciudad;
+    delete condo.Ciudad;
+    const data = JSON.stringify([condo]);
+    return data;
   }
 }

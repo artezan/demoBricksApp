@@ -1,15 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
+interface MenuSettings {
+  hideMenu: boolean;
+  hideExit: boolean;
+  selectSection: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ControllerMenuService {
-public  hideMenu$ = new BehaviorSubject<boolean>(true);
+  public menuSettings$ = new BehaviorSubject<MenuSettings>({
+    hideMenu: true,
+    hideExit: true,
+    selectSection: ''
+  });
 
   constructor() {}
-  hideMenu(data: boolean ) {
-    this.hideMenu$.next(data);
+  menuSettings(hideMenu: boolean, hideExit: boolean, selectSection: string) {
+    this.menuSettings$.next({
+      hideMenu: hideMenu,
+      hideExit: hideExit,
+      selectSection: selectSection
+    });
   }
-
 }

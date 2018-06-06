@@ -1,25 +1,28 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav *ngIf="!isHide$ | async" #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+  <mat-sidenav *ngIf="!isHide" #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item href="#">Link 1</a>
-      <a mat-list-item href="#">Link 2</a>
+      <a class="a-activate" mat-list-item routerLink="/list-condo">Condominios</a>
+      <a [ngClass]="{'a-active': menuSelect === 'departamento'}" mat-list-item routerLink="/list-depa">Departamentos</a>
+      <a [ngClass]="{'a-active': menuSelect === 'propietarios'}" mat-list-item routerLink="/list-propietaries">Propietarios</a>
+      <a [ngClass]="{'a-active': menuSelect === 'inquilinos'}" mat-list-item routerLink="/list-renter">Inquilinos</a>
       <a mat-list-item href="#">Link 3</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary" [class.mat-elevation-z8]=true class="top-bar">
       <mat-toolbar-row>
-        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async) && (!isHide$ | async) ">
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async) && (!isHide) ">
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
         <span>BricksApp</span>
 
-        <span class="example-spacer"></span>
-        <button mat-icon-button >
+        <span *ngIf="!isHide" class="example-spacer1"></span>
+        <span *ngIf="isHide" class="example-spacer"></span>
+        <button mat-icon-button *ngIf="!isHideExit" >
           <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
-        </button><span>Salir</span>
+        </button><span *ngIf="!isHideExit">Salir</span>
         
       </mat-toolbar-row>
 

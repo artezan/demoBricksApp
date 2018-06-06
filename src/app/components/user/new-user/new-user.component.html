@@ -85,7 +85,7 @@
   </div>
   <div align="end">
       <mat-card-actions>
-        <span [matTooltip]=errorToShow (mouseenter)="getPopMessage($event)">
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
             <button id="submitUser" mat-raised-button color="primary" (click)="login()" [disabled]="!newUserForm.form.valid">Aceptar</button>
         </span>
         <button  mat-raised-button color="warn" routerLink="/login">Cancelar</button>

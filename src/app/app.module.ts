@@ -25,7 +25,8 @@ import {
   MatTooltipModule,
   MatButtonToggleModule,
   MatChipsModule,
-  MatBottomSheetModule
+  MatBottomSheetModule,
+  MatSnackBarModule
 } from '@angular/material';
 // component
 import { GeneralMenuComponent } from './components/shared/general-menu/general-menu.component';
@@ -33,6 +34,11 @@ import { GeneralTableComponent } from './components/shared/general-table/general
 import { LoginComponent } from './components/user/login/login.component';
 import { NewUserComponent } from './components/user/new-user/new-user.component';
 import { CondominiosListComponent } from './components/condominios/condominios-list/condominios-list.component';
+import { NuevoEditCondoComponent } from './components/condominios/nuevo-edit-condo/nuevo-edit-condo.component';
+import { ListDepaComponent } from './components/depa/list-depa/list-depa.component';
+import { ListPropietariesComponent } from './components/propietaries/list-propietaries/list-propietaries.component';
+import { ListRenterComponent } from './components/renter/list-renter/list-renter.component';
+import { UserService } from './services/user.service';
 // npm
 
 @NgModule({
@@ -42,7 +48,11 @@ import { CondominiosListComponent } from './components/condominios/condominios-l
     GeneralTableComponent,
     LoginComponent,
     NewUserComponent,
-    CondominiosListComponent
+    CondominiosListComponent,
+    NuevoEditCondoComponent,
+    ListDepaComponent,
+    ListPropietariesComponent,
+    ListRenterComponent
   ],
   imports: [
     BrowserModule,
@@ -69,9 +79,10 @@ import { CondominiosListComponent } from './components/condominios/condominios-l
     MatTooltipModule,
     MatButtonToggleModule,
     MatChipsModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatSnackBarModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

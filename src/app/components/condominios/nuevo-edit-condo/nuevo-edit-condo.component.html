@@ -1,0 +1,73 @@
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Nuevo Condominio</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+<mat-card class="margin-form">
+    <mat-card-title>Complete los campos</mat-card-title>
+  <div class="flex-container">
+    <!-- Ciudad -->
+    <mat-form-field appearance="outline">
+      <mat-label>Ciudad</mat-label>
+      <input matInput placeholder="" [(ngModel)]="condo.Ciudad" #city="ngModel" id="city" name="city" required>
+      <mat-error *ngIf="city.dirty || city.touched">Anotar Ciudad</mat-error>
+    </mat-form-field>
+    <!-- Dirección -->
+    <mat-form-field appearance="outline">
+      <mat-label>Dirección</mat-label>
+      <input matInput [(ngModel)]="condo.Direccion" #address="ngModel" id="address" name="address" required pattern="[a-zA-Z0-9- ,\.]{1,255}" (keyup)="getMatError($event)">
+      <mat-error *ngIf="address.dirty || address.touched || errorToShowMat">{{errorToShowMat}}</mat-error>
+    </mat-form-field>
+    <!-- Colonia -->
+    <mat-form-field appearance="outline">
+      <mat-label>Colonia</mat-label>
+      <input matInput [(ngModel)]="condo.Colonia" #colony="ngModel" id="colony" name="colony" required>
+      <mat-error *ngIf="colony.dirty || colony.touched">Anotar Colonia</mat-error>
+    </mat-form-field>
+    <!-- Saldo -->
+    <mat-form-field appearance="outline">
+      <mat-label>Saldo</mat-label>
+      <input matInput type="number" [(ngModel)]="condo.Saldo" #balance="ngModel" id="balance" name="balance" required>
+      <mat-error *ngIf="balance.dirty || balance.touched">Anotar Saldo</mat-error>
+    </mat-form-field>
+
+    <!-- Banco -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Banco</mat-label>
+      <input matInput [(ngModel)]="condo.Banco" #bank="ngModel" id="bank" name="bank" required>
+      <mat-error *ngIf="bank.dirty || bank.touched">Anotar Banco</mat-error>
+
+
+    </mat-form-field>
+    <!-- Cuenta -->
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cuenta</mat-label>
+      <input matInput type="number" [(ngModel)]="condo.Cuenta" #count="ngModel" id="count" name="count" required>
+      <mat-error *ngIf="count.dirty || count.touched">Anotar Cuenta</mat-error>
+
+
+    </mat-form-field>
+    <!-- NO Rec -->
+    
+
+    <mat-form-field appearance="outline">
+      <mat-label>No. Recibo Inicial</mat-label>
+      <input matInput type="number" [(ngModel)]="condo.NumeroRecibo" #rec="ngModel" id="rec" name="rec" required>
+      <mat-error *ngIf="rec.dirty || rec.touched">Anotar No. Recibo Inicial</mat-error>
+
+
+    </mat-form-field>
+  </div>
+  <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
+            <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
+            <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
+        </span>
+        <button  mat-raised-button color="warn" routerLink="/list-condo">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+</mat-card>
+</form>

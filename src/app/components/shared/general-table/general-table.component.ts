@@ -6,7 +6,8 @@ import {
   OnChanges,
   SimpleChanges,
   Output,
-  EventEmitter
+  EventEmitter,
+  DoCheck
 } from '@angular/core';
 
 @Component({

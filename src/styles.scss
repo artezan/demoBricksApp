@@ -13,7 +13,23 @@ body {
 
 body {
   margin: 0;
+  overflow-y:hidden;
 }
 .tooltip-size {
   font-size: 1em;
+}
+.secondary-color {
+  background-color: #9fa8da;
+}
+.chips-font {
+  font-size: .8em;
+}
+.btn {
+  margin-left: 1% !important;
+}
+.toogle-btns {
+  text-align: right;
+  margin-right: 1%;
+  margin-top: 2%;
+  margin-bottom: -2%;
 }

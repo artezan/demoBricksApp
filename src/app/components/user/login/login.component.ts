@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
+import { ControllerMenuService } from '../../shared/general-menu/controller-menu.service';
 
 @Component({
   selector: 'app-login',
@@ -9,16 +10,28 @@ import { Router, NavigationExtras } from '@angular/router';
 export class LoginComponent implements OnInit {
   emailInput: string;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private controllerMenu: ControllerMenuService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.controllerMenu.menuSettings(true, true, '');
+  }
   login() {
-    const user: NavigationExtras = {
-      queryParams: {
-      'correo': 'asdf',
-      'contra': '3da541559918a808c2402bba5012f6c60b27661c'
+    // const user: NavigationExtras = {
+    //   queryParams: {
+    //   'correo': 'asdf',
+    //   'contra': '3da541559918a808c2402bba5012f6c60b27661c'
+    //   }
+    // };
+    const userKey = JSON.stringify([
+      {
+        correo: 'asdf',
+        contra: '3da541559918a808c2402bba5012f6c60b27661c'
       }
-    };
-    this.router.navigate(['list-condo'], user);
+    ]);
+    localStorage.setItem('userKey', userKey);
+    this.router.navigate(['list-condo']);
   }
 }
