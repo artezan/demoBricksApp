@@ -1,3 +1,75 @@
-<p>
-  new-edit-propietaries works!
-</p>
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Registrar Propietario</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+  <mat-card class="margin-form">
+    <mat-card-title>Complete los campos</mat-card-title>
+    <div class="flex-container">
+      <!-- Nombre -->
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="propietary.NombrePropietario" #NombrePropietario="ngModel" id="NombrePropietario" name="NombrePropietario"
+          required pattern="[a-zA-Z0-9- ,\.]{1,255}" (keyup)="getMatError($event)">
+        <mat-error *ngIf="NombrePropietario.dirty || NombrePropietario.touched || errorToShowMat">{{errorToShowMat}}</mat-error>
+      </mat-form-field>
+      <!-- Paterno -->
+      <mat-form-field appearance="outline">
+        <mat-label>Apellido Paterno</mat-label>
+        <input matInput [(ngModel)]="propietary.ApellidoPaterno" #ApellidoPaterno="ngModel" id="ApellidoPaterno" name="ApellidoPaterno"
+          required>
+        <mat-error *ngIf="ApellidoPaterno.dirty || ApellidoPaterno.touched">Anotar Apellido Paterno</mat-error>
+      </mat-form-field>
+      <!-- Materno -->
+      <mat-form-field appearance="outline">
+        <mat-label>Apellido Materno </mat-label>
+        <input matInput [(ngModel)]="propietary.ApellidoMaterno" #ApellidoMaterno="ngModel" id="ApellidoMaterno" name="ApellidoMaterno"
+          required>
+        <mat-error *ngIf="ApellidoMaterno.dirty || ApellidoMaterno.touched">Anotar Apellido Materno</mat-error>
+      </mat-form-field>
+
+      <!-- Correo -->
+
+      <mat-form-field appearance="outline">
+        <mat-label>Correo Electronico</mat-label>
+        <input matInput type="email" [(ngModel)]="propietary.CorreoElectronico" #CorreoElectronico="ngModel" id="CorreoElectronico"
+          name="CorreoElectronico" required>
+        <mat-error *ngIf="CorreoElectronico.dirty || CorreoElectronico.touched">Anotar Correo Electronico</mat-error>
+
+
+      </mat-form-field>
+      <!-- Tel cel -->
+      <!-- Tel depa -->
+      <!-- Tel ofi -->
+      <mat-form-field appearance="outline">
+        <mat-label>Telefono Cel</mat-label>
+        <input matInput type="number" [(ngModel)]="propietary.TelefonoCel" #TelefonoCel="ngModel" id="TelefonoCel" name="TelefonoCel"
+          required>
+        <mat-error *ngIf="TelefonoCel.dirty || TelefonoCel.touched">Anotar Telefono Cel</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefono Depa</mat-label>
+        <input matInput type="number" [(ngModel)]="propietary.TelefonoDepa" #TelefonoDepa="ngModel" id="TelefonoDepa" name="TelefonoDepa"
+          required>
+        <mat-error *ngIf="TelefonoDepa.dirty || TelefonoDepa.touched">Anotar Telefono Depa</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefono Oficina</mat-label>
+        <input matInput type="number" [(ngModel)]="propietary.TelefonoOficina" #TelefonoOficina="ngModel" id="TelefonoOficina" name="TelefonoOficina"
+          required>
+        <mat-error *ngIf="TelefonoOficina.dirty || TelefonoOficina.touched">Anotar Telefono Oficina</mat-error>
+      </mat-form-field>
+    </div>
+    <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
+          <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
+          <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
+        </span>
+        <button mat-raised-button color="warn" routerLink="/list-propietaries">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+  </mat-card>
+</form>

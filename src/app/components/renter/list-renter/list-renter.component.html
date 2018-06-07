@@ -5,11 +5,11 @@
   </mat-chip-list>
 </mat-toolbar>
 <div class="toogle-btns">
-  <button mat-raised-button class="btn" routerLink="/new-edit-condo" color="accent">Nuevo</button>
+  <button mat-raised-button class="btn" routerLink="/new-edit-renter" color="accent">Nuevo</button>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-      <button mat-raised-button (click)="edit()" id="edit" [disabled]="!userSelect" class="btn" color="primary">Editar</button>
+      <button mat-raised-button (click)="edit()" id="edit" [disabled]="!renterSelect" class="btn" color="primary">Editar</button>
   </span>
 </div>
 
 
-<app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" ></app-general-table>
+<app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)" ></app-general-table>

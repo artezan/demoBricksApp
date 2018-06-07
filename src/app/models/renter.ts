@@ -13,4 +13,5 @@ export interface Renter {
   Condominio?: string;
   Id_Depa?: string;
   error?: string;
+  Id_Condominio?;
 }

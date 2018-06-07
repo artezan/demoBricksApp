@@ -1,11 +1,11 @@
 import { Component, OnInit, AfterViewInit, DoCheck } from '@angular/core';
 import { ControllerMenuService } from '../../shared/general-menu/controller-menu.service';
 import { UserService } from '../../../services/user.service';
-import { ApartmentService } from '../../../services/apartment.service';
-import { Apartment } from '../../../models/apartment';
 import { Propietary } from '../../../models/propietary';
 import { PropietariesService } from '../../../services/propietaries.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
+
 
 @Component({
   selector: 'app-list-propietaries',
@@ -19,12 +19,22 @@ export class ListPropietariesComponent implements OnInit {
   loadingIndicator = true;
   errorToShow = '';
   rows: any;
+  propietarySelect: Propietary[];
+  realData: Propietary[];
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
     private porpietariesService: PropietariesService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private router: Router,
+    public snackBar: MatSnackBar
+  ) {
+    this.route.queryParams.subscribe((params) => {
+      if (Object.keys(params).length !== 0) {
+        this.openSnackBar(params.res.toString());
+      }
+    });
+  }
 
   ngOnInit() {
     this.columns = [
@@ -83,6 +93,7 @@ export class ListPropietariesComponent implements OnInit {
     });
   }
   generateRows(data: Propietary[]) {
+    this.realData = data;
     const arrRows: Propietary[] = [];
     data.forEach(item => {
       if (item.error !== '') {
@@ -104,9 +115,25 @@ export class ListPropietariesComponent implements OnInit {
     const isDisabledEdit = (<HTMLInputElement>document.getElementById('edit'))
       .disabled;
     if (isDisabledEdit) {
-      this.errorToShow = 'Seleccione un condominio';
+      this.errorToShow = 'Seleccione una fila';
     } else {
       this.errorToShow = '';
     }
+  }
+  edit() {
+    this.router.navigate(['new-edit-propietaries']);
+    this.porpietariesService.propietarySelect = this.propietarySelect;
+  }
+  select(event: Propietary[]) {
+    this.propietarySelect = this.realData.filter(item => {
+      if (item.Id_Propietario === event[0].Id_Propietario) {
+        return item;
+      }
+    });
+  }
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000
+    });
   }
 }

@@ -12,4 +12,6 @@ export interface Propietary {
   Contra?: null;
   EsJunta?: boolean;
   error?: string;
+  condominio?: string;
+  Id_Condominio?;
 }

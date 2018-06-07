@@ -112,7 +112,6 @@ export class ListDepaComponent implements OnInit {
   }
   generateRows(data: Apartment[]) {
     this.realData = data;
-    console.log(data);
     const arrRows: Apartment[] = [];
     data.forEach(item => {
       if (item.DiaExtemporanea === '0') {
@@ -143,7 +142,7 @@ export class ListDepaComponent implements OnInit {
       document.getElementById('details')
     )).disabled;
     if (isDisabledDetails) {
-      this.errorToShow = 'Seleccione un condominio';
+      this.errorToShow = 'Seleccione un departamento';
     } else {
       this.errorToShow = '';
     }
@@ -152,7 +151,7 @@ export class ListDepaComponent implements OnInit {
     const isDisabledEdit = (<HTMLInputElement>document.getElementById('edit'))
       .disabled;
     if (isDisabledEdit) {
-      this.errorToShow = 'Seleccione un condominio';
+      this.errorToShow = 'Seleccione un departamento';
     } else {
       this.errorToShow = '';
     }

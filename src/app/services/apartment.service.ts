@@ -27,7 +27,6 @@ export class ApartmentService {
 
   editApartment(apart: Apartment) {
     const data = this.makeReqEdit(apart);
-    console.log(END_POINT.APART_EDIT + data)
     return this.http.get(encodeURI(END_POINT.APART_EDIT + data));
   }
   // helper

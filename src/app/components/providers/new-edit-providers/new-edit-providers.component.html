@@ -1,0 +1,63 @@
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Registrar Proveedor</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+<mat-card class="margin-form">
+    <mat-card-title>Complete los campos</mat-card-title>
+  <div class="flex-container">
+    <!-- Nombre -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="provider.NombreProveedor" #NombreProveedor="ngModel" id="NombreProveedor" name="NombreProveedor" required pattern="[a-zA-Z0-9- ,\.]{1,255}" (keyup)="getMatError($event)">
+      <mat-error *ngIf="NombreProveedor.dirty || NombreProveedor.touched || errorToShowMat">{{errorToShowMat}}</mat-error>
+    </mat-form-field>
+    <!-- Domicilio -->
+    <mat-form-field appearance="outline">
+      <mat-label>Domicilio</mat-label>
+      <input matInput [(ngModel)]="provider.Domicilio" #Domicilio="ngModel" id="Domicilio" name="Domicilio" required pattern="[a-zA-Z0-9- ,\.]{1,255}" (keyup)="getMatError($event)">
+      <mat-error *ngIf="Domicilio.dirty || Domicilio.touched || errorToShowMat">{{errorToShowMat}}</mat-error>
+    </mat-form-field>
+    <!-- Correo -->
+    <mat-form-field appearance="outline">
+      <mat-label>Correo</mat-label>
+      <input matInput type="email" [(ngModel)]="provider.Correo" #Correo="ngModel" id="Correo" name="Correo" required>
+      <mat-error *ngIf="Correo.dirty || Correo.touched">Anotar Correo</mat-error>
+    </mat-form-field>
+    <!-- Telefono -->
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono </mat-label>
+      <input matInput type="number" [(ngModel)]="provider.Telefono" #Telefono="ngModel" id="Telefono" name="Telefono" required>
+      <mat-error  *ngIf="Telefono.dirty || Telefono.touched">Anotar Telefono</mat-error>
+    </mat-form-field>
+
+    <!-- Nombre Cheque -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre Cheque</mat-label>
+      <input matInput  [(ngModel)]="provider.NombreCheque" #NombreCheque="ngModel" id="NombreCheque" name="NombreCheque" required>
+      <mat-error *ngIf="NombreCheque.dirty || NombreCheque.touched">Anotar Nombre Cheque</mat-error>
+      </mat-form-field>
+    <!-- Banco -->
+    <mat-form-field appearance="outline">
+      <mat-label>Banco</mat-label>
+      <input matInput  [(ngModel)]="provider.Banco" #Banco="ngModel" id="Banco" name="Banco" required>
+      <mat-error *ngIf="Banco.dirty || Banco.touched">Anotar Banco</mat-error>
+      </mat-form-field>
+    <!-- Cuenta -->
+    <mat-form-field appearance="outline">
+      <mat-label>Cuenta</mat-label>
+      <input matInput type="number" [(ngModel)]="provider.Cuenta" #Cuenta="ngModel" id="Cuenta" name="Cuenta" required>
+      <mat-error *ngIf="Cuenta.dirty || Cuenta.touched">Anotar Cuenta</mat-error>
+      </mat-form-field>
+  </div>
+  <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
+            <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
+            <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
+        </span>
+        <button  mat-raised-button color="warn" routerLink="/list-providers">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+</mat-card>
+</form>

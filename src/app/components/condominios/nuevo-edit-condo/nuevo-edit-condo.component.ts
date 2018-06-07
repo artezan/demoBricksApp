@@ -34,7 +34,6 @@ export class NuevoEditCondoComponent implements OnInit {
           Cuenta: params.Cuenta,
           NumeroRecibo: params.NumeroRecibo
         };
-        console.log(params);
         this.isNew = false;
       } else {
         this.isNew = true;
@@ -83,7 +82,6 @@ export class NuevoEditCondoComponent implements OnInit {
     });
   }
   editCondo() {
-    console.log(this.condo);
     const condoEdit: Condo = {
       Id_Condominio: this.condo.Id_Condominio,
       Direccion: this.condo.Direccion,

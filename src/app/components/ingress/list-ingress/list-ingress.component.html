@@ -1,0 +1,120 @@
+<mat-toolbar class="secondary-color" [class.mat-elevation-z2]=true>
+  <mat-chip-list>
+    <mat-chip color="primary" class="chips-font" selected="true">Condominio: {{condoName}}</mat-chip>
+    <mat-chip color="accent" class="chips-font" selected="true">Saldo: ${{condoBalance}}</mat-chip>
+  </mat-chip-list>
+</mat-toolbar>
+
+
+<div class="toogle-btns">
+  <button mat-raised-button class="btn" routerLink="/new-edit-depa" color="accent">Nuevo</button>
+  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="primary">Recibo</button>
+  </span>
+  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="primary">Enviar Recibo</button>
+  </span>
+  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="warn">Eliminar</button>
+  </span>
+  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="primary">Editar</button>
+  </span>
+</div>
+<!-- Panel -->
+<div class="panel-margin">
+  <mat-card>
+    <mat-card-header>
+      <p>
+        Filtros:
+      </p>
+    </mat-card-header>
+    <div>
+      <mat-chip-list>
+
+        <!-- depachip -->
+        <mat-chip color="primary" *ngIf="apartmentSelect" class="chips-font" selected="true" (removed)="remove('apartmentSelect')"
+          [removable]="removable">
+          Depa:{{apartmentSelect.Interior}}
+          <mat-icon matChipRemove *ngIf="removable">
+            cancel
+          </mat-icon>
+        </mat-chip>
+        <!-- estado -->
+        <mat-chip color="accent" *ngIf="state" class="chips-font" selected="true" (removed)="remove('state')" [removable]="removable">
+          Estado:{{state}}
+          <mat-icon matChipRemove *ngIf="removable">
+            cancel
+          </mat-icon>
+        </mat-chip>
+        <!-- Mes -->
+        <mat-chip color="primary" *ngIf="monthInput" class="chips-font" selected="true" (removed)="remove('monthInput')" [removable]="removable">
+          Mes:{{monthInput.label}}
+          <mat-icon matChipRemove *ngIf="removable">
+            cancel
+          </mat-icon>
+        </mat-chip>
+        <!-- year -->
+        <mat-chip color="accent" *ngIf="yearInput" class="chips-font" selected="true" (removed)="remove('yearInput')" [removable]="removable">
+          Año:{{yearInput}}
+          <mat-icon matChipRemove *ngIf="removable">
+            cancel
+          </mat-icon>
+        </mat-chip>
+        <!-- Def -->
+        <mat-chip *ngIf="!yearInput && !monthInput && !apartmentSelect && !state " class="chips-font" selected="false">
+          Ningun filtro seleccionado
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+    <p>Seleccione uno o varios</p>
+    <div>
+      <!-- Depa (selectionChange)="apartmentSet(name.value)" -->
+      <mat-form-field style="margin-right: 3%" appearance="fill">
+        <mat-label>Depa</mat-label>
+        <mat-select placeholder=" Seleccione Depa" aria-label="State" [(ngModel)]="apartmentSelect" #name (selectionChange)="setfilters(name.value.Interior, 'Interior')">
+          <span *ngFor="let state of apartment$ | async">
+            <mat-option *ngIf="state.error !==''" [value]="state">{{ state.Interior }}</mat-option>
+          </span>
+        </mat-select>
+      </mat-form-field>
+      <!-- Edo -->
+      <mat-form-field style="margin-right: 3%" appearance="fill">
+        <mat-label>Estado</mat-label>
+        <mat-select placeholder=" Seleccione Estado" aria-label="State" [(ngModel)]="state" #stateValue (selectionChange)="setfilters(stateValue.value, 'Pagado')">
+          <mat-option value="Pagado">Pagado</mat-option>
+          <mat-option value="Por pagar">Por pagar</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- Mes -->
+      <mat-form-field style="margin-right: 3%" appearance="fill">
+        <mat-label>Mes</mat-label>
+        <mat-select placeholder=" Seleccione Mes" aria-label="State" [(ngModel)]="monthInput" #montValue (selectionChange)="setfilters(montValue.value.month, 'month')">
+          <mat-option [value]="{month: '01', label: 'Enero'}">Enero</mat-option>
+          <mat-option [value]="{month: '02', label: 'Febrero'}">Febrero</mat-option>
+          <mat-option [value]="{month: '03', label: 'Marzo'}">Marzo</mat-option>
+          <mat-option [value]="{month: '04', label: 'Abril'}">Abril</mat-option>
+          <mat-option [value]="{month: '05', label: 'Mayo'}">Mayo</mat-option>
+          <mat-option [value]="{month: '06', label: 'Junio'}">Junio</mat-option>
+          <mat-option [value]="{month: '07', label: 'Julio'}">Julio</mat-option>
+          <mat-option [value]="{month: '08', label: 'Agosto'}">Agosto</mat-option>
+          <mat-option [value]="{month: '09', label: 'Septiembre'}">Septiembre</mat-option>
+          <mat-option [value]="{month: '10', label: 'Octubre'}">Octubre</mat-option>
+          <mat-option [value]="{month: '11', label: 'Noviembre'}">Noviembre</mat-option>
+          <mat-option [value]="{month: '12', label: 'Diciembre'}">Diciembre</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- year -->
+      <mat-form-field appearance="fill">
+        <mat-label>Año</mat-label>
+        <mat-select placeholder=" Seleccione Mes" aria-label="State" [(ngModel)]="yearInput" #yearValue (selectionChange)="setfilters(yearValue.value, 'year')">
+          <mat-option *ngFor="let year of yearOptions" [value]="year">{{year}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+  </mat-card>
+</div>
+
+
+<app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)"></app-general-table>

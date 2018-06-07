@@ -25,7 +25,6 @@ export class CondoService {
     condo.correo = JSON.parse(userData)[0].correo;
     condo.contra = JSON.parse(userData)[0].contra;
     const data = JSON.stringify([condo]);
-    console.log(END_POINT.CONDO_EDIT + data)
     return this.http.get(encodeURI(END_POINT.CONDO_EDIT + data));
   }
   // helper

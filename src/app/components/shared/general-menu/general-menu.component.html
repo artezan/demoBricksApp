@@ -7,7 +7,11 @@
       <a [ngClass]="{'a-active': menuSelect === 'departamento'}" (click)="close()" mat-list-item routerLink="/list-depa">Departamentos</a>
       <a [ngClass]="{'a-active': menuSelect === 'propietarios'}" (click)="close()" mat-list-item routerLink="/list-propietaries">Propietarios</a>
       <a [ngClass]="{'a-active': menuSelect === 'inquilinos'}" (click)="close()" mat-list-item routerLink="/list-renter">Inquilinos</a>
-      <a mat-list-item href="#">Link 3</a>
+      <hr>
+      <a [ngClass]="{'a-active': menuSelect === 'proveedores'}" (click)="close()" mat-list-item routerLink="/list-providers">Proveedores</a>
+      <a [ngClass]="{'a-active': menuSelect === 'servicios'}" (click)="close()" mat-list-item routerLink="/list-services">Servicios</a>
+      <hr>
+      <a [ngClass]="{'a-active': menuSelect === 'ingresos'}" (click)="close()" mat-list-item routerLink="/list-ingress">Ingresos</a>
     </mat-nav-list>
 
   </mat-sidenav>
@@ -34,7 +38,7 @@
 </mat-sidenav-container>
 
 
-<!-- 
+<!--
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">

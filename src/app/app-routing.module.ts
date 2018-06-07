@@ -1,3 +1,6 @@
+import { ListIngressComponent } from './components/ingress/list-ingress/list-ingress.component';
+import { ListServicesComponent } from './components/service-condo/list-services/list-services.component';
+import { NewEditProvidersComponent } from './components/providers/new-edit-providers/new-edit-providers.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './components/user/login/login.component';
@@ -10,6 +13,8 @@ import { ListPropietariesComponent } from './components/propietaries/list-propie
 import { NewEditRenterComponent } from './components/renter/new-edit-renter/new-edit-renter.component';
 import { NewEditDepaComponent } from './components/depa/new-edit-depa/new-edit-depa.component';
 import { NewEditPropietariesComponent } from './components/propietaries/new-edit-propietaries/new-edit-propietaries.component';
+import { ListProvidersComponent } from './components/providers/list-providers/list-providers.component';
+import { NewEditServicesComponent } from './components/service-condo/new-edit-services/new-edit-services.component';
 
 const routes: Routes = [
   // Rutas
@@ -23,7 +28,12 @@ const routes: Routes = [
   { path: 'list-propietaries', component: ListPropietariesComponent },
   { path: 'new-edit-propietaries', component: NewEditPropietariesComponent },
   { path: 'new-edit-depa', component: NewEditDepaComponent },
-  { path: 'new-edit-renter', component: NewEditRenterComponent }
+  { path: 'new-edit-renter', component: NewEditRenterComponent },
+  { path: 'list-providers', component: ListProvidersComponent },
+  { path: 'new-edit-providers', component: NewEditProvidersComponent },
+  { path: 'list-services', component: ListServicesComponent },
+  { path: 'new-edit-services', component: NewEditServicesComponent },
+  { path: 'list-ingress', component: ListIngressComponent }
 ];
 
 @NgModule({

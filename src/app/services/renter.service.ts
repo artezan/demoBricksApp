@@ -9,7 +9,7 @@ import { Renter } from '../models/renter';
   providedIn: 'root'
 })
 export class RenterService {
-
+  renterSelect: Renter[] = [];
   constructor(private http: HttpClient) {}
 
   getData(id): Observable<Renter[]> {
@@ -21,13 +21,21 @@ export class RenterService {
     const data = JSON.stringify([dataReq]);
     return this.http.get<Renter[]>(END_POINT.RENTER_GET + data);
   }
+  newRenter(apart) {
+    const data = this.makeReq(apart);
+    return this.http.get(encodeURI(END_POINT.RENTER_NEW + data));
+  }
+
+  editRenter(apart: Apartment) {
+    const data = this.makeReq(apart);
+    return this.http.get(encodeURI(END_POINT.RENTER_EDIT + data));
+  }
   // helper
   private makeReq(dataReq: any) {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
-    dataReq.ciudad = dataReq.Ciudad;
-    delete dataReq.Ciudad;
+    // salida -- entrada
     const data = JSON.stringify([dataReq]);
     return data;
   }

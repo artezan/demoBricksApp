@@ -1,0 +1,35 @@
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Registrar Inquilino</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+<mat-card class="margin-form">
+    <mat-card-title>Complete los campos</mat-card-title>
+  <div class="flex-container">
+    <!-- Proveedor -->
+    <mat-form-field appearance="outline">
+      <mat-select [(value)]="service.Id_Proveedor" placeholder=" Selecciona Proveedor" aria-label="State"  [(ngModel)]="service.Id_Proveedor" #Id_Depa="ngModel" id="Id_Depa" name="Id_Depa" required>
+        <span *ngFor="let state of providerSelect$ | async">
+          <mat-option   *ngIf="state.error !==''"  [value]="state.Id_Proveedor" >{{ state.NombreProveedor }}</mat-option>
+        </span>
+        </mat-select>
+        <mat-error *ngIf="Id_Depa.dirty || Id_Depa.touched">Selecciona Proveedor</mat-error>
+      </mat-form-field>
+    <!-- Nombre servicio -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre Servicio</mat-label>
+      <input matInput [(ngModel)]="service.NombreServicio" #NombreServicio="ngModel" id="NombreServicio" name="NombreServicio" required pattern="[a-zA-Z0-9- ,\.]{1,255}" (keyup)="getMatError($event)">
+      <mat-error *ngIf="NombreServicio.dirty || NombreServicio.touched || errorToShowMat">{{errorToShowMat}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
+            <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
+            <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
+        </span>
+        <button  mat-raised-button color="warn" routerLink="/list-services">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+</mat-card>
+</form>

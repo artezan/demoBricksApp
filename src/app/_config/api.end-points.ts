@@ -13,6 +13,8 @@ const renterNew = 'registrarInquilino.php?json=';
 const renterEdit = 'editarInquilino.php?json=';
 const paymentsGet = 'mostrarPagos.php?json=';
 const providerGet = 'mostrarProveedores.php?json=';
+const providerNew = 'registrarProveedor.php?json=';
+const providerEdit = 'modificarProveedores.php?json=';
 const servicesGet = 'mostrarServicios.php?json=';
 const expensesGet = 'mostrarEgresos.php?json=';
 
@@ -37,6 +39,8 @@ export const END_POINT = ({
   PAYMENTS_GET: urlAPI + paymentsGet,
   // provider
   PROVIDER_GET: urlAPI + providerGet,
+  PROVIDER_NEW: urlAPI + providerNew,
+  PROVIDER_EDIT: urlAPI + providerEdit,
   // service
   SERVICE_GET: urlAPI + servicesGet,
   // expenses

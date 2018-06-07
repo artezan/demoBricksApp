@@ -31,21 +31,6 @@ export class NewEditDepaComponent implements OnInit {
     this.userService.userDataSelect.subscribe(data => {
       this.id = data['Id_Condominio'];
     });
-    // this.route.queryParams.subscribe((params: Apartment) => {
-    //   if (Object.keys(params).length !== 0) {
-    //     this.apartment = params;
-    //     this.isNew = false;
-    //     console.log(params);
-    //     if (params.DiaExtemporanea !== 'Sin recargo') {
-    //       if (+params.DiaExtemporanea > 1) {
-    //         this.extra2 = +params.DiaExtemporanea;
-    //         this.apartment.DiaExtemporanea = 'other';
-    //       }
-    //     }
-    //   } else {
-    //     this.isNew = true;
-    //   }
-    // });
     if (this.apartmentService.apartementSelect.length !== 0) {
       this.apartment = this.apartmentService.apartementSelect[0];
       this.isNew = false;
@@ -96,9 +81,7 @@ export class NewEditDepaComponent implements OnInit {
       this.apartment.DiaExtemporanea = this.extra2.toString();
     }
     this.apartment.condominio = this.id;
-    console.log(this.apartment);
     this.apartmentService.newApartment(this.apartment).subscribe((res: any) => {
-      console.log(res);
       const toast: NavigationExtras = {
         queryParams: { res: res.respuesta }
       };
@@ -111,21 +94,9 @@ export class NewEditDepaComponent implements OnInit {
     } else {
     }
     this.apartment.condominio = this.id;
-    console.log(this.apartment);
-    // const depaEdit: Apartment = {
-    //   CuotaMensual: this.apartment.CuotaMensual,
-    //   DiaExtemporanea: this.apartment.DiaExtemporanea,
-    //   Interior: this.apartment.Interior,
-    //   Id_Propietario: this.apartment.Id_Propietario,
-    //   condominio: this.id,
-    //   CuotaExtraordinario: this.extra2,
-    //   LugaresEstacionamiento: this.apartment.LugaresEstacionamiento,
-    //   Referencia: this.apartment.Referencia
-    // };
     this.apartmentService
       .editApartment(this.apartment)
       .subscribe((res: any) => {
-        console.log(res);
         const toast: NavigationExtras = {
           queryParams: { res: res.respuesta }
         };

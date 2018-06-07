@@ -27,7 +27,8 @@ import {
   MatChipsModule,
   MatBottomSheetModule,
   MatSnackBarModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatExpansionModule
 } from '@angular/material';
 // component
 import { GeneralMenuComponent } from './components/shared/general-menu/general-menu.component';
@@ -43,6 +44,16 @@ import { UserService } from './services/user.service';
 import { NewEditDepaComponent } from './components/depa/new-edit-depa/new-edit-depa.component';
 import { NewEditPropietariesComponent } from './components/propietaries/new-edit-propietaries/new-edit-propietaries.component';
 import { NewEditRenterComponent } from './components/renter/new-edit-renter/new-edit-renter.component';
+import { ListProvidersComponent } from './components/providers/list-providers/list-providers.component';
+import { NewEditProvidersComponent } from './components/providers/new-edit-providers/new-edit-providers.component';
+import { ListServicesComponent } from './components/service-condo/list-services/list-services.component';
+import { NewEditServicesComponent } from './components/service-condo/new-edit-services/new-edit-services.component';
+import { NewEgressServicesComponent } from './components/service-condo/new-egress-services/new-egress-services.component';
+import { NewEgressVarServicesComponent } from './components/service-condo/new-egress-var-services/new-egress-var-services.component';
+import { ListIngressComponent } from './components/ingress/list-ingress/list-ingress.component';
+import { NewIngressComponent } from './components/ingress/new-ingress/new-ingress.component';
+import { PaymentComponent } from './components/ingress/payment/payment.component';
+import { ListEgressComponent } from './components/egress/list-egress/list-egress.component';
 // npm
 
 @NgModule({
@@ -59,7 +70,17 @@ import { NewEditRenterComponent } from './components/renter/new-edit-renter/new-
     ListRenterComponent,
     NewEditDepaComponent,
     NewEditPropietariesComponent,
-    NewEditRenterComponent
+    NewEditRenterComponent,
+    ListProvidersComponent,
+    NewEditProvidersComponent,
+    ListServicesComponent,
+    NewEditServicesComponent,
+    NewEgressServicesComponent,
+    NewEgressVarServicesComponent,
+    ListIngressComponent,
+    NewIngressComponent,
+    PaymentComponent,
+    ListEgressComponent
   ],
   imports: [
     BrowserModule,
@@ -88,7 +109,8 @@ import { NewEditRenterComponent } from './components/renter/new-edit-renter/new-
     MatChipsModule,
     MatBottomSheetModule,
     MatSnackBarModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatExpansionModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

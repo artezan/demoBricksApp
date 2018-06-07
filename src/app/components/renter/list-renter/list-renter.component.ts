@@ -3,10 +3,10 @@ import { ControllerMenuService } from '../../shared/general-menu/controller-menu
 import { UserService } from '../../../services/user.service';
 import { ApartmentService } from '../../../services/apartment.service';
 import { Apartment } from '../../../models/apartment';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RenterService } from '../../../services/renter.service';
 import { Renter } from '../../../models/renter';
-
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-list-renter',
@@ -14,19 +14,28 @@ import { Renter } from '../../../models/renter';
   styleUrls: ['./list-renter.component.scss']
 })
 export class ListRenterComponent implements OnInit {
-
   condoName = '';
   condoBalance = 0;
   columns: any;
   loadingIndicator = true;
   errorToShow = '';
   rows: any;
+  renterSelect: Renter[];
+  realData: Renter[];
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
     private renterService: RenterService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private router: Router,
+    public snackBar: MatSnackBar
+  ) {
+    this.route.queryParams.subscribe(params => {
+      if (Object.keys(params).length !== 0) {
+        this.openSnackBar(params.res.toString());
+      }
+    });
+  }
 
   ngOnInit() {
     this.columns = [
@@ -74,13 +83,13 @@ export class ListRenterComponent implements OnInit {
         prop: 'Condominio',
         name: 'Departamento',
         width: '80'
-      },
+      }
     ];
     this.controllerMenu.menuSettings(false, false, 'inquilinos');
     this.userService.userDataSelect.subscribe((params: any) => {
       this.condoBalance = params['Saldo'];
       this.condoName = params.Colonia;
-    this.getData(params['Id_Condominio']);
+      this.getData(params['Id_Condominio']);
     });
   }
   getData(id) {
@@ -90,6 +99,7 @@ export class ListRenterComponent implements OnInit {
     });
   }
   generateRows(data: Renter[]) {
+    this.realData = data;
     const arrRows: Renter[] = [];
     data.forEach(item => {
       if (item.error !== '') {
@@ -112,10 +122,25 @@ export class ListRenterComponent implements OnInit {
     const isDisabledEdit = (<HTMLInputElement>document.getElementById('edit'))
       .disabled;
     if (isDisabledEdit) {
-      this.errorToShow = 'Seleccione un condominio';
+      this.errorToShow = 'Seleccione un inquilino';
     } else {
       this.errorToShow = '';
     }
   }
-
+  edit() {
+    this.router.navigate(['new-edit-renter']);
+    this.renterService.renterSelect = this.renterSelect;
+  }
+  select(event: Renter[]) {
+    this.renterSelect = this.realData.filter(item => {
+      if (item.Id_Inquilino === event[0].Id_Inquilino) {
+        return item;
+      }
+    });
+  }
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000
+    });
+  }
 }
