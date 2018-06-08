@@ -1,10 +1,19 @@
+import { GeneralDialogComponent } from './../../shared/general-dialog/general-dialog.component';
 import { ServicesCondoService } from './../../../services/services-condo.service';
 import { Service } from './../../../models/service.model';
-import { Component, OnInit, AfterViewInit, DoCheck } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  DoCheck,
+  Inject
+} from '@angular/core';
 import { ControllerMenuService } from '../../shared/general-menu/controller-menu.service';
 import { UserService } from '../../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { NewEditDepaComponent } from '../../depa/new-edit-depa/new-edit-depa.component';
 
 @Component({
   selector: 'app-list-services',
@@ -26,11 +35,20 @@ export class ListServicesComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public snackBar: MatSnackBar,
-    public servicesCondoService: ServicesCondoService
+    public servicesCondoService: ServicesCondoService,
+    public dialog: MatDialog
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
-        this.openSnackBar(params.res.toString());
+        if (!params.balanceAfter) {
+          this.openSnackBar(params.res.toString());
+        } else {
+          this.openDialog(
+            params.monto,
+            params.balanceBefore,
+            params.balanceAfter
+          );
+        }
       }
     });
   }
@@ -99,6 +117,10 @@ export class ListServicesComponent implements OnInit {
     this.router.navigate(['new-edit-services']);
     this.servicesCondoService.serviceSelect = this.serviceSelect;
   }
+  egressFixed() {
+    this.router.navigate(['new-egress-fixed']);
+    this.servicesCondoService.serviceSelect = this.serviceSelect;
+  }
   select(event: Service[]) {
     this.serviceSelect = this.realData.filter(item => {
       if (item.Id_Servicio === event[0].Id_Servicio) {
@@ -109,6 +131,20 @@ export class ListServicesComponent implements OnInit {
   openSnackBar(message: string) {
     this.snackBar.open(message, 'OK', {
       duration: 3000
+    });
+  }
+  openDialog(monto, balanceBefore, balanceAfter): void {
+    const dialogRef = this.dialog.open(GeneralDialogComponent, {
+      maxWidth: '50%',
+      minWidth: '20%',
+      data: {
+        monto: monto,
+        balanceBefore: balanceBefore,
+        balanceAfter: balanceAfter
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
     });
   }
 }

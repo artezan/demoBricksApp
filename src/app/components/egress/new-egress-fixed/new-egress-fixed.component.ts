@@ -1,43 +1,38 @@
-import { ServicesCondoService } from './../../../services/services-condo.service';
-import { Providers } from './../../../models/provider.model';
+import { EgressService } from './../../../services/egress.service';
 import { Service } from './../../../models/service.model';
+import { ServicesCondoService } from './../../../services/services-condo.service';
+import { Egress } from './../../../models/egress.model';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { UserService } from '../../../services/user.service';
-import { Observable } from 'rxjs';
-import { ProvidersService } from '../../../services/providers.service';
-
 
 @Component({
-  selector: 'app-new-edit-services',
-  templateUrl: './new-edit-services.component.html',
-  styleUrls: ['./new-edit-services.component.scss']
+  selector: 'app-new-egress-fixed',
+  templateUrl: './new-egress-fixed.component.html',
+  styleUrls: ['./new-egress-fixed.component.scss']
 })
-export class NewEditServicesComponent implements OnInit {
+export class NewEgressFixedComponent implements OnInit {
   errorToShow = '';
   errorToShowMat = 'Dato obligatorio';
-  service: Service = {};
+  egressFixed: Egress = {};
+  serviceSelect: Service = {};
   isNew: boolean;
-  providerSelect$: Observable<Providers[]>;
   id;
+  condoBalance = 0;
+  extra2;
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
     private serviceCondoServices: ServicesCondoService,
-    private providerservice: ProvidersService
+    private egressService: EgressService
   ) {}
   ngOnInit() {
     this.userService.userDataSelect.subscribe(data => {
       this.id = data['Id_Condominio'];
+      this.condoBalance = data['Saldo'];
     });
-    this.providerSelect$ = this.providerservice.getData(this.id);
     if (this.serviceCondoServices.serviceSelect.length !== 0) {
-      this.service = this.serviceCondoServices.serviceSelect[0];
-      this.isNew = false;
-      this.serviceCondoServices.serviceSelect.length = 0;
-    } else {
-      this.isNew = true;
+      this.serviceSelect = this.serviceCondoServices.serviceSelect[0];
     }
   }
   getPopMessage(event) {
@@ -67,21 +62,23 @@ export class NewEditServicesComponent implements OnInit {
     }
   }
   newCondo() {
-    this.service.Id_Condominio = this.id;
-    this.serviceCondoServices.newRenter(this.service).subscribe((res: any) => {
-      const toast: NavigationExtras = {
-        queryParams: { res: res.respuesta }
-      };
-      this.router.navigate(['list-services'], toast);
-    });
-  }
-  editCondo() {
-    this.service.Id_Condominio = this.id;
-    this.serviceCondoServices.editRenter(this.service).subscribe((res: any) => {
-      const toast: NavigationExtras = {
-        queryParams: { res: res.respuesta }
-      };
-      this.router.navigate(['list-services'], toast);
-    });
+    this.egressFixed.Id_Condominio = this.id;
+    this.egressFixed.Id_Servicio = this.serviceSelect.Id_Servicio;
+    this.egressFixed.Saldo = (
+      +this.condoBalance - +this.egressFixed.Monto
+    ).toString();
+    this.egressService
+      .newEgressFixed(this.egressFixed)
+      .subscribe((res: any) => {
+        const toast: NavigationExtras = {
+          queryParams: {
+            res: res.respuesta,
+            monto: this.egressFixed.Monto,
+            balanceBefore: this.condoBalance,
+            balanceAfter: this.egressFixed.Saldo
+          }
+        };
+        this.router.navigate(['list-services'], toast);
+      });
   }
 }

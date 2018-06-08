@@ -1,7 +1,7 @@
 <mat-toolbar class="secondary-color" [class.mat-elevation-z2]=true>
   <mat-chip-list>
     <mat-chip color="primary" class="chips-font" selected="true">Condominio: {{condoName}}</mat-chip>
-    <mat-chip color="accent" class="chips-font" selected="true">Saldo: ${{condoBalance}}</mat-chip>
+    <mat-chip color="accent"  class="chips-font" selected="true" >Saldo: ${{condoBalance}}</mat-chip>
   </mat-chip-list>
 </mat-toolbar>
 <div class="toogle-btns">
@@ -12,7 +12,7 @@
   <button mat-raised-button class="btn" routerLink="/new-edit-services" color="accent">Egreso Variable</button>
 
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!serviceSelect" class="btn" color="primary">Egreso Fijo</button>
+    <button mat-raised-button (click)="egressFixed()" id="edit" [disabled]="!serviceSelect" class="btn" color="primary">Egreso Fijo</button>
   </span>
 </div>
 

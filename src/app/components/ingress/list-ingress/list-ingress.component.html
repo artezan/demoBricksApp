@@ -88,26 +88,26 @@
       </mat-form-field>
       <!-- Mes -->
       <mat-form-field style="margin-right: 3%" appearance="fill">
-        <mat-label>Mes</mat-label>
-        <mat-select placeholder=" Seleccione Mes" aria-label="State" [(ngModel)]="monthInput" #montValue (selectionChange)="setfilters(montValue.value.month, 'month')">
-          <mat-option [value]="{month: '01', label: 'Enero'}">Enero</mat-option>
-          <mat-option [value]="{month: '02', label: 'Febrero'}">Febrero</mat-option>
-          <mat-option [value]="{month: '03', label: 'Marzo'}">Marzo</mat-option>
-          <mat-option [value]="{month: '04', label: 'Abril'}">Abril</mat-option>
-          <mat-option [value]="{month: '05', label: 'Mayo'}">Mayo</mat-option>
-          <mat-option [value]="{month: '06', label: 'Junio'}">Junio</mat-option>
-          <mat-option [value]="{month: '07', label: 'Julio'}">Julio</mat-option>
-          <mat-option [value]="{month: '08', label: 'Agosto'}">Agosto</mat-option>
-          <mat-option [value]="{month: '09', label: 'Septiembre'}">Septiembre</mat-option>
-          <mat-option [value]="{month: '10', label: 'Octubre'}">Octubre</mat-option>
-          <mat-option [value]="{month: '11', label: 'Noviembre'}">Noviembre</mat-option>
-          <mat-option [value]="{month: '12', label: 'Diciembre'}">Diciembre</mat-option>
+        <mat-label>Periodo Mes</mat-label>
+        <mat-select placeholder=" Seleccione Mes" aria-label="State" [(ngModel)]="monthInput" #montValue (selectionChange)="setfilters(montValue.value.month, 'Mes')">
+          <mat-option [value]="{month: 1, label: 'Enero'}">Enero</mat-option>
+          <mat-option [value]="{month: 2, label: 'Febrero'}">Febrero</mat-option>
+          <mat-option [value]="{month: 3, label: 'Marzo'}">Marzo</mat-option>
+          <mat-option [value]="{month: 4, label: 'Abril'}">Abril</mat-option>
+          <mat-option [value]="{month: 5, label: 'Mayo'}">Mayo</mat-option>
+          <mat-option [value]="{month: 6, label: 'Junio'}">Junio</mat-option>
+          <mat-option [value]="{month: 7, label: 'Julio'}">Julio</mat-option>
+          <mat-option [value]="{month: 8, label: 'Agosto'}">Agosto</mat-option>
+          <mat-option [value]="{month: 9, label: 'Septiembre'}">Septiembre</mat-option>
+          <mat-option [value]="{month: 10, label: 'Octubre'}">Octubre</mat-option>
+          <mat-option [value]="{month: 11, label: 'Noviembre'}">Noviembre</mat-option>
+          <mat-option [value]="{month: 12, label: 'Diciembre'}">Diciembre</mat-option>
         </mat-select>
       </mat-form-field>
       <!-- year -->
       <mat-form-field appearance="fill">
-        <mat-label>Año</mat-label>
-        <mat-select placeholder=" Seleccione Mes" aria-label="State" [(ngModel)]="yearInput" #yearValue (selectionChange)="setfilters(yearValue.value, 'year')">
+        <mat-label>Perido Año</mat-label>
+        <mat-select placeholder=" Seleccione Mes" aria-label="State" [(ngModel)]="yearInput" #yearValue (selectionChange)="setfilters(yearInput, 'Year')">
           <mat-option *ngFor="let year of yearOptions" [value]="year">{{year}}</mat-option>
         </mat-select>
       </mat-form-field>

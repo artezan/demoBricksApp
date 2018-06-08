@@ -63,7 +63,6 @@ export class NewEditProvidersComponent implements OnInit {
     }
   }
   newCondo() {
-    console.log(this.provider);
     this.provider.Id_Condominio = this.id;
     this.providersService.newProvider(this.provider).subscribe((res: any) => {
       const toast: NavigationExtras = {
@@ -73,7 +72,6 @@ export class NewEditProvidersComponent implements OnInit {
     });
   }
   editCondo() {
-    console.log(this.provider);
     this.provider.Id_Condominio = this.id;
     this.providersService.editProvider(this.provider).subscribe((res: any) => {
       const toast: NavigationExtras = {

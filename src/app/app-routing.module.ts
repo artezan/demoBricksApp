@@ -1,3 +1,6 @@
+import { ListEgressComponent } from './components/egress/list-egress/list-egress.component';
+import { NewEgressVariableComponent } from './components/egress/new-egress-variable/new-egress-variable.component';
+import { NewEgressFixedComponent } from './components/egress/new-egress-fixed/new-egress-fixed.component';
 import { ListIngressComponent } from './components/ingress/list-ingress/list-ingress.component';
 import { ListServicesComponent } from './components/service-condo/list-services/list-services.component';
 import { NewEditProvidersComponent } from './components/providers/new-edit-providers/new-edit-providers.component';
@@ -33,7 +36,10 @@ const routes: Routes = [
   { path: 'new-edit-providers', component: NewEditProvidersComponent },
   { path: 'list-services', component: ListServicesComponent },
   { path: 'new-edit-services', component: NewEditServicesComponent },
-  { path: 'list-ingress', component: ListIngressComponent }
+  { path: 'list-ingress', component: ListIngressComponent },
+  { path: 'new-egress-variable', component: NewEgressVariableComponent },
+  { path: 'new-egress-fixed', component: NewEgressFixedComponent },
+  { path: 'list-egress', component: ListEgressComponent }
 ];
 
 @NgModule({

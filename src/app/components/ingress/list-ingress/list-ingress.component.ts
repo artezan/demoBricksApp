@@ -1,3 +1,4 @@
+import { NewEditDepaComponent } from './../../depa/new-edit-depa/new-edit-depa.component';
 import { Apartment } from './../../../models/apartment';
 import { ApartmentService } from './../../../services/apartment.service';
 import { IngressService } from './../../../services/ingress.service';
@@ -9,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { Observable } from 'rxjs';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-list-ingress',
@@ -37,7 +39,7 @@ export class ListIngressComponent implements OnInit {
   yearInput: string;
   yearOptions: string[] = [];
   apartmentNum: number;
-  activeFilters = { Interior: '', Pagado: '', FechaPagado: '' };
+  activeFilters = { Interior: '', Pagado: '', Year: 0, Mes: 0 };
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -45,7 +47,8 @@ export class ListIngressComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public snackBar: MatSnackBar,
-    public apartmentServices: ApartmentService
+    public apartmentServices: ApartmentService,
+    public dialog: MatDialog
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -138,6 +141,8 @@ export class ListIngressComponent implements OnInit {
         isPayment = 'Por pagar';
       }
       if (item.error !== '') {
+        const year = item.Periodo.substring(item.Periodo.indexOf('/') + 1);
+        const month = item.Periodo.substring(0, item.Periodo.indexOf('/'));
         arrRows.push({
           Id_Pago: item.Id_Pago,
           NumeroRecibo: item.NumeroRecibo,
@@ -149,7 +154,9 @@ export class ListIngressComponent implements OnInit {
           Total: item.Total,
           Periodo: item.Periodo,
           Pagado: isPayment,
-          FechaPagado: item.FechaPagado
+          FechaPagado: item.FechaPagado,
+          Year: +year,
+          Mes: +month
         });
       }
     });
@@ -157,7 +164,7 @@ export class ListIngressComponent implements OnInit {
     this.rows2 = arrRows;
     // set years
     arrRows.forEach(item => {
-      const year = new Date(item.FechaPagado).getFullYear();
+      const year = item.Year;
       if (!isNaN(year)) {
         if (this.yearOptions.indexOf(year.toString()) === -1) {
           this.yearOptions.push(year.toString());
@@ -212,63 +219,65 @@ export class ListIngressComponent implements OnInit {
     }
     if (item === 'monthInput') {
       this.monthInput = undefined;
-      if (this.yearInput) {
-        this.activeFilters.FechaPagado = this.activeFilters.FechaPagado.substring(
-          0,
-          4
-        );
-      } else {
-        delete this.activeFilters.FechaPagado;
-      }
+      delete this.activeFilters.Mes;
     }
     if (item === 'yearInput') {
       this.yearInput = undefined;
-
-      if (this.monthInput) {
-        this.activeFilters.FechaPagado = this.activeFilters.FechaPagado.substring(
-          4
-        );
-      } else {
-        delete this.activeFilters.FechaPagado;
-      }
+      delete this.activeFilters.Year;
     }
     this.rows = this.rows2;
     Object.keys(this.activeFilters).forEach(key => {
-      this.apartmentSet(this.activeFilters[key], key);
+      this.searchSet(this.activeFilters[key], key);
     });
   }
+  /**
+   *
+   * @param filter string a buscar
+   * @param param columna en donde esta
+   */
   setfilters(filter, param: string) {
     this.rows = this.rows2;
-    if (param === 'month') {
-      if (this.yearInput) {
-        filter = this.yearInput + this.monthToString(filter);
-      } else {
-        filter = this.monthToString(filter);
-      }
-      param = 'FechaPagado';
-    } else if (param === 'year') {
-      if (this.monthInput) {
-        filter = filter + '-' + this.monthInput.month + '-';
-      }
-      param = 'FechaPagado';
-    }
     this.activeFilters[param] = filter;
     Object.keys(this.activeFilters).forEach(key => {
-      this.apartmentSet(this.activeFilters[key], key);
+      this.searchSet(this.activeFilters[key], key);
     });
   }
-  apartmentSet(filter, param: string) {
+  /**
+   *
+   * @param filter string a buscar
+   * @param param columna en donde esta
+   */
+  searchSet(filter, param: string) {
+    console.log(filter);
     const dataTemp = this.rows;
-    const colName = param;
-    // filter our data
-
-    this.rows = dataTemp.filter(d => {
-      if (d[colName] !== '') {
-        return d[colName].toString().indexOf(filter) !== -1 || !filter;
+    if (param === 'Year' || param === 'Mes') {
+      if (filter !== 0) {
+        this.rows = dataTemp.filter(d => {
+          if (+d[param] === +filter) {
+            return d;
+          }
+        });
       }
-    });
+    } else {
+      // filter our data
+      if (filter !== '') {
+        this.rows = dataTemp.filter(data => {
+          if (data[param] === filter) {
+            return data;
+          }
+        });
+      }
+    }
   }
-  monthToString(month): string {
-    return '-' + month + '-';
+  openDialog(): void {
+    const dialogRef = this.dialog.open(NewEditDepaComponent, {
+      width: '70%',
+      data: '{ name: this.name, animal: this.animal }'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // this.animal = result;
+    });
   }
 }

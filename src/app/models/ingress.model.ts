@@ -22,4 +22,6 @@ export interface Ingress {
   NumeroCheque?: string;
   EsParcialOFiniquito?: string;
   error?;
+  Mes?;
+  Year?;
 }

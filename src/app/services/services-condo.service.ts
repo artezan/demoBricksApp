@@ -21,22 +21,22 @@ export class ServicesCondoService {
     const data = JSON.stringify([dataReq]);
     return this.http.get<Service[]>(END_POINT.SERVICE_GET + data);
   }
-  // newRenter(apart) {
-  //   const data = this.makeReq(apart);
-  //   return this.http.get(encodeURI(END_POINT.SERVICE_NEW + data));
-  // }
+  newRenter(apart) {
+    const data = this.makeReq(apart);
+    return this.http.get(encodeURI(END_POINT.SERVICE_NEW + data));
+  }
 
-  // editRenter(apart: Service) {
-  //   const data = this.makeReq(apart);
-  //   return this.http.get(encodeURI(END_POINT.SERVICE_EDIT + data));
-  // }
-  // // helper
-  // private makeReq(dataReq: any) {
-  //   const userData = localStorage.getItem('userKey');
-  //   dataReq.correo = JSON.parse(userData)[0].correo;
-  //   dataReq.contra = JSON.parse(userData)[0].contra;
-  //   // salida -- entrada
-  //   const data = JSON.stringify([dataReq]);
-  //   return data;
-  // }
+  editRenter(apart: Service) {
+    const data = this.makeReq(apart);
+    return this.http.get(encodeURI(END_POINT.SERVICE_EDIT + data));
+  }
+  // helper
+  private makeReq(dataReq: any) {
+    const userData = localStorage.getItem('userKey');
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    // salida -- entrada
+    const data = JSON.stringify([dataReq]);
+    return data;
+  }
 }

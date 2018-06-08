@@ -28,7 +28,9 @@ import {
   MatBottomSheetModule,
   MatSnackBarModule,
   MatAutocompleteModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatDialogModule,
+  MAT_DIALOG_DEFAULT_OPTIONS
 } from '@angular/material';
 // component
 import { GeneralMenuComponent } from './components/shared/general-menu/general-menu.component';
@@ -46,7 +48,7 @@ import { NewEditPropietariesComponent } from './components/propietaries/new-edit
 import { NewEditRenterComponent } from './components/renter/new-edit-renter/new-edit-renter.component';
 import { ListProvidersComponent } from './components/providers/list-providers/list-providers.component';
 import { NewEditProvidersComponent } from './components/providers/new-edit-providers/new-edit-providers.component';
-import { ListServicesComponent } from './components/service-condo/list-services/list-services.component';
+import { ListServicesComponent  } from './components/service-condo/list-services/list-services.component';
 import { NewEditServicesComponent } from './components/service-condo/new-edit-services/new-edit-services.component';
 import { NewEgressServicesComponent } from './components/service-condo/new-egress-services/new-egress-services.component';
 import { NewEgressVarServicesComponent } from './components/service-condo/new-egress-var-services/new-egress-var-services.component';
@@ -54,9 +56,14 @@ import { ListIngressComponent } from './components/ingress/list-ingress/list-ing
 import { NewIngressComponent } from './components/ingress/new-ingress/new-ingress.component';
 import { PaymentComponent } from './components/ingress/payment/payment.component';
 import { ListEgressComponent } from './components/egress/list-egress/list-egress.component';
+import { NewEgressFixedComponent } from './components/egress/new-egress-fixed/new-egress-fixed.component';
+import { NewEgressVariableComponent } from './components/egress/new-egress-variable/new-egress-variable.component';
+import { GeneralDialogComponent } from './components/shared/general-dialog/general-dialog.component';
+
 // npm
 
 @NgModule({
+  entryComponents: [ GeneralDialogComponent ],
   declarations: [
     AppComponent,
     GeneralMenuComponent,
@@ -80,7 +87,10 @@ import { ListEgressComponent } from './components/egress/list-egress/list-egress
     ListIngressComponent,
     NewIngressComponent,
     PaymentComponent,
-    ListEgressComponent
+    ListEgressComponent,
+    NewEgressFixedComponent,
+    NewEgressVariableComponent,
+    GeneralDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -110,9 +120,10 @@ import { ListEgressComponent } from './components/egress/list-egress/list-egress
     MatBottomSheetModule,
     MatSnackBarModule,
     MatAutocompleteModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDialogModule
   ],
-  providers: [UserService],
+  providers: [UserService, ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
