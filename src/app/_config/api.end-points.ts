@@ -1,4 +1,4 @@
-const urlAPI = 'http://chobezin.com/php/CondominiosAdmin/';
+const urlAPI = 'https://chobezin.com/php/CondominiosAdmin/';
 const condoGet = 'mostrarCondominios.php?json=';
 const condoNew = 'registrarCondominio.php?json=';
 const condoEdit = 'modificarCondominio.php?json=';

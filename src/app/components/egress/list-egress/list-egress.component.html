@@ -9,10 +9,10 @@
 <div class="toogle-btns">
   <button mat-raised-button class="btn" routerLink="/new-egress-variable" color="accent">Egreso Variable</button>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="recibo" [disabled]="!ingressSelect" class="btn" color="primary">Recibo</button>
+    <button mat-raised-button  id="recibo" disabled class="btn" color="primary">Recibo</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="primary">Enviar Recibo</button>
+    <button mat-raised-button  id="edit" disabled class="btn" color="primary">Enviar Recibo</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button (click)="pay()" id="pay" [disabled]=" isPay" class="btn" color="warn">Pagar</button>
@@ -57,7 +57,7 @@
           </mat-icon>
         </mat-chip>
         <!-- Def -->
-        <mat-chip *ngIf="!yearInput && !monthInput && !apartmentSelect && !state " class="chips-font" selected="false">
+        <mat-chip *ngIf="!yearInput && !monthInput && !state " class="chips-font" selected="false">
           Ningun filtro seleccionado
         </mat-chip>
       </mat-chip-list>

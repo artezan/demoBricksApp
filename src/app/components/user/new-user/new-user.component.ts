@@ -8,10 +8,20 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class NewUserComponent implements OnInit {
   errorToShow = '';
+  telApartInput;
+  telCelInput;
+  telOficInput;
+  passwordInput;
+  passwor2dInput;
+  nameInput;
+  lastNameInput;
+  lastName2Input;
+  emailInput;
+  companyInput;
   constructor(private route: ActivatedRoute) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
+  newUser() {}
   getPopMessage(event) {
     const isDisabled = (<HTMLInputElement>document.getElementById('submitUser'))
       .disabled;

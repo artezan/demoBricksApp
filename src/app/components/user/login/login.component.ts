@@ -9,6 +9,7 @@ import { ControllerMenuService } from '../../shared/general-menu/controller-menu
 })
 export class LoginComponent implements OnInit {
   emailInput: string;
+  passInput: string;
 
   constructor(
     private router: Router,
