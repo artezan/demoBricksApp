@@ -21,12 +21,19 @@ const servicesEdit = 'modificarServicio.php?json=';
 const egressGet = 'mostrarEgresos.php?json=';
 const egressFixed = 'registrarEgreso.php?json=';
 const egressVar = 'registrarServicioVariable.php?json=';
+const paymentNew = 'registrarPago.php?json=';
+const paymentDelete = 'eliminarIngreso.php?json=';
+const condoById = 'datosCondominio.php?json=';
+const egressPay = 'pagarEgreso.php?json=';
+const egressTransit = 'entransitoEgreso.php?json=';
+const newDebit = 'registrarPorPagar.php?json=';
 
 export const END_POINT = ({
   // condo
   CONDO_GET: urlAPI + condoGet,
   CONDO_NEW: urlAPI + condoNew,
   CONDO_EDIT: urlAPI + condoEdit,
+  CONDO_GET_BY_ID: urlAPI + condoById,
   // pro
   PROPIETARIES_GET: urlAPI + propietariesGet,
   PROPIETARIES_NEW: urlAPI + propietariesNew,
@@ -41,6 +48,8 @@ export const END_POINT = ({
   RENTER_EDIT: urlAPI + renterEdit,
   // payment ingress
   PAYMENTS_GET: urlAPI + paymentsGet,
+  PAYMENTS_NEW: urlAPI + paymentNew,
+  PAYMENTS_DELETE: urlAPI + paymentDelete,
   // provider
   PROVIDER_GET: urlAPI + providerGet,
   PROVIDER_NEW: urlAPI + providerNew,
@@ -53,4 +62,8 @@ export const END_POINT = ({
   EGRESS_GET: urlAPI + egressGet,
   EGRESS_FIXED: urlAPI + egressFixed,
   EGRESS_VAR: urlAPI + egressVar,
+  EGRESS_PAY: urlAPI + egressPay,
+  EGRESS_TRANSIT: urlAPI + egressTransit,
+  // debit
+  DEBIT_NEW: urlAPI + newDebit
 });

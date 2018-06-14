@@ -13,7 +13,6 @@ export class GeneralDialogComponent implements OnInit {
     public data: { monto: string; balanceBefore: string; balanceAfter: string }
   ) {
     this.dataInput = data;
-    console.log(this.dataInput)
   }
 
   ngOnInit() {}

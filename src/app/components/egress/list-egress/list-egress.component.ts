@@ -5,6 +5,8 @@ import { ControllerMenuService } from '../../shared/general-menu/controller-menu
 import { UserService } from '../../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material';
+import { GeneralDialogComponent } from '../../shared/general-dialog/general-dialog.component';
 
 @Component({
   selector: 'app-list-egress',
@@ -27,6 +29,9 @@ export class ListEgressComponent implements OnInit {
   yearOptions: string[] = [];
   activeFilters = { Variable: '', Año: 0, Mes: 0 };
   removable = true;
+  idCondo: string;
+  isPay = true;
+  isTransit = true;
 
   constructor(
     private controllerMenu: ControllerMenuService,
@@ -34,11 +39,20 @@ export class ListEgressComponent implements OnInit {
     private egressService: EgressService,
     private route: ActivatedRoute,
     private router: Router,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
-        this.openSnackBar(params.res.toString());
+        if (!params.balanceAfter) {
+          this.openSnackBar(params.res.toString());
+        } else {
+          this.openDialog(
+            params.monto,
+            params.balanceBefore,
+            params.balanceAfter
+          );
+        }
       }
     });
   }
@@ -105,6 +119,7 @@ export class ListEgressComponent implements OnInit {
     this.userService.userDataSelect.subscribe((params: any) => {
       this.condoBalance = params['Saldo'];
       this.condoName = params.Colonia;
+      this.idCondo = params.Id_Condominio;
       this.getData(params['Id_Condominio']);
     });
   }
@@ -156,9 +171,18 @@ export class ListEgressComponent implements OnInit {
     });
   }
   getPopMessage2(event) {
-    const isDisabledEdit = (<HTMLInputElement>document.getElementById('edit'))
+    const isDisabledEdit = (<HTMLInputElement>document.getElementById('recibo'))
       .disabled;
-    if (isDisabledEdit) {
+    const isDisabledPay = (<HTMLInputElement>document.getElementById('pay'))
+      .disabled;
+    const isDisabledTransit = (<HTMLInputElement>(
+      document.getElementById('transit')
+    )).disabled;
+    if (isDisabledPay && event.target.textContent === 'Pagar') {
+      this.errorToShow = 'Seleccione un egreso en transito';
+    } else if (isDisabledTransit && event.target.textContent === 'Transito') {
+      this.errorToShow = 'Seleccione un egreso pagado';
+    } else if (isDisabledEdit && event.target.textContent === 'Recibo') {
       this.errorToShow = 'Seleccione un egreso';
     } else {
       this.errorToShow = '';
@@ -174,6 +198,15 @@ export class ListEgressComponent implements OnInit {
         return item;
       }
     });
+    if (this.egressSelect[0].Estado === 'Pagado') {
+      this.isPay = true;
+      this.isTransit = false;
+    }
+    if (this.egressSelect[0].Estado === 'En transito') {
+      this.isTransit = true;
+      this.isPay = false;
+    }
+    console.log(this.egressSelect)
   }
   openSnackBar(message: string) {
     this.snackBar.open(message, 'OK', {
@@ -217,7 +250,6 @@ export class ListEgressComponent implements OnInit {
    * @param param columna en donde esta
    */
   searchSet(filter, param: string) {
-    console.log(filter);
     const dataTemp = this.rows;
     if (param === 'Año' || param === 'Mes') {
       if (filter !== 0) {
@@ -237,5 +269,38 @@ export class ListEgressComponent implements OnInit {
         });
       }
     }
+  }
+  openDialog(monto, balanceBefore, balanceAfter): void {
+    const dialogRef = this.dialog.open(GeneralDialogComponent, {
+      maxWidth: '50%',
+      minWidth: '20%',
+      data: {
+        monto: monto,
+        balanceBefore: balanceBefore,
+        balanceAfter: balanceAfter
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  pay() {
+    this.egressService
+      .payEgress(this.idCondo, this.egressSelect[0].Id_Egreso)
+      .subscribe(res => {
+        this.updateTable();
+        this.openSnackBar(res.respuesta);
+      });
+  }
+  transit() {
+    this.egressService
+      .transitEgress(this.idCondo, this.egressSelect[0].Id_Egreso)
+      .subscribe(res => {
+        this.updateTable();
+        this.openSnackBar(res.respuesta);
+      });
+  }
+  updateTable() {
+    this.getData(this.idCondo);
+    this.rows = [...this.rows];
   }
 }

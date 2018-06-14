@@ -18,13 +18,18 @@ import {
 })
 export class GeneralTableComponent implements OnInit, OnChanges {
   @Input() rows = [];
-  @Input() columns = [{ name: '' }];
+  @Input() columns = [{ name: '', prop: '', width: '' }];
   @Input() loadingIndicator: boolean;
+  @Input() checkColum = false;
+  //
+  @Input() selectionType = 'single';
   @Output() select = new EventEmitter<Array<any>>();
   dataTemp = [];
   rows2;
-  selected = [];
-  constructor() {}
+  @Input() selected = [];
+  c;
+  constructor() {
+  }
   change(event: { value: string; name: string }) {
     this.rows = this.rows2;
     this.dataTemp = this.rows;
@@ -50,16 +55,29 @@ export class GeneralTableComponent implements OnInit, OnChanges {
     this.rows2 = this.rows;
   }
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.rows.currentValue) {
-      this.rows = [...changes.rows.currentValue];
-      this.rows2 = this.rows;
-      setTimeout(() => {
-        this.loadingIndicator = false;
-      }, 1000);
+    if (changes.rows) {
+      if (changes.rows.currentValue) {
+        this.rows = [...changes.rows.currentValue];
+        this.rows2 = this.rows;
+        setTimeout(() => {
+          this.loadingIndicator = false;
+        }, 1000);
+      }
+    }
+    if (changes.selected) {
+      if (changes.selected.currentValue) {
+        this.selected = [...changes.selected.currentValue];
+      }
     }
   }
   onSelect(event) {
     this.select.emit(event.selected);
+  }
+  displayCheck(row) {
+    return row.name !== 'Ethel Price';
+  }
+  selectFn(d) {
+    console.log(d);
   }
 
   onActivate(event) {}

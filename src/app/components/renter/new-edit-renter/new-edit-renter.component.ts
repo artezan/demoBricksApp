@@ -66,7 +66,6 @@ export class NewEditRenterComponent implements OnInit {
     }
   }
   newCondo() {
-    console.log(this.renter);
     this.renter.Id_Condominio = this.id;
     this.renterService.newRenter(this.renter).subscribe((res: any) => {
       const toast: NavigationExtras = {
@@ -76,7 +75,6 @@ export class NewEditRenterComponent implements OnInit {
     });
   }
   editCondo() {
-    console.log(this.renter);
     this.renter.Id_Condominio = this.id;
     this.renterService.editRenter(this.renter).subscribe((res: any) => {
       const toast: NavigationExtras = {

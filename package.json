@@ -25,6 +25,7 @@
     "@swimlane/ngx-datatable": "^13.0.1",
     "cesar-table-artezan": "^13.0.5",
     "core-js": "^2.5.4",
+    "pdfmake": "^0.1.36",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },

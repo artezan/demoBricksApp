@@ -6,7 +6,6 @@ import { PropietariesService } from '../../../services/propietaries.service';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 
-
 @Component({
   selector: 'app-list-propietaries',
   templateUrl: './list-propietaries.component.html',
@@ -21,6 +20,7 @@ export class ListPropietariesComponent implements OnInit {
   rows: any;
   propietarySelect: Propietary[];
   realData: Propietary[];
+  hasData: boolean;
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -29,7 +29,7 @@ export class ListPropietariesComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar
   ) {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
         this.openSnackBar(params.res.toString());
       }
@@ -77,39 +77,45 @@ export class ListPropietariesComponent implements OnInit {
         prop: 'TelefonoOficina',
         name: 'Tel Oficina',
         width: '80'
-      },
+      }
     ];
     this.controllerMenu.menuSettings(false, false, 'propietarios');
     this.userService.userDataSelect.subscribe((params: any) => {
       this.condoBalance = params['Saldo'];
       this.condoName = params.Colonia;
-    this.getData(params['Id_Condominio']);
+      this.getData(params['Id_Condominio']);
     });
   }
   getData(id) {
     this.loadingIndicator = true;
     this.porpietariesService.getData(id).subscribe(data => {
+      this.loadingIndicator = false;
       this.generateRows(data);
     });
   }
   generateRows(data: Propietary[]) {
-    this.realData = data;
-    const arrRows: Propietary[] = [];
-    data.forEach(item => {
-      if (item.error !== '') {
-        arrRows.push({
-          Id_Propietario: item.Id_Propietario,
-          NombrePropietario: item.NombrePropietario,
-          ApellidoPaterno: item.ApellidoPaterno,
-          ApellidoMaterno: item.ApellidoMaterno,
-          CorreoElectronico: item.CorreoElectronico,
-          TelefonoDepa: item.TelefonoDepa,
-          TelefonoCel: item.TelefonoCel,
-          TelefonoOficina: item.TelefonoOficina
-        });
-      }
-    });
-    this.rows = arrRows;
+    if (data.length === 1) {
+      this.hasData = false;
+    } else {
+      this.hasData = true;
+      this.realData = data;
+      const arrRows: Propietary[] = [];
+      data.forEach(item => {
+        if (item.error !== '') {
+          arrRows.push({
+            Id_Propietario: item.Id_Propietario,
+            NombrePropietario: item.NombrePropietario,
+            ApellidoPaterno: item.ApellidoPaterno,
+            ApellidoMaterno: item.ApellidoMaterno,
+            CorreoElectronico: item.CorreoElectronico,
+            TelefonoDepa: item.TelefonoDepa,
+            TelefonoCel: item.TelefonoCel,
+            TelefonoOficina: item.TelefonoOficina
+          });
+        }
+      });
+      this.rows = arrRows;
+    }
   }
   getPopMessage2(event) {
     const isDisabledEdit = (<HTMLInputElement>document.getElementById('edit'))

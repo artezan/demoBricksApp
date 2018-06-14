@@ -12,4 +12,21 @@
 </div>
 
 
-<app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)" ></app-general-table>
+<div *ngIf="hasData; then table else msg"></div>
+<ng-template #table>
+  <app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)"></app-general-table>
+</ng-template>
+<ng-template #msg>
+  <div class="flex-container">
+    <div class="row">
+      <div class="flex-item">
+          <mat-spinner *ngIf="loadingIndicator"  ></mat-spinner>
+        <mat-card *ngIf="!loadingIndicator" >
+          <mat-card-title>
+            Registre un nuevo propietario
+          </mat-card-title>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</ng-template>

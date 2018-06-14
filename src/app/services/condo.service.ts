@@ -17,7 +17,7 @@ export class CondoService {
   }
   newCondo(condo) {
     const data = this.makeReq(condo);
-    return this.http.get(encodeURI(END_POINT.CONDO_NEW + data));
+return this.http.get(encodeURI(END_POINT.CONDO_NEW + data));
   }
 
   editCondo(condo: any) {
@@ -26,6 +26,16 @@ export class CondoService {
     condo.contra = JSON.parse(userData)[0].contra;
     const data = JSON.stringify([condo]);
     return this.http.get(encodeURI(END_POINT.CONDO_EDIT + data));
+  }
+
+  getDataById(id): Observable<Condo> {
+    const userData = localStorage.getItem('userKey');
+    const dataReq: any = {};
+    dataReq.Id_Condominio = id;
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([dataReq]);
+    return this.http.get<Condo>(END_POINT.CONDO_GET_BY_ID + data);
   }
   // helper
   private makeReq(condo: any) {

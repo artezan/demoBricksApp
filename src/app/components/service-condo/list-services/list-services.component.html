@@ -9,7 +9,7 @@
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button (click)="edit()" id="edit" [disabled]="!serviceSelect" class="btn" color="primary">Editar</button>
   </span>
-  <button mat-raised-button class="btn" routerLink="/new-edit-services" color="accent">Egreso Variable</button>
+  <button mat-raised-button class="btn" routerLink="/new-egress-variable" color="accent">Egreso Variable</button>
 
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button (click)="egressFixed()" id="edit" [disabled]="!serviceSelect" class="btn" color="primary">Egreso Fijo</button>

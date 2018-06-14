@@ -25,6 +25,32 @@ export class EgressService {
     const data = this.makeReq(egress);
     return this.http.get(encodeURI(END_POINT.EGRESS_FIXED + data));
   }
+  newEgressVariable(egress) {
+    const data = this.makeReq(egress);
+    return this.http.get(encodeURI(END_POINT.EGRESS_FIXED + data));
+  }
+  payEgress(idCondo, idEgress): Observable<any> {
+    const dateNow = "2018-06-11"// new Date(Date.now());
+    const userData = localStorage.getItem('userKey');
+    const dataReq: any = {};
+    dataReq.Id_Condominio = idCondo;
+    dataReq.Id_Egreso = idEgress;
+    dataReq.FechaCobrado = dateNow;
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([dataReq]);
+    return this.http.get<any>(END_POINT.EGRESS_PAY + data);
+  }
+  transitEgress(idCondo, idEgress): Observable<any> {
+    const userData = localStorage.getItem('userKey');
+    const dataReq: any = {};
+    dataReq.Id_Condominio = idCondo;
+    dataReq.Id_Egreso = idEgress;
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([dataReq]);
+    return this.http.get<any>(END_POINT.EGRESS_TRANSIT + data);
+  }
    // helper
    private makeReq(dataReq: any) {
     const userData = localStorage.getItem('userKey');

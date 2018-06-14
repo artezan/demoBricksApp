@@ -1,3 +1,5 @@
+import { CondoService } from './../../../services/condo.service';
+import { GeneralAlertComponent } from './../../shared/general-alert/general-alert.component';
 import { NewEditDepaComponent } from './../../depa/new-edit-depa/new-edit-depa.component';
 import { Apartment } from './../../../models/apartment';
 import { ApartmentService } from './../../../services/apartment.service';
@@ -11,6 +13,11 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { Observable } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import { logoImgB64 } from '../../../_config/logo-img-b64';
+import { GeneralDialogComponent } from '../../shared/general-dialog/general-dialog.component';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-list-ingress',
@@ -23,7 +30,7 @@ export class ListIngressComponent implements OnInit {
   columns: any;
   loadingIndicator = true;
   errorToShow = '';
-  rows: any;
+  rows: any[];
   rows2;
   id: string;
   sub: any;
@@ -40,6 +47,8 @@ export class ListIngressComponent implements OnInit {
   yearOptions: string[] = [];
   apartmentNum: number;
   activeFilters = { Interior: '', Pagado: '', Year: 0, Mes: 0 };
+  // pdf
+  propietary;
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -48,11 +57,20 @@ export class ListIngressComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar,
     public apartmentServices: ApartmentService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public condoService: CondoService
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
-        this.openSnackBar(params.res.toString());
+        if (!params.balanceAfter) {
+          this.openSnackBar(params.res.toString());
+        } else {
+          this.openDialog(
+            params.monto,
+            params.balanceBefore,
+            params.balanceAfter
+          );
+        }
       }
     });
   }
@@ -195,9 +213,22 @@ export class ListIngressComponent implements OnInit {
     this.router.navigate(['new-edit-renter']);
     this.ingressService.ingressSelect = this.ingressSelect;
   }
+  generateDoc() {
+    if (this.ingressSelect[0].Pagado === '0') {
+      this.openSnackBar('Seleccione un ingreso pagado');
+    } else {
+      this.apartmentServices.getData(this.id).subscribe(data => {
+        const depaSelect = data.find(
+          apartment => apartment.Id_Depa === this.ingressSelect[0].Id_Depa
+        );
+        this.propietary = depaSelect.NombrePropietario;
+        this.pdf();
+      });
+    }
+  }
   select(event: Ingress[]) {
     this.ingressSelect = this.realData.filter(item => {
-      if (item.Id_Inquilino === event[0].Id_Inquilino) {
+      if (item.Id_Pago === event[0].Id_Pago) {
         return item;
       }
     });
@@ -248,7 +279,6 @@ export class ListIngressComponent implements OnInit {
    * @param param columna en donde esta
    */
   searchSet(filter, param: string) {
-    console.log(filter);
     const dataTemp = this.rows;
     if (param === 'Year' || param === 'Mes') {
       if (filter !== 0) {
@@ -269,15 +299,275 @@ export class ListIngressComponent implements OnInit {
       }
     }
   }
-  openDialog(): void {
-    const dialogRef = this.dialog.open(NewEditDepaComponent, {
-      width: '70%',
-      data: '{ name: this.name, animal: this.animal }'
+  openDialog(monto, balanceBefore, balanceAfter): void {
+    const dialogRef = this.dialog.open(GeneralDialogComponent, {
+      maxWidth: '50%',
+      minWidth: '20%',
+      data: {
+        monto: monto,
+        balanceBefore: balanceBefore,
+        balanceAfter: balanceAfter
+      }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // this.animal = result;
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  deletePayment(): void {
+    const dialogRef = this.dialog.open(GeneralAlertComponent, {
+      maxWidth: '50%',
+      minWidth: '20%',
+      data: {
+        header: 'Eliminar Ingreso',
+        subHeader: 'Desea eliminar:',
+        body:
+          ' <p><b>Concepto:</b>' +
+          this.ingressSelect[0].Concepto +
+          '</p> ' +
+          ' <p><b>Saldo:</b>' +
+          this.ingressSelect[0].Total +
+          '</p> ' +
+          ' <p><b>Periodo:</b>' +
+          this.ingressSelect[0].Periodo +
+          '</p> ',
+        isform: false
+      }
     });
+    const sub = dialogRef.componentInstance.buttons.subscribe(res => {
+      if (res === 'ok') {
+        this.deleteIngress();
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+  deleteIngress() {
+    this.ingressService
+      .deleteData(this.ingressSelect[0], this.id)
+      .subscribe(data => {
+        this.openSnackBar('Ingreso Eliminado');
+        this.condoService.getDataById(this.id).subscribe(condo => {
+          this.userService.userDataSelect.next({
+            Saldo: +condo.Saldo,
+            Colonia: this.condoName,
+            Id_Condominio: this.id
+          });
+          this.rows.forEach((item, i) => {
+            if (item.Id_Pago === this.ingressSelect[0].Id_Pago) {
+              this.rows.splice(i, 1);
+            }
+          });
+          this.rows = [...this.rows];
+        });
+      });
+  }
+
+  // PDF
+
+  pdf() {
+    const date = new Date(Date.now());
+    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1).toString();
+    const year = date.getFullYear().toString();
+    const dateFormat: string = day + '/' + month + '/' + year;
+    const docDefinition = {
+      header: [
+        {
+          image: logoImgB64,
+          width: 150,
+          style: 'rightme',
+          fit: [100, 100]
+        }
+      ],
+      content: [
+        {
+          text: 'Golem\n\n',
+          style: 'header'
+        },
+        {
+          text: 'Condominio: ' + this.condoName,
+          style: 'subheader'
+        },
+        {
+          text: 'Recibo de Pago',
+          style: 'subheader2'
+        },
+        {
+          text: 'Recibo No: ' + this.ingressSelect[0].NumeroRecibo,
+          style: 'subheader2'
+        },
+        {
+          text: 'Fecha: ' + dateFormat
+        },
+        {
+          table: {
+            widths: ['*'],
+            body: [[' '], [' ']]
+          },
+          layout: {
+            hLineWidth: function(i, node) {
+              return i === 0 || i === node.table.body.length ? 0 : 2;
+            },
+            vLineWidth: function(i, node) {
+              return 0;
+            }
+          }
+        },
+        {
+          text: [
+            {
+              text: 'Recibimos de: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.propietary
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: 'Depto: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].Interior
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: 'Correspondiente a: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].Periodo
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: 'Concepto: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].Concepto
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: 'Fecha de pago: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].FechaPagado
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: ' La Cantidad de: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].Total
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: 'Saldo anterior: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].SaldoAnteriorDepa
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: '+Pago: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].Total
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          text: [
+            {
+              text: '=Saldo Nuevo: ',
+              bold: true
+            },
+            {
+              text: ' ' + this.ingressSelect[0].SaldoDepartamento
+            }
+          ],
+          alignment: 'justify'
+        },
+        {
+          table: {
+            widths: ['*'],
+            body: [[' '], [' ']]
+          },
+          layout: {
+            hLineWidth: function(i, node) {
+              return i === 0 || i === node.table.body.length ? 0 : 2;
+            },
+            vLineWidth: function(i, node) {
+              return 0;
+            }
+          }
+        },
+        {
+          text:
+            'EL MONTO DE ESTE PAGO NO EXIME DE ADEUDOS ANTERIORES QUE PUEDA TENER EL CONDOMINIO',
+          style: 'subheader',
+          alignment: 'center'
+        },
+        {}
+      ],
+      styles: {
+        header: {
+          fontSize: 24,
+          bold: true
+        },
+        bigger: {
+          fontSize: 15,
+          italics: true
+        },
+        center: {
+          'text-align': 'center'
+        },
+        rightme: {
+          alignment: 'right'
+        },
+        subheader: {
+          fontSize: 18,
+          bold: true
+        },
+        subheader2: {
+          fontSize: 15,
+          bold: true
+        }
+      }
+    };
+    pdfMake.createPdf(docDefinition).open();
+    pdfMake.createPdf(docDefinition).download('Recibo');
   }
 }

@@ -23,6 +23,7 @@ export class ListDepaComponent implements OnInit {
   sub: any;
   depaSelect: Apartment[];
   realData: Apartment[];
+  hasData: boolean;
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -31,7 +32,7 @@ export class ListDepaComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar
   ) {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
         this.openSnackBar(params.res.toString());
       }
@@ -72,7 +73,7 @@ export class ListDepaComponent implements OnInit {
       },
       {
         prop: 'CuotaExtraordinario',
-        name: 'CuataExt',
+        name: 'CuotaExt',
         width: '80'
       },
       {
@@ -107,35 +108,41 @@ export class ListDepaComponent implements OnInit {
   getData(id) {
     this.loadingIndicator = true;
     this.apartmentService.getData(id).subscribe(data => {
+      this.loadingIndicator = false;
       this.generateRows(data);
     });
   }
   generateRows(data: Apartment[]) {
-    this.realData = data;
-    const arrRows: Apartment[] = [];
-    data.forEach(item => {
-      if (item.DiaExtemporanea === '0') {
-        item.DiaExtemporanea = 'Sin recargo';
-      }
-      if (item.error !== '') {
-        arrRows.push({
-          Id_Depa: item.Id_Depa,
-          Interior: item.Interior,
-          NombrePropietario: item.NombrePropietario,
-          ApellidoPaterno: item.ApellidoPaterno,
-          ApellidoMaterno: item.ApellidoMaterno,
-          CuotaMensual: item.CuotaMensual,
-          CuotaExtraordinario: item.CuotaExtraordinario,
-          LugaresEstacionamiento: item.LugaresEstacionamiento,
-          Referencia: item.Referencia,
-          DiaExtemporanea: item.DiaExtemporanea,
-          SaldoDepartamento: (
-            +item.SaldoDepartamento - +item.AdeudoDepartamento
-          ).toString()
-        });
-      }
-    });
-    this.rows = arrRows;
+    if (data.length === 1) {
+      this.hasData = false;
+    } else {
+      this.hasData = true;
+      this.realData = data;
+      const arrRows: Apartment[] = [];
+      data.forEach(item => {
+        if (item.DiaExtemporanea === '0') {
+          item.DiaExtemporanea = 'Sin recargo';
+        }
+        if (item.error !== '') {
+          arrRows.push({
+            Id_Depa: item.Id_Depa,
+            Interior: item.Interior,
+            NombrePropietario: item.NombrePropietario,
+            ApellidoPaterno: item.ApellidoPaterno,
+            ApellidoMaterno: item.ApellidoMaterno,
+            CuotaMensual: item.CuotaMensual,
+            CuotaExtraordinario: item.CuotaExtraordinario,
+            LugaresEstacionamiento: item.LugaresEstacionamiento,
+            Referencia: item.Referencia,
+            DiaExtemporanea: item.DiaExtemporanea,
+            SaldoDepartamento: (
+              +item.SaldoDepartamento - +item.AdeudoDepartamento
+            ).toString()
+          });
+        }
+      });
+      this.rows = arrRows;
+    }
   }
   getPopMessage(event) {
     const isDisabledDetails = (<HTMLInputElement>(

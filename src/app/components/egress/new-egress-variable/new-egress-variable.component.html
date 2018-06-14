@@ -1,3 +1,106 @@
-<p>
-  new-egress-variable works!
-</p>
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Registrar Egreso Variable</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+  <mat-card class="margin-form">
+    <mat-card-title>Complete los campos</mat-card-title>
+    <div class="flex-container">
+      <!-- Proveedor -->
+    <mat-form-field appearance="outline">
+      <mat-select  placeholder=" Selecciona Proveedor" aria-label="State"  [(ngModel)]="providerId" #Id_Provider="ngModel" id="Id_Provider" name="Id_Provider" required>
+        <span *ngFor="let state of providerSelect$ | async">
+          <mat-option   *ngIf="state.error !==''"  [value]="state.Id_Proveedor" >{{ state.NombreProveedor }}</mat-option>
+        </span>
+        </mat-select>
+        <mat-error *ngIf="Id_Provider.dirty || Id_Provider.touched">Selecciona Proveedor</mat-error>
+      </mat-form-field>
+    <!-- Nombre servicio -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre Servicio</mat-label>
+      <input matInput [(ngModel)]="egressVarible.NombreServicio" #NombreServicio="ngModel" id="NombreServicio" name="NombreServicio" required pattern="[a-zA-Z0-9- ,\.]{1,255}" (keyup)="getMatError($event)">
+      <mat-error *ngIf="NombreServicio.dirty || NombreServicio.touched || errorToShowMat">{{errorToShowMat}}</mat-error>
+    </mat-form-field>
+
+      <!-- Precio -->
+      <mat-form-field appearance="outline">
+        <mat-label>Precio </mat-label>
+        <input matInput type="number" [(ngModel)]="egressVarible.Monto" #Monto="ngModel" id="Monto" name="Monto" required>
+        <mat-error *ngIf="Monto.dirty || Monto.touched">Anotar Monto</mat-error>
+      </mat-form-field>
+
+      <!-- Numero de cheque -->
+
+      <mat-form-field appearance="outline">
+        <mat-label>Numero de Cheque</mat-label>
+        <input matInput type="number" [(ngModel)]="egressVarible.NumeroCheque" #NumeroCheque="ngModel" id="NumeroCheque" name="NumeroCheque"
+          required>
+        <mat-error *ngIf="NumeroCheque.dirty || NumeroCheque.touched">Anotar Numero Cheque</mat-error>
+
+
+      </mat-form-field>
+      <!-- Mes -->
+      <mat-form-field style="margin-right: 3%" appearance="outline">
+        <mat-label> Mes</mat-label>
+        <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="egressVarible.Mes" #Mes="ngModel" id="Mes"
+          name="Mes" required>
+          <mat-option value="1">Enero</mat-option>
+          <mat-option value="2">Febrero</mat-option>
+          <mat-option value="3">Marzo</mat-option>
+          <mat-option value="4">Abril</mat-option>
+          <mat-option value="5">Mayo</mat-option>
+          <mat-option value="6">Junio</mat-option>
+          <mat-option value="7">Julio</mat-option>
+          <mat-option value="8">Agosto</mat-option>
+          <mat-option value="9">Septiembre</mat-option>
+          <mat-option value="10">Octubre</mat-option>
+          <mat-option value="11">Noviembre</mat-option>
+          <mat-option value="12">Diciembre</mat-option>
+        </mat-select>
+        <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
+      </mat-form-field>
+      <!-- year -->
+      <mat-form-field appearance="outline">
+        <mat-label>Año</mat-label>
+        <input s matInput type="number" [(ngModel)]="egressVarible.year" #year="ngModel" id="year" name="year" required>
+        <mat-error *ngIf="year.dirty || year.touched">Anotar Año</mat-error>
+
+
+      </mat-form-field>
+      <!-- Hecho por -->
+      <mat-form-field appearance="outline">
+        <mat-label>
+          Hecho por:
+        </mat-label>
+        <input matInput [(ngModel)]="egressVarible.HechoPor" #HechoPor="ngModel" id="HechoPor" name="HechoPor" required>
+        <mat-error *ngIf="HechoPor.dirty || HechoPor.touched">Anotar Nombre</mat-error>
+      </mat-form-field>
+      <!-- Revisado por -->
+      <mat-form-field appearance="outline">
+        <mat-label>
+          Revisado por:
+        </mat-label>
+        <input matInput [(ngModel)]="egressVarible.RevisadoPor" #RevisadoPor="ngModel" id="RevisadoPor" name="RevisadoPor" required>
+        <mat-error *ngIf="RevisadoPor.dirty || RevisadoPor.touched">Anotar Nombre</mat-error>
+      </mat-form-field>
+      <!-- autorizado  por -->
+      <mat-form-field appearance="outline">
+        <mat-label>
+          Audtorizado por:
+        </mat-label>
+        <input matInput [(ngModel)]="egressVarible.AutorizadoPor" #AutorizadoPor="ngModel" id="AutorizadoPor" name="AutorizadoPor"
+          required>
+        <mat-error *ngIf="AutorizadoPor.dirty || AutorizadoPor.touched">Anotar Nombre</mat-error>
+      </mat-form-field>
+
+    </div>
+    <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
+          <button id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
+        </span>
+        <button mat-raised-button color="warn" routerLink="/list-services">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+  </mat-card>
+</form>

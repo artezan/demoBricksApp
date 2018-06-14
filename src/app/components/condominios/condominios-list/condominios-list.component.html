@@ -10,11 +10,17 @@
         <button mat-raised-button (click)="edit()" id="edit" [disabled]="!userSelect" class="btn" color="primary">Editar</button>
     </span>
     <button mat-raised-button class="btn" style="background-color: green; color: white" (click)="link()">Excel</button>
-    <input id="fileInput" name="file" type="file" hidden multiple>
+    <input (change)="detectFiles($event)" id="fileInput" name="file" type="file" hidden multiple>
 </div>
 
 <!-- Tabla -->
-<app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)"></app-general-table>
-
+<app-general-table  *ngIf="!loadingIndicator" [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)"></app-general-table>
+<div class="flex-container">
+  <div class="row">
+    <div class="flex-item">
+        <mat-spinner *ngIf="loadingIndicator"  ></mat-spinner>
+    </div>
+  </div>
+</div>
 
 

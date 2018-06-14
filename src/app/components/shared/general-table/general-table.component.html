@@ -1,28 +1,48 @@
-  <ngx-datatable 
+  <ngx-datatable
   *ngIf="rows"
-  [rows]="rows"  
+  [rows]="rows"
   [columnMode]="'force'"
   [headerHeight]="70"
   [footerHeight]="50"
   [scrollbarH]="true"
-  (inputChange)="change($event)" 
+  (inputChange)="change($event)"
   [loadingIndicator]="loadingIndicator"
-  [columns]="columns"  
+  [columns]="columns"
   class="material data-table colum-size sort-hide data-header table input-responsive"
   [rowHeight]="50"
   [scrollbarV]="true"
   [selected]="selected"
-   [selectionType]="'single'"
+  [displayCheck]="displayCheck"
+   [selectionType]="selectionType"
    (select)='onSelect($event)'>
-    
+<span *ngIf="checkColum">
+    <ngx-datatable-column
+    [width]="40"
+    [sortable]="false"
+    [canAutoResize]="false"
+    [draggable]="false"
+    [resizeable]="false"
+    [checkboxable]="true">
+    <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+        <mat-checkbox type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"></mat-checkbox>
+      </ng-template>
+  </ngx-datatable-column>
     <ngx-datatable-column
     *ngFor="let colum of columns"
           name="{{colum.name}}"
           prop="{{colum.prop}}"
-          [width]="colum.width"
+
           >
         </ngx-datatable-column>
+</span>
+
   </ngx-datatable>
+
+
+
+<!-- [columnMode]="'force'" [headerHeight]="70" [rows]="rows" [columns]="columns" class="material data-table colum-size sort-hide data-header table input-responsive"
+  [footerHeight]="50" [rowHeight]="50" [scrollbarV]="true" (inputChange)="change($event)" [loadingIndicator]="loadingIndicator"
+  [limit]="15"  width = "{{colum.width}}" -->
 
 <!-- [columnMode]="'force'" [headerHeight]="70" [rows]="rows" [columns]="columns" class="material data-table colum-size sort-hide data-header table input-responsive"
   [footerHeight]="50" [rowHeight]="50" [scrollbarV]="true" (inputChange)="change($event)" [loadingIndicator]="loadingIndicator"

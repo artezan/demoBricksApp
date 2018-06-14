@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>{{dataInput.header}}</h2>
+<h3 mat-dialog-title>{{dataInput.subHeader}}</h3>
+<mat-dialog-content>
+    <span *ngIf="dataInput.body" [innerHTML]="dataInput.body"></span>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button color="primary" (click)="buttonsResponse('ok')" mat-button mat-dialog-close>Si</button>
+  <button color="warn" mat-button mat-dialog-close (click)="buttonsResponse('cancel')" >Cancelar</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+</mat-dialog-actions>

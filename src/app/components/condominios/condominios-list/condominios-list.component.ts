@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { CondoService } from '../../../services/condo.service';
 import { Condo } from '../../../models/condo';
 import { ControllerMenuService } from '../../shared/general-menu/controller-menu.service';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -27,7 +27,7 @@ export class CondominiosListComponent implements OnInit {
     public snackBar: MatSnackBar,
     public userService: UserService
   ) {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
         this.openSnackBar(params.res.toString());
       }
@@ -141,7 +141,114 @@ export class CondominiosListComponent implements OnInit {
   }
   openSnackBar(message: string) {
     this.snackBar.open(message, 'OK', {
-      duration: 3000,
+      duration: 3000
     });
+  }
+  detectFiles(event) {
+    const file = event.target.files[0];
+    const name: string = event.target.files.item(0).name;
+    const reader = new FileReader();
+    reader.onload = r => {
+      const jsonData = this.csvTojs(reader.result);
+      this.uplodadData(jsonData);
+    };
+    reader.readAsText(file);
+  }
+  uplodadData(data: any[]) {
+    data.forEach(item => {
+    this.updateTable(item);
+      this.condoService.newCondo(item).subscribe((res: any) => {
+        console.log(res);
+      });
+    });
+    const toast: NavigationExtras = {
+      queryParams: { res: 'Condominio agregado desde Excel' }
+    };
+
+    this.router.navigate(['list-condo'], toast);
+  }
+  // helper
+  updateTable(item) {
+    this.rows.push(item);
+    this.rows = [...this.rows];
+  }
+  csvTojs(csv) {
+    // tslint:disable:prefer-const
+    let lines = csv.split('\n');
+    let result = [];
+    let headers = lines[0].split(',');
+
+    for (let i = 1; i < lines.length; i++) {
+      let obj = {};
+
+      let row = lines[i],
+        queryIdx = 0,
+        startValueIdx = 0,
+        idx = 0;
+
+      if (row.trim() === '') {
+        continue;
+      }
+
+      while (idx < row.length) {
+        /* if we meet a double quote we skip until the next one */
+        let c = row[idx];
+
+        if (c === '"') {
+          do {
+            c = row[++idx];
+          } while (c !== '"' && idx < row.length - 1);
+        }
+
+        if (
+          c === ',' ||
+          /* handle end of line with no comma */ idx === row.length - 1
+        ) {
+          /* we've got a value */
+          let value = row.substr(startValueIdx, idx - startValueIdx).trim();
+
+          /* skip first double quote */
+          if (value[0] === '"') {
+            value = value.substr(1);
+          }
+          /* skip last comma */
+          if (value[value.length - 1] === ',') {
+            value = value.substr(0, value.length - 1);
+          }
+          /* skip last double quote */
+          if (value[value.length - 1] === '"') {
+            value = value.substr(0, value.length - 1);
+          }
+
+          const key = headers[queryIdx++];
+          obj[key.trim()] = value;
+          startValueIdx = idx + 1;
+        }
+
+        ++idx;
+      }
+
+      result.push(obj);
+    }
+    // return result;
+    const arrResult = [];
+    result.forEach(item => {
+      const objectTrasnform = {};
+      Object.keys(item).forEach(key => {
+        // numero
+        if (item[key] !== '') {
+          if (!isNaN(item[key])) {
+            objectTrasnform[key] = +item[key];
+          } else {
+            objectTrasnform[key] = item[key];
+          }
+        } else {
+          objectTrasnform[key] = item[key];
+        }
+      });
+      arrResult.push(objectTrasnform);
+    });
+
+    return arrResult;
   }
 }

@@ -20,6 +20,7 @@ export class NewEgressFixedComponent implements OnInit {
   id;
   condoBalance = 0;
   extra2;
+  colonia: string;
   constructor(
     private router: Router,
     private userService: UserService,
@@ -30,6 +31,8 @@ export class NewEgressFixedComponent implements OnInit {
     this.userService.userDataSelect.subscribe(data => {
       this.id = data['Id_Condominio'];
       this.condoBalance = data['Saldo'];
+      this.colonia = data.Colonia;
+
     });
     if (this.serviceCondoServices.serviceSelect.length !== 0) {
       this.serviceSelect = this.serviceCondoServices.serviceSelect[0];
@@ -78,6 +81,11 @@ export class NewEgressFixedComponent implements OnInit {
             balanceAfter: this.egressFixed.Saldo
           }
         };
+        this.userService.userDataSelect.next({
+          Saldo: this.egressFixed.Saldo,
+          Colonia: this.colonia,
+          Id_Condominio: this.id
+        });
         this.router.navigate(['list-services'], toast);
       });
   }

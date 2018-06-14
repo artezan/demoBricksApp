@@ -7,18 +7,21 @@
 
 
 <div class="toogle-btns">
-  <button mat-raised-button class="btn" routerLink="/new-edit-depa" color="accent">Nuevo</button>
+  <button mat-raised-button class="btn" routerLink="/new-egress-variable" color="accent">Egreso Variable</button>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="primary">Recibo</button>
+    <button mat-raised-button (click)="edit()" id="recibo" [disabled]="!ingressSelect" class="btn" color="primary">Recibo</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="primary">Enviar Recibo</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="warn">Eliminar</button>
+    <button mat-raised-button (click)="pay()" id="pay" [disabled]=" isPay" class="btn" color="warn">Pagar</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn" color="primary">Editar</button>
+    <button mat-raised-button (click)="transit()" id="transit" [disabled]="  isTransit" class="btn" color="primary">Transito</button>
+  </span>
+  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+    <button mat-raised-button (click)="transit()" id="delete" disabled class="btn" color="primary">Eliminar</button>
   </span>
 </div>
 

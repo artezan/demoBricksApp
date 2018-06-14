@@ -1,0 +1,86 @@
+<div class="toogle-btns">
+  <button mat-raised-button id="enviar" class="btn" routerLink="/new-edit-renter" [disabled]="!arrReports.length || !arrUsers.length" color="accent">Eviar</button>
+  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
+    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!arrReports.length" class="btn" color="primary">Solo Imprimir</button>
+  </span>
+</div>
+
+<div class="row">
+  <div class="col-lg">
+    <mat-card>
+      <mat-card-title>Destinatarios</mat-card-title>
+      <mat-card-subtitle>Usuarios Seleccionados</mat-card-subtitle>
+      <mat-chip-list style="margin: 3%;">
+        <mat-chip *ngIf="arrUsers.length === 0">No hay usuarios seleccionados</mat-chip>
+        <span *ngIf="arrUsers.length > 0 ">
+          <mat-chip *ngFor="let item of arrUsers" color="primary" class="chips-font" selected="true" (removed)="remove(item)"
+            [removable]="removable">{{item.Nombre}}
+            <mat-icon matChipRemove *ngIf="removable">
+              cancel
+            </mat-icon>
+          </mat-chip>
+        </span>
+
+      </mat-chip-list>
+      <mat-card-content>
+        <mat-tab-group (selectedTabChange)="updateSel($event)" class="demo-tab-group">
+          <mat-tab label="Todos">
+            <div class="table-height">
+              <!-- todos -->
+              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+            </div>
+          </mat-tab>
+          <mat-tab label="Inquilinos">
+            <div class="table-height">
+              <!-- Inquilinos -->
+              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+            </div>
+          </mat-tab>
+          <mat-tab label="Propietarios">
+            <div class="table-height">
+              <!-- Propietarios -->
+              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+            </div>
+          </mat-tab>
+          <mat-tab label="Junta">
+            <div class="table-height">
+              <!-- Propietarios2 -->
+              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-sm">
+    <mat-card>
+      <mat-card-title>Reportes</mat-card-title>
+      <mat-card-subtitle>Reportes Seleccionados</mat-card-subtitle>
+      <mat-chip-list style="margin: 3%;">
+        <mat-chip *ngIf="arrReports.length === 0">No hay reportes seleccionados</mat-chip>
+        <span *ngIf="arrReports.length > 0 ">
+          <mat-chip *ngFor="let item of arrReports" color="primary" class="chips-font" selected="true" (removed)="removeReport(item)"
+            [removable]="removable">{{item.Reporte}}
+            <mat-icon matChipRemove *ngIf="removable">
+              cancel
+            </mat-icon>
+          </mat-chip>
+        </span>
+
+      </mat-chip-list>
+      <mat-card-content>
+        <div style="height: 39.2em !important;">
+          <!-- Reporte -->
+          <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rowsReport" [columns]="columnsReport"
+            (select)="selectReport($event)" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+</div>

@@ -1,0 +1,103 @@
+<mat-toolbar color="primary" [class.mat-elevation-z2]=true>
+  <span>Nuevo Adeudo</span>
+</mat-toolbar>
+<form #newUserForm="ngForm">
+  <mat-card class="margin-form">
+    <mat-card-title>Complete los campos</mat-card-title>
+    <div class="flex-container">
+      <!-- Depa -->
+    <mat-form-field appearance="outline">
+        <mat-label> Depa </mat-label>
+
+      <mat-select  placeholder=" Selecciona Depa" aria-label="State"  [(ngModel)]="depaSelect" #Id_Provider="ngModel" id="Id_Provider" name="Id_Provider" required>
+        <span *ngFor="let state of depaOptions$ | async">
+          <mat-option   *ngIf="state.error !==''"  [value]="state.Id_Depa" >{{ state.Interior }}</mat-option>
+        </span>
+        </mat-select>
+        <mat-error *ngIf="Id_Provider.dirty || Id_Provider.touched">Selecciona Depa</mat-error>
+      </mat-form-field>
+    <!-- Inquilino-->
+
+      <mat-form-field appearance="outline">
+        <mat-label> Inquilino </mat-label>
+      <mat-select  (selectionChange)="getConcepto(Id_Provider.value)" placeholder=" Selecciona Inquilino" aria-label="State" [(ngModel)]="renterSelect"
+        #Id_Depa="ngModel" id="Id_Depa" name="Id_Depa" required>
+        <mat-option value= 'Sin Inquilino'>Sin Inquilino</mat-option>
+        <span *ngFor="let state of renterOptions$ | async">
+          <mat-option *ngIf="state.error !==''" [value]="state.Id_Depa">{{ state.NombreInquilino }}</mat-option>
+        </span>
+      </mat-select>
+      <mat-error *ngIf="Id_Depa.dirty || Id_Depa.touched">Selecciona Inquilino</mat-error>
+    </mat-form-field>
+
+      <!-- Concepto OTRO -->
+   <!-- Concep -->
+   <mat-form-field appearance="outline" >
+    <mat-label>Concepto</mat-label>
+
+  <mat-select  (selectionChange)="changeTotal(Concepto.value)" value='def' placeholder=" Seleccione Concepto" [(ngModel)]="concepto"
+    #Concepto="ngModel" id="Concepto" name="Concepto" required>
+    <mat-option value="def">Otro</mat-option>
+    <span *ngFor="let state of conceptoArr">
+      <mat-option [value]="state">{{ state.Concepto }}</mat-option>
+    </span>
+  </mat-select>
+  <mat-error *ngIf="Concepto.dirty || Concepto.touched">Selecciona Concepto</mat-error>
+</mat-form-field>
+
+        <mat-form-field *ngIf="Concepto.value === 'def'  "  appearance="outline">
+            <mat-label>Anote Concepto en específico</mat-label>
+            <input matInput  placeholder=" " [(ngModel)]="extra2"  #DiaExtemporanea2="ngModel"  id="DiaExtemporanea2" name="DiaExtemporanea2" required>
+            <mat-error *ngIf="DiaExtemporanea2.dirty || DiaExtemporanea2.touched">Anote Concepto</mat-error>
+            </mat-form-field>
+
+      <!-- Total -->
+
+      <mat-form-field appearance="outline">
+        <mat-label>Total</mat-label>
+        <input matInput type="number" [(ngModel)]="newDebit.Total" #NumeroCheque="ngModel" id="NumeroCheque" name="NumeroCheque"
+          required>
+        <mat-error *ngIf="NumeroCheque.dirty || NumeroCheque.touched">Anotar Total</mat-error>
+
+
+      </mat-form-field>
+      <!-- Mes -->
+      <mat-form-field style="margin-right: 3%" appearance="outline">
+        <mat-label> Mes</mat-label>
+        <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="newDebit.Mes" #Mes="ngModel" id="Mes"
+          name="Mes" required>
+          <mat-option value="1">Enero</mat-option>
+          <mat-option value="2">Febrero</mat-option>
+          <mat-option value="3">Marzo</mat-option>
+          <mat-option value="4">Abril</mat-option>
+          <mat-option value="5">Mayo</mat-option>
+          <mat-option value="6">Junio</mat-option>
+          <mat-option value="7">Julio</mat-option>
+          <mat-option value="8">Agosto</mat-option>
+          <mat-option value="9">Septiembre</mat-option>
+          <mat-option value="10">Octubre</mat-option>
+          <mat-option value="11">Noviembre</mat-option>
+          <mat-option value="12">Diciembre</mat-option>
+        </mat-select>
+        <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
+      </mat-form-field>
+      <!-- year -->
+      <mat-form-field appearance="outline">
+        <mat-label>Año</mat-label>
+        <input  matInput type="number" [(ngModel)]="newDebit.Year" #year="ngModel" id="year" name="year" required>
+        <mat-error *ngIf="year.dirty || year.touched">Anotar Año</mat-error>
+
+      </mat-form-field>
+
+    </div>
+    <div align="end">
+      <mat-card-actions>
+        <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
+          <button id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
+        </span>
+        <button mat-raised-button color="warn" routerLink="/list-services">Cancelar</button>
+      </mat-card-actions>
+    </div>
+
+  </mat-card>
+</form>

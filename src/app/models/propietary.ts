@@ -10,7 +10,7 @@ export interface Propietary {
   FechaCreacion?: string;
   HoraCreacion?: string;
   Contra?: null;
-  EsJunta?: boolean;
+  EsJunta?: string;
   error?: string;
   condominio?: string;
   Id_Condominio?;

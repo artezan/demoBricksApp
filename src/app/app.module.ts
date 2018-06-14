@@ -30,7 +30,11 @@ import {
   MatAutocompleteModule,
   MatExpansionModule,
   MatDialogModule,
-  MAT_DIALOG_DEFAULT_OPTIONS
+  MatRadioModule,
+  MAT_DIALOG_DEFAULT_OPTIONS,
+  MatTabsModule,
+  MatCheckboxModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 // component
 import { GeneralMenuComponent } from './components/shared/general-menu/general-menu.component';
@@ -59,11 +63,15 @@ import { ListEgressComponent } from './components/egress/list-egress/list-egress
 import { NewEgressFixedComponent } from './components/egress/new-egress-fixed/new-egress-fixed.component';
 import { NewEgressVariableComponent } from './components/egress/new-egress-variable/new-egress-variable.component';
 import { GeneralDialogComponent } from './components/shared/general-dialog/general-dialog.component';
+import { NewDebitComponent } from './components/debit/new-debit/new-debit.component';
+import { GeneralAlertComponent } from './components/shared/general-alert/general-alert.component';
+import { NewReportsComponent } from './components/reports/new-reports/new-reports.component';
 
 // npm
 
+
 @NgModule({
-  entryComponents: [ GeneralDialogComponent ],
+  entryComponents: [ GeneralDialogComponent, GeneralAlertComponent],
   declarations: [
     AppComponent,
     GeneralMenuComponent,
@@ -91,6 +99,9 @@ import { GeneralDialogComponent } from './components/shared/general-dialog/gener
     NewEgressFixedComponent,
     NewEgressVariableComponent,
     GeneralDialogComponent,
+    NewDebitComponent,
+    GeneralAlertComponent,
+    NewReportsComponent,
   ],
   imports: [
     BrowserModule,
@@ -121,7 +132,11 @@ import { GeneralDialogComponent } from './components/shared/general-dialog/gener
     MatSnackBarModule,
     MatAutocompleteModule,
     MatExpansionModule,
-    MatDialogModule
+    MatDialogModule,
+    MatRadioModule,
+    MatTabsModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule
   ],
   providers: [UserService, ],
   bootstrap: [AppComponent]

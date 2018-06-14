@@ -21,6 +21,45 @@ export class IngressService {
     dataReq.contra = JSON.parse(userData)[0].contra;
     const data = JSON.stringify([dataReq]);
     return this.http.get<Ingress[]>(END_POINT.PAYMENTS_GET + data);
-    //  return this.http.get<Ingress[]>('https://next.json-generator.com/api/json/get/Nk1XxIMer');
+  }
+  newPayment(payment): Observable<any> {
+    const userData = localStorage.getItem('userKey');
+    let dataReq: any = {};
+    dataReq = payment;
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([dataReq]);
+    return this.http.get<any>(END_POINT.PAYMENTS_NEW + data);
+  }
+  addIngress(payment): Observable<any> {
+    const userData = localStorage.getItem('userKey');
+    let dataReq: any = {};
+    dataReq = payment;
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([dataReq]);
+    return this.http.get(
+      'http://chobezin.com/php/CondominiosAdmin/registrarAbonoDepartamento.php?json=' +
+        data
+    );
+  }
+  deleteData(payment, id): Observable<Ingress[]> {
+    const userData = localStorage.getItem('userKey');
+    let dataReq: any = {};
+    dataReq = payment;
+    dataReq.Id_Condominio = id;
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([dataReq]);
+    return this.http.get<Ingress[]>(END_POINT.PAYMENTS_DELETE + data);
+  }
+  newDebit(debit): Observable<any> {
+    const userData = localStorage.getItem('userKey');
+    let dataReq: any = {};
+    dataReq = debit;
+    dataReq.correo = JSON.parse(userData)[0].correo;
+    dataReq.contra = JSON.parse(userData)[0].contra;
+    const data = JSON.stringify([dataReq]);
+    return this.http.get(END_POINT.DEBIT_NEW + data);
   }
 }

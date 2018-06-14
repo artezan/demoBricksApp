@@ -1,3 +1,5 @@
+import { PaymentComponent } from './components/ingress/payment/payment.component';
+import { NewDebitComponent } from './components/debit/new-debit/new-debit.component';
 import { ListEgressComponent } from './components/egress/list-egress/list-egress.component';
 import { NewEgressVariableComponent } from './components/egress/new-egress-variable/new-egress-variable.component';
 import { NewEgressFixedComponent } from './components/egress/new-egress-fixed/new-egress-fixed.component';
@@ -18,6 +20,7 @@ import { NewEditDepaComponent } from './components/depa/new-edit-depa/new-edit-d
 import { NewEditPropietariesComponent } from './components/propietaries/new-edit-propietaries/new-edit-propietaries.component';
 import { ListProvidersComponent } from './components/providers/list-providers/list-providers.component';
 import { NewEditServicesComponent } from './components/service-condo/new-edit-services/new-edit-services.component';
+import { NewReportsComponent } from './components/reports/new-reports/new-reports.component';
 
 const routes: Routes = [
   // Rutas
@@ -39,7 +42,11 @@ const routes: Routes = [
   { path: 'list-ingress', component: ListIngressComponent },
   { path: 'new-egress-variable', component: NewEgressVariableComponent },
   { path: 'new-egress-fixed', component: NewEgressFixedComponent },
-  { path: 'list-egress', component: ListEgressComponent }
+  { path: 'list-egress', component: ListEgressComponent },
+  { path: 'new-debit', component: NewDebitComponent },
+  { path: 'new-payment', component: PaymentComponent },
+  { path: 'new-reports', component: NewReportsComponent }
+
 ];
 
 @NgModule({

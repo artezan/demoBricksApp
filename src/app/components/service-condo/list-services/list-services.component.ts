@@ -12,8 +12,7 @@ import { ControllerMenuService } from '../../shared/general-menu/controller-menu
 import { UserService } from '../../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { NewEditDepaComponent } from '../../depa/new-edit-depa/new-edit-depa.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-list-services',
