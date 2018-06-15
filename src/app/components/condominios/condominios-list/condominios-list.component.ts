@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { CondoService } from '../../../services/condo.service';
@@ -5,6 +6,8 @@ import { Condo } from '../../../models/condo';
 import { ControllerMenuService } from '../../shared/general-menu/controller-menu.service';
 import { MatSnackBar } from '@angular/material';
 import { UserService } from '../../../services/user.service';
+import * as XLSX from 'xlsx';
+import { END_POINT } from '../../../_config/api.end-points';
 
 @Component({
   selector: 'app-condominios-list',
@@ -17,15 +20,18 @@ export class CondominiosListComponent implements OnInit {
   columns: any;
   rows: any;
   rows2: any;
-  userSelect: Condo;
+  userSelect: Condo[];
+  realData: Condo[];
   errorToShow = '';
+  dataXls;
   constructor(
     private route: ActivatedRoute,
     public condoService: CondoService,
     private router: Router,
     private controllerMenu: ControllerMenuService,
     public snackBar: MatSnackBar,
-    public userService: UserService
+    public userService: UserService,
+    public http: HttpClient
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -83,6 +89,7 @@ export class CondominiosListComponent implements OnInit {
     });
   }
   generateRows(data: Condo[]) {
+    this.realData = data;
     const arrRows: Condo[] = [];
     data.forEach(item => {
       if (item.error !== '') {
@@ -102,8 +109,12 @@ export class CondominiosListComponent implements OnInit {
   link() {
     const input = document.getElementById('fileInput').click();
   }
-  select(event) {
-    this.userSelect = event;
+  select(event: Condo[]) {
+    this.userSelect = this.realData.filter(item => {
+      if (item.Id_Condominio === event[0].Id_Condominio) {
+        return item;
+      }
+    });
   }
   edit() {
     const condo: NavigationExtras = {
@@ -117,7 +128,11 @@ export class CondominiosListComponent implements OnInit {
       queryParams: this.userSelect[0]
     };
     this.router.navigate(['list-depa']);
-    this.userService.userDataSelect.next(this.userSelect[0]);
+    this.userService.userDataSelect.next({
+      Saldo: +this.userSelect[0].Saldo,
+      Colonia: this.userSelect[0].Colonia,
+      Id_Condominio: this.userSelect[0].Id_Condominio
+    });
     this.userService.datass = this.userSelect[0];
   }
   getPopMessage(event) {
@@ -144,111 +159,160 @@ export class CondominiosListComponent implements OnInit {
       duration: 3000
     });
   }
-  detectFiles(event) {
-    const file = event.target.files[0];
-    const name: string = event.target.files.item(0).name;
-    const reader = new FileReader();
-    reader.onload = r => {
-      const jsonData = this.csvTojs(reader.result);
-      this.uplodadData(jsonData);
-    };
-    reader.readAsText(file);
-  }
-  uplodadData(data: any[]) {
-    data.forEach(item => {
-    this.updateTable(item);
-      this.condoService.newCondo(item).subscribe((res: any) => {
-        console.log(res);
-      });
-    });
-    const toast: NavigationExtras = {
-      queryParams: { res: 'Condominio agregado desde Excel' }
-    };
+  detectFiles(evt: any) {
+    this.loadingIndicator = true;
+    /* wire up file reader */
+    const target: DataTransfer = <DataTransfer>evt.target;
+    if (target.files.length !== 1) {
+      throw new Error('Cannot use multiple files');
+    }
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      /* read workbook */
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
 
-    this.router.navigate(['list-condo'], toast);
+      // /* grab first sheet */
+      // const wsname: string = wb.SheetNames[1];
+      // const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      // /* save data */
+      // this.dataXls = (XLSX.utils.sheet_to_json(ws, {header: 1}));
+      const dataExcelJson = this.exelToJson(wb);
+      this.uplodadData(dataExcelJson);
+    };
+    reader.readAsBinaryString(target.files[0]);
+  }
+  private exelToJson(wb: XLSX.WorkBook): Array<{ data: any[]; name: string }> {
+    const arrJson = [];
+    let columsNames: string[];
+    wb.SheetNames.forEach(sheetName => {
+      const arrRows = [];
+      const dataRows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], {
+        header: 1
+      });
+      dataRows.forEach((row: Array<any>, numRow) => {
+        const obj = {};
+        // caputa nombre de colums
+        if (numRow === 0) {
+          columsNames = row;
+        } else {
+          // crea un obj con nomColumna: dato
+          if (columsNames.length === row.length) {
+            columsNames.forEach((nameColum, numColum) => {
+              obj[nameColum] = row[numColum];
+            });
+            arrRows.push(obj);
+          }
+        }
+      });
+      arrJson.push({ name: sheetName, data: arrRows });
+    });
+    return arrJson;
+  }
+
+  // detectFiles(event) {
+
+  // const file = event.target.files[0];
+  // const name: string = event.target.files.item(0).name;
+  // const reader = new FileReader();
+  // reader.onload = r => {
+  //   const jsonData = this.csvTojs(reader.result);
+  //   this.uplodadData(jsonData);
+  // };
+  // reader.readAsText(file);
+  // }
+  uplodadData(dataSheet) {
+    const userData = localStorage.getItem('userKey');
+    const correo = JSON.parse(userData)[0].correo;
+    const contra = JSON.parse(userData)[0].contra;
+    const sheets: [{ data: any[]; name: string }] = dataSheet;
+    const findCondo = sheets.find(sheet => sheet.name === 'Condominio');
+    const findDepa = sheets.find(sheet => sheet.name === 'Departamentos');
+    const findRenter = sheets.find(sheet => sheet.name === 'Inquilinos');
+    const findServer = sheets.find(sheet => sheet.name === 'Servicios');
+    if (findCondo.name) {
+      this.condoService.newCondo(findCondo.data[0]).subscribe((res: any) => {
+        // this.depaService.newApartment(res.Id_Condominio);
+        sheets.forEach(sheet => {
+          if (sheet.name === 'Propietarios') {
+            // crea un prop
+            sheet.data.forEach(propietary => {
+              propietary.correo = correo;
+              propietary.contra = contra;
+              propietary.condominio = res.Id_Condominio;
+              const dataProp = JSON.stringify([propietary]);
+              this.http
+                .get(END_POINT.PROPIETARIES_NEW + dataProp)
+                .subscribe((resProp: any) => {
+                  // crea un depa
+                  findDepa.data.forEach(depa => {
+                    if (depa.Propietario === propietary.Propietario) {
+                      depa.correo = correo;
+                      depa.contra = contra;
+                      depa.condominio = res.Id_Condominio;
+                      depa.Id_Propietario = resProp.Id_Propietario;
+                      const dataDepa = JSON.stringify([depa]);
+                      this.http
+                        .get(END_POINT.APART_NEW + dataDepa)
+                        .subscribe((resDepa: any) => {
+                          // crea inquilino
+                          findRenter.data.forEach(renter => {
+                            if (renter.Departamento === depa.Interior) {
+                              renter.correo = correo;
+                              renter.contra = contra;
+                              renter.Id_Condominio = res.Id_Condominio;
+                              renter.Id_Depa = resDepa.Id_Departamento;
+                              delete renter.Departamento;
+                              const dataRenter = JSON.stringify([renter]);
+                              this.http
+                                .get(END_POINT.RENTER_NEW + dataRenter)
+                                .subscribe(end => {
+                                  this.loadingIndicator = false;
+                                  console.log(end);
+                                });
+                            }
+                          });
+                        });
+                    }
+                  });
+                });
+            });
+          } else if (sheet.name === 'Proveedores') {
+            sheet.data.forEach(providerRes => {
+              providerRes.correo = correo;
+              providerRes.contra = contra;
+              providerRes.Id_Condominio = res.Id_Condominio;
+              const dataProp = JSON.stringify([providerRes]);
+              this.http
+                .get(END_POINT.PROVIDER_NEW + dataProp)
+                .subscribe((resIdProv: any) => {
+                  // crea server
+                  findServer.data.forEach(server => {
+                    if (server.Proveedor === providerRes.Proveedor) {
+                      server.correo = correo;
+                      server.contra = contra;
+                      server.Id_Condominio = res.Id_Condominio;
+                      server.Id_Proveedor = resIdProv.Id_Proveedor;
+                      const dataServer = JSON.stringify([server]);
+                      this.http
+                        .get(END_POINT.SERVICE_NEW + dataServer)
+                        .subscribe(end => console.log(end));
+                    }
+                  });
+                });
+            });
+          }
+        });
+      });
+    }
+    this.updateTable();
+    this.openSnackBar('Condominio agregado desde Excel');
   }
   // helper
-  updateTable(item) {
-    this.rows.push(item);
+  updateTable() {
+    this.getData();
     this.rows = [...this.rows];
   }
-  csvTojs(csv) {
-    // tslint:disable:prefer-const
-    let lines = csv.split('\n');
-    let result = [];
-    let headers = lines[0].split(',');
-
-    for (let i = 1; i < lines.length; i++) {
-      let obj = {};
-
-      let row = lines[i],
-        queryIdx = 0,
-        startValueIdx = 0,
-        idx = 0;
-
-      if (row.trim() === '') {
-        continue;
-      }
-
-      while (idx < row.length) {
-        /* if we meet a double quote we skip until the next one */
-        let c = row[idx];
-
-        if (c === '"') {
-          do {
-            c = row[++idx];
-          } while (c !== '"' && idx < row.length - 1);
-        }
-
-        if (
-          c === ',' ||
-          /* handle end of line with no comma */ idx === row.length - 1
-        ) {
-          /* we've got a value */
-          let value = row.substr(startValueIdx, idx - startValueIdx).trim();
-
-          /* skip first double quote */
-          if (value[0] === '"') {
-            value = value.substr(1);
-          }
-          /* skip last comma */
-          if (value[value.length - 1] === ',') {
-            value = value.substr(0, value.length - 1);
-          }
-          /* skip last double quote */
-          if (value[value.length - 1] === '"') {
-            value = value.substr(0, value.length - 1);
-          }
-
-          const key = headers[queryIdx++];
-          obj[key.trim()] = value;
-          startValueIdx = idx + 1;
-        }
-
-        ++idx;
-      }
-
-      result.push(obj);
-    }
-    // return result;
-    const arrResult = [];
-    result.forEach(item => {
-      const objectTrasnform = {};
-      Object.keys(item).forEach(key => {
-        // numero
-        if (item[key] !== '') {
-          if (!isNaN(item[key])) {
-            objectTrasnform[key] = +item[key];
-          } else {
-            objectTrasnform[key] = item[key];
-          }
-        } else {
-          objectTrasnform[key] = item[key];
-        }
-      });
-      arrResult.push(objectTrasnform);
-    });
-
-    return arrResult;
-  }
+  // excel to json
 }

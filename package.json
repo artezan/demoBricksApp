@@ -29,6 +29,7 @@
     "core-js": "^2.5.4",
     "pdfmake": "^0.1.36",
     "rxjs": "^6.0.0",
+    "xlsx": "^0.13.0",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
