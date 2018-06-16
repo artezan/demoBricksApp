@@ -7,8 +7,12 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
-  DoCheck
+  DoCheck,
+  ViewChild
 } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-general-table',
@@ -21,15 +25,19 @@ export class GeneralTableComponent implements OnInit, OnChanges {
   @Input() columns = [{ name: '', prop: '', width: '' }];
   @Input() loadingIndicator: boolean;
   @Input() checkColum = false;
-  //
   @Input() selectionType = 'single';
   @Output() select = new EventEmitter<Array<any>>();
+  // list
+  @Input() itemsToShow = [1, 2, 3];
   dataTemp = [];
   rows2;
+  food;
   @Input() selected = [];
-  c;
-  constructor() {
-  }
+  isDevice$: Observable<boolean> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(map(result => result.matches));
+  arrHelp = [];
+  constructor(private breakpointObserver: BreakpointObserver) {}
   change(event: { value: string; name: string }) {
     this.rows = this.rows2;
     this.dataTemp = this.rows;
@@ -81,4 +89,27 @@ export class GeneralTableComponent implements OnInit, OnChanges {
   }
 
   onActivate(event) {}
+  // list
+  handleSelection(event) {
+    if (event.option.selected && this.selectionType === 'single') {
+      event.source.deselectAll();
+      event.option._setSelected(true);
+    }
+  }
+  onClickList(value) {
+    if (this.selectionType === 'single') {
+      this.arrHelp.length = 0;
+      this.arrHelp.push(value);
+      this.select.emit(this.arrHelp);
+    } else {
+      const isFinded = this.arrHelp.find(item => item === value);
+      if (isFinded) {
+        this.arrHelp.splice(this.arrHelp.indexOf(value), 1);
+      } else {
+        this.arrHelp.push(value);
+      }
+      console.log(isFinded);
+      this.select.emit(this.arrHelp);
+    }
+  }
 }

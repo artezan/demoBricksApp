@@ -32,17 +32,21 @@ export class NewEditDepaComponent implements OnInit {
       this.id = data['Id_Condominio'];
     });
     if (this.apartmentService.apartementSelect.length !== 0) {
+      console.log( this.apartmentService.apartementSelect[0])
       this.apartment = this.apartmentService.apartementSelect[0];
       this.isNew = false;
       if (
-        this.apartmentService.apartementSelect[0].DiaExtemporanea !==
-        'Sin recargo'
+        +this.apartmentService.apartementSelect[0].DiaExtemporanea < 49
       ) {
-        if (+this.apartmentService.apartementSelect[0].DiaExtemporanea > 1) {
           this.extra2 = +this.apartmentService.apartementSelect[0]
             .DiaExtemporanea;
           this.apartment.DiaExtemporanea = 'other';
-        }
+      }
+      if (this.apartmentService.apartementSelect[0].DiaExtemporanea === '1ero del Mes') {
+        this.apartment.DiaExtemporanea = '100';
+      }
+      if (this.apartmentService.apartementSelect[0].DiaExtemporanea === 'Sin recargo') {
+        this.apartment.DiaExtemporanea = '50';
       }
       this.apartmentService.apartementSelect.length = 0;
     } else {
@@ -77,7 +81,7 @@ export class NewEditDepaComponent implements OnInit {
     }
   }
   newCondo() {
-    if (this.apartment.DiaExtemporanea === 'other' || this.extra2) {
+    if (this.apartment.DiaExtemporanea === 'other') {
       this.apartment.DiaExtemporanea = this.extra2.toString();
     }
     this.apartment.condominio = this.id;
@@ -89,7 +93,7 @@ export class NewEditDepaComponent implements OnInit {
     });
   }
   editCondo() {
-    if (this.apartment.DiaExtemporanea === 'other' || this.extra2) {
+    if (this.apartment.DiaExtemporanea === 'other' ) {
       this.apartment.DiaExtemporanea = this.extra2.toString();
     } else {
     }
@@ -103,4 +107,5 @@ export class NewEditDepaComponent implements OnInit {
         this.router.navigate(['list-depa'], toast);
       });
   }
-}
+  }
+

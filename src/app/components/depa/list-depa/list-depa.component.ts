@@ -120,7 +120,7 @@ export class ListDepaComponent implements OnInit {
       this.realData = data;
       const arrRows: Apartment[] = [];
       data.forEach(item => {
-        if (item.DiaExtemporanea === '0') {
+        if (item.DiaExtemporanea === '50') {
           item.DiaExtemporanea = 'Sin recargo';
         }
         if (item.error !== '') {

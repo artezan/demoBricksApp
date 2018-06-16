@@ -34,7 +34,8 @@ import {
   MAT_DIALOG_DEFAULT_OPTIONS,
   MatTabsModule,
   MatCheckboxModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatDividerModule
 } from '@angular/material';
 // component
 import { GeneralMenuComponent } from './components/shared/general-menu/general-menu.component';
@@ -136,7 +137,8 @@ import { NewReportsComponent } from './components/reports/new-reports/new-report
     MatRadioModule,
     MatTabsModule,
     MatCheckboxModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDividerModule
   ],
   providers: [UserService, ],
   bootstrap: [AppComponent]

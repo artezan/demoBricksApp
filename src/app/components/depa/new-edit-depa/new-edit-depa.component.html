@@ -55,15 +55,15 @@
     </mat-form-field>
     <!-- Dia de recargo selct -->
     <mat-form-field appearance="outline"   >
-        <mat-select  [(value)]="apartment.DiaExtemporanea" placeholder=" Seleccione Dia de Recargo" [(ngModel)]="apartment.DiaExtemporanea"  #DiaExtemporanea="ngModel" id="DiaExtemporanea" name="DiaExtemporanea" required>
-            <mat-option    value="Sin recargo" >Sin recargo</mat-option>
-            <mat-option    value="1" >Primer día del mes</mat-option>
+        <mat-select [(value)]="apartment.DiaExtemporanea" placeholder=" Seleccione Dia de Recargo" [(ngModel)]="apartment.DiaExtemporanea"  #DiaExtemporanea="ngModel" id="DiaExtemporanea" name="DiaExtemporanea" required>
+            <mat-option    value="50" >Sin recargo</mat-option>
+            <mat-option    value="100" >Primer día del mes</mat-option>
             <mat-option   value="other"  >Otro dia</mat-option>
           </mat-select>
           <mat-error *ngIf="DiaExtemporanea.dirty || DiaExtemporanea.touched">Selecciona Dia Extemporanea</mat-error>
         </mat-form-field>
 
-        <mat-form-field *ngIf="DiaExtemporanea.value === 'other' || extra2 "  appearance="outline">
+        <mat-form-field *ngIf="DiaExtemporanea.value === 'other' "  appearance="outline">
             <mat-label>Anote día en específico</mat-label>
             <input matInput type="number" placeholder=" " [(ngModel)]="extra2"  #DiaExtemporanea2="ngModel"  id="DiaExtemporanea2" name="DiaExtemporanea2" required>
             <mat-error *ngIf="DiaExtemporanea2.dirty || DiaExtemporanea2.touched">Selecciona Dia Extemporanea</mat-error>

@@ -33,3 +33,17 @@ body {
   margin-top: 2%;
   margin-bottom: -2%;
 }
+
+@media  (max-width:800px) {
+  .toogle-btns {
+    position: fixed;
+    top: auto;
+    /* right: 2%; */
+    bottom: 0%;
+    z-index: 3;
+    text-align: center !important;
+    display: flex;
+    padding: 5%;
+  }
+}
+

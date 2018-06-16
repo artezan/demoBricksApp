@@ -211,17 +211,7 @@ export class CondominiosListComponent implements OnInit {
     return arrJson;
   }
 
-  // detectFiles(event) {
-
-  // const file = event.target.files[0];
-  // const name: string = event.target.files.item(0).name;
-  // const reader = new FileReader();
-  // reader.onload = r => {
-  //   const jsonData = this.csvTojs(reader.result);
-  //   this.uplodadData(jsonData);
-  // };
-  // reader.readAsText(file);
-  // }
+  // Crear desde Excel
   uplodadData(dataSheet) {
     const userData = localStorage.getItem('userKey');
     const correo = JSON.parse(userData)[0].correo;

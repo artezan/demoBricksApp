@@ -76,7 +76,7 @@
         <div style="height: 39.2em !important;">
           <!-- Reporte -->
           <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rowsReport" [columns]="columnsReport"
-            (select)="selectReport($event)" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+            (select)="selectReport($event)" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0,1]></app-general-table>
         </div>
       </mat-card-content>
     </mat-card>

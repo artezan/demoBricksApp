@@ -9,7 +9,7 @@
 .top-bar {
   position: fixed;
   overflow: hidden;
-  z-index: 2;
+  z-index: 10;
   top: 0;
 }
 .example-icon {

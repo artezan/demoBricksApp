@@ -75,7 +75,6 @@ export class NuevoEditCondoComponent implements OnInit {
   }
   newCondo() {
     this.condoService.newCondo(this.condo).subscribe((res: any) => {
-      console.log(res)
       const toast: NavigationExtras = {
         queryParams: { res: res.respuesta }
       };

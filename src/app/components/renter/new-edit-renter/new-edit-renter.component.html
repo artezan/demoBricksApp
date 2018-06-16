@@ -66,7 +66,7 @@
             <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
             <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
         </span>
-        <button  mat-raised-button color="warn" routerLink="/list-depa">Cancelar</button>
+        <button  mat-raised-button color="warn" routerLink="/list-renter">Cancelar</button>
       </mat-card-actions>
     </div>
 
