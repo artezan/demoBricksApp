@@ -27,10 +27,10 @@ export class EgressService {
   }
   newEgressVariable(egress) {
     const data = this.makeReq(egress);
-    return this.http.get(encodeURI(END_POINT.EGRESS_FIXED + data));
+    return this.http.get(encodeURI(END_POINT.EGRESS_VAR + data));
   }
   payEgress(idCondo, idEgress): Observable<any> {
-    const dateNow = "2018-06-11"// new Date(Date.now());
+    const dateNow = '2018-06-11' // new Date(Date.now());
     const userData = localStorage.getItem('userKey');
     const dataReq: any = {};
     dataReq.Id_Condominio = idCondo;

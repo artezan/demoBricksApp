@@ -9,7 +9,7 @@
 <div class="toogle-btns">
   <button mat-raised-button class="btn" routerLink="/new-egress-variable" color="accent">Egreso Variable</button>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button  id="recibo" disabled class="btn" color="primary">Recibo</button>
+    <button mat-raised-button  id="recibo" (click)="pdf()" [disabled]="isTransit" class="btn" color="primary">Poliza</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button  id="edit" disabled class="btn" color="primary">Enviar Recibo</button>
@@ -104,3 +104,5 @@
 
 
 <app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)" ></app-general-table>
+<div class="space-buttons" ></div>
+

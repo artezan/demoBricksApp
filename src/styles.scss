@@ -4,8 +4,6 @@
 @import '~cesar-table-artezan/release/themes/material.css';
 @import '~cesar-table-artezan/release/assets/icons.css';
 
-
-
 html,
 body {
   height: 100%;
@@ -13,7 +11,7 @@ body {
 
 body {
   margin: 0;
-  overflow-y:hidden;
+  overflow-y: hidden;
 }
 .tooltip-size {
   font-size: 1em;
@@ -22,7 +20,7 @@ body {
   background-color: #9fa8da;
 }
 .chips-font {
-  font-size: .8em;
+  font-size: 0.8em;
 }
 .btn {
   margin-left: 1% !important;
@@ -34,7 +32,20 @@ body {
   margin-bottom: -2%;
 }
 
-@media  (max-width:800px) {
+@media (max-width: 800px) {
+  .mat-chip-list-wrapper {
+    display: inherit !important;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+    align-items: center;
+    margin: -4px;
+  }
+  .space-buttons {
+    min-height: 100px !important;
+  }
+  .btn {
+    -webkit-order: inherit;
+  }
   .toogle-btns {
     position: fixed;
     top: auto;
@@ -43,7 +54,8 @@ body {
     z-index: 3;
     text-align: center !important;
     display: flex;
+    flex-wrap: wrap;
     padding: 5%;
+    // justify-content: space-around;
   }
 }
-

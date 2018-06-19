@@ -41,8 +41,8 @@
  </ng-template>
 <ng-template #list>
   <mat-card>
-    <mat-selection-list (selectionChange)="handleSelection($event)">
-      <mat-list-option #option (click)="onClickList(row)" *ngFor="let row of rows">
+    <mat-selection-list #option (selectionChange)="handleSelection($event)">
+      <mat-list-option [selected]=row.isSelect (click)="onClickList(row)" *ngFor="let row of rows">
         <h3 matLine><b> {{columns[itemsToShow[0]].name}}: </b>{{row[columns[itemsToShow[0]].prop]}}</h3>
         <p *ngIf="columns.length > 2"  matLine> <b> {{columns[itemsToShow[1]].name}}: </b>{{row[columns[itemsToShow[1]].prop]}}</p>
         <p *ngIf="columns.length > 3" matLine> <b>{{columns[itemsToShow[2]].name}}:  </b>{{row[columns[itemsToShow[2]].prop]}}</p>

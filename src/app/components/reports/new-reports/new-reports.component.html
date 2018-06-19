@@ -1,8 +1,9 @@
 <div class="toogle-btns">
-  <button mat-raised-button id="enviar" class="btn" routerLink="/new-edit-renter" [disabled]="!arrReports.length || !arrUsers.length" color="accent">Eviar</button>
-  <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!arrReports.length" class="btn" color="primary">Solo Imprimir</button>
-  </span>
+  <button mat-raised-button id="enviar" class="btn"  [disabled]="!arrReports.length || !arrUsers.length || !months.length || !yearInput"
+    color="accent" (click)="send()">Eviar</button>
+
+    <button mat-raised-button (click)="dataPdf()" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !balanceBefore " class="btn" color="primary">Solo Imprimir</button>
+
 </div>
 
 <div class="row">
@@ -13,8 +14,7 @@
       <mat-chip-list style="margin: 3%;">
         <mat-chip *ngIf="arrUsers.length === 0">No hay usuarios seleccionados</mat-chip>
         <span *ngIf="arrUsers.length > 0 ">
-          <mat-chip *ngFor="let item of arrUsers" color="primary" class="chips-font" selected="true" (removed)="remove(item)"
-            [removable]="removable">{{item.Nombre}}
+          <mat-chip *ngFor="let item of arrUsers" color="primary" class="chips-font" selected="true" (removed)="remove(item)" [removable]="removable">{{item.Nombre}}
             <mat-icon matChipRemove *ngIf="removable">
               cancel
             </mat-icon>
@@ -28,28 +28,28 @@
             <div class="table-height">
               <!-- todos -->
               <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
             </div>
           </mat-tab>
           <mat-tab label="Inquilinos">
             <div class="table-height">
               <!-- Inquilinos -->
               <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"> </app-general-table>
             </div>
           </mat-tab>
           <mat-tab label="Propietarios">
             <div class="table-height">
               <!-- Propietarios -->
               <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
             </div>
           </mat-tab>
           <mat-tab label="Junta">
             <div class="table-height">
               <!-- Propietarios2 -->
               <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true></app-general-table>
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
             </div>
           </mat-tab>
         </mat-tab-group>
@@ -59,6 +59,38 @@
   <div class="col-sm">
     <mat-card>
       <mat-card-title>Reportes</mat-card-title>
+       <!-- Mes -->
+       <mat-form-field style="margin-right: 3%" appearance="outline">
+        <mat-label> Mes</mat-label>
+        <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="months" #Mes="ngModel" id="Mes"
+          name="Mes" required multiple>
+          <mat-option value="1">Enero</mat-option>
+          <mat-option value="2">Febrero</mat-option>
+          <mat-option value="3">Marzo</mat-option>
+          <mat-option value="4">Abril</mat-option>
+          <mat-option value="5">Mayo</mat-option>
+          <mat-option value="6">Junio</mat-option>
+          <mat-option value="7">Julio</mat-option>
+          <mat-option value="8">Agosto</mat-option>
+          <mat-option value="9">Septiembre</mat-option>
+          <mat-option value="10">Octubre</mat-option>
+          <mat-option value="11">Noviembre</mat-option>
+          <mat-option value="12">Diciembre</mat-option>
+        </mat-select>
+        <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Año</mat-label>
+        <input  matInput type="number" [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
+        <mat-error *ngIf="year.dirty || year.touched">anotar Año</mat-error>
+
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Conciliacion</mat-label>
+        <input  matInput type="number" [(ngModel)]="balanceBefore" #before="ngModel" id="before" name="before" required>
+        <mat-error *ngIf="before.dirty || before.touched">anotar conciliacion</mat-error>
+
+      </mat-form-field>
       <mat-card-subtitle>Reportes Seleccionados</mat-card-subtitle>
       <mat-chip-list style="margin: 3%;">
         <mat-chip *ngIf="arrReports.length === 0">No hay reportes seleccionados</mat-chip>
@@ -76,7 +108,9 @@
         <div style="height: 39.2em !important;">
           <!-- Reporte -->
           <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rowsReport" [columns]="columnsReport"
-            (select)="selectReport($event)" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0,1]></app-general-table>
+            (select)="selectReport($event)" [selected]="arrReports" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0] [rowDeselect]="rowDeselect"></app-general-table>
+          <div class="space-buttons"></div>
+
         </div>
       </mat-card-content>
     </mat-card>

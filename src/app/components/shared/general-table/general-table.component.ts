@@ -21,6 +21,7 @@ import { map } from 'rxjs/operators';
   encapsulation: ViewEncapsulation.None
 })
 export class GeneralTableComponent implements OnInit, OnChanges {
+  @Input() rowDeselect = [];
   @Input() rows = [];
   @Input() columns = [{ name: '', prop: '', width: '' }];
   @Input() loadingIndicator: boolean;
@@ -77,6 +78,24 @@ export class GeneralTableComponent implements OnInit, OnChanges {
         this.selected = [...changes.selected.currentValue];
       }
     }
+    if (changes.rowDeselect) {
+      if (changes.rowDeselect.currentValue) {
+        if (this.selectionType === 'multiClick') {
+          this.isDevice$.subscribe(isDev => {
+            if (isDev) {
+              this.deselectList(changes.rowDeselect.currentValue);
+            }
+          });
+        }
+      }
+      // if (this.selectionType === 'multiClick') {
+      //   this.isDevice$.subscribe(isDev => {
+      //     if (isDev) {
+      //       this.deselectList(changes.selected.currentValue);
+      //     }
+      //   });
+      // }
+    }
   }
   onSelect(event) {
     this.select.emit(event.selected);
@@ -96,6 +115,18 @@ export class GeneralTableComponent implements OnInit, OnChanges {
       event.option._setSelected(true);
     }
   }
+  deselectList(itemDeselct) {
+    if (this.rows) {
+      this.rows.forEach((row, i) => {
+        itemDeselct.forEach(element => {
+          if (element === row) {
+            this.rows[i].isSelect = false;
+            this.arrHelp.splice(this.arrHelp.indexOf(row), 1);
+          }
+        });
+      });
+    }
+  }
   onClickList(value) {
     if (this.selectionType === 'single') {
       this.arrHelp.length = 0;
@@ -108,7 +139,6 @@ export class GeneralTableComponent implements OnInit, OnChanges {
       } else {
         this.arrHelp.push(value);
       }
-      console.log(isFinded);
       this.select.emit(this.arrHelp);
     }
   }

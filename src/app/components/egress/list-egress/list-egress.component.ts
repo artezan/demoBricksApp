@@ -1,3 +1,5 @@
+import { Providers } from './../../../models/provider.model';
+import { ProvidersService } from './../../../services/providers.service';
 import { EgressService } from './../../../services/egress.service';
 import { Egress } from './../../../models/egress.model';
 import { Component, OnInit, AfterViewInit, DoCheck } from '@angular/core';
@@ -7,6 +9,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { GeneralDialogComponent } from '../../shared/general-dialog/general-dialog.component';
+import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import { logoImgB64 } from '../../../_config/logo-img-b64';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-list-egress',
@@ -40,7 +46,8 @@ export class ListEgressComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public snackBar: MatSnackBar,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private providersService: ProvidersService
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -206,7 +213,6 @@ export class ListEgressComponent implements OnInit {
       this.isTransit = true;
       this.isPay = false;
     }
-    console.log(this.egressSelect)
   }
   openSnackBar(message: string) {
     this.snackBar.open(message, 'OK', {
@@ -302,5 +308,184 @@ export class ListEgressComponent implements OnInit {
   updateTable() {
     this.getData(this.idCondo);
     this.rows = [...this.rows];
+  }
+  // PDF
+  pdf() {
+    this.providersService.getData(this.idCondo).subscribe(res => {
+      const providerSelect = res.filter(provider => {
+        if (provider.Id_Proveedor === this.egressSelect[0].Id_Proveedor) {
+          return provider;
+        }
+      });
+      const date = new Date(Date.now());
+      const day = date.getDate().toString();
+      const month = (date.getMonth() + 1).toString();
+      const year = date.getFullYear().toString();
+      const dateFormat: string = day + '/' + month + '/' + year;
+      const docDefinition = {
+        header: [
+          {
+            image: logoImgB64,
+            width: 150,
+            style: 'rightme',
+            fit: [100, 100]
+          }
+        ],
+        content: [
+          {
+            text: 'Golem\n\n',
+            style: 'header'
+          },
+          {
+            text: 'Condominio: ' + this.condoName,
+            style: 'subheader'
+          },
+          {
+            text: 'Poliza de Egreso',
+            style: 'subheader2'
+          },
+          {
+            table: {
+              widths: ['*'],
+              body: [[' '], [' ']]
+            },
+            layout: {
+              hLineWidth: function(i, node) {
+                return i === 0 || i === node.table.body.length ? 0 : 2;
+              },
+              vLineWidth: function(i, node) {
+                return 0;
+              }
+            }
+          },
+          {
+            columns: [
+              {
+                text: ' '
+              },
+              {
+                text: 'Fecha: ' + dateFormat,
+                style: 'rightme'
+              }
+            ]
+          },
+          {
+            text: [
+              {
+                text: 'Nombre Beneficiario: ',
+                bold: true
+              },
+              {
+                text: ' ' + providerSelect[0].NombreCheque
+              }
+            ],
+            alignment: 'justify'
+          },
+          {
+            text: '\n'
+          },
+          {
+            text: 'Monto: ',
+            bold: true
+          },
+          {
+            text: ' ' + this.egressSelect[0].Monto
+          },
+          {
+            text: '\n'
+          },
+          {
+            columns: [
+              {
+                text: 'Banco: ',
+                bold: true
+              },
+              {
+                text: 'Numero de Cuenta: ',
+                bold: true
+              },
+              {
+                text: 'Numero de Cheque: ',
+                bold: true
+              }
+            ]
+          },
+          {
+            columns: [
+              {
+                text: ' ' + providerSelect[0].Banco
+              },
+              {
+                text: ' ' + providerSelect[0].Cuenta
+              },
+              {
+                text: ' ' + this.egressSelect[0].NumeroCheque
+              }
+            ]
+          },
+          {
+            text: '\n'
+          },
+          {
+            columns: [
+              {
+                text: ' Concepto: ',
+                bold: true
+              },
+              {
+                text: 'Firma de Recibido ',
+                bold: true,
+                style: 'rightme',
+              }
+            ]
+          },
+          {
+            columns: [
+              {
+                text:
+                  ' ' +
+                  this.egressSelect[0].NombreProveedor +
+                  ', Periodo ' +
+                  this.egressSelect[0].Mes +
+                  '/' +
+                  this.egressSelect[0].Año +
+                  ', Tipo de pago ' +
+                  this.egressSelect[0].Periodo
+              },
+              {
+                text: '__________________',
+                style: 'rightme'
+              }
+            ]
+          }
+        ],
+        styles: {
+          header: {
+            fontSize: 24,
+            bold: true
+          },
+          bigger: {
+            fontSize: 15,
+            italics: true
+          },
+          center: {
+            'text-align': 'center'
+          },
+          rightme: {
+            alignment: 'right'
+          },
+          subheader: {
+            fontSize: 18,
+            bold: true
+          },
+          subheader2: {
+            fontSize: 15,
+            bold: true
+          }
+        }
+      };
+      pdfMake.createPdf(docDefinition).open();
+      // pdfMake.createPdf(docDefinition).download('Recibo');
+    });
   }
 }

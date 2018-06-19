@@ -13,8 +13,10 @@
     <input (change)="detectFiles($event)" id="fileInput" name="file" type="file" hidden multiple>
 </div>
 
+
 <!-- Tabla -->
 <app-general-table  *ngIf="!loadingIndicator" [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)"></app-general-table>
+<div class="space-buttons" ></div>
 <div class="flex-container">
   <div class="row">
     <div class="flex-item">
