@@ -1,7 +1,7 @@
 import { NgxDatatableModule } from 'cesar-table-artezan';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -67,6 +67,7 @@ import { GeneralDialogComponent } from './components/shared/general-dialog/gener
 import { NewDebitComponent } from './components/debit/new-debit/new-debit.component';
 import { GeneralAlertComponent } from './components/shared/general-alert/general-alert.component';
 import { NewReportsComponent } from './components/reports/new-reports/new-reports.component';
+import { ApiTokenInterceptor } from './_config/api-jwt-interceptor';
 
 // npm
 
@@ -140,7 +141,13 @@ import { NewReportsComponent } from './components/reports/new-reports/new-report
     MatProgressSpinnerModule,
     MatDividerModule
   ],
-  providers: [UserService, ],
+  providers: [UserService,
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: ApiTokenInterceptor,
+    //   multi: true
+    // },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

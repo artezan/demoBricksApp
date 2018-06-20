@@ -34,6 +34,7 @@ export class GeneralTableComponent implements OnInit, OnChanges {
   rows2;
   food;
   @Input() selected = [];
+  @Input() changeToTable = false;
   isDevice$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));

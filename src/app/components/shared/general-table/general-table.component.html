@@ -1,4 +1,4 @@
- <div *ngIf="(isDevice$ | async); then list else table" ></div>
+ <div *ngIf="(isDevice$ | async) ; then list else table" ></div>
  <ng-template #table>
     <ngx-datatable
   *ngIf="rows"

@@ -45,6 +45,7 @@ export class GeneralMenuComponent {
     });
   }
   logout() {
+    localStorage.removeItem('userKey');
     this.router.navigate(['login']);
   }
   close () {

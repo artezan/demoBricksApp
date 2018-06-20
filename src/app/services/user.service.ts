@@ -1,6 +1,9 @@
+import { UserSession } from './../models/user-session.model';
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { Condo } from '../models/condo';
+import { HttpClient } from '@angular/common/http';
+import { JwtResponse } from '../models/jwt-response.model';
 
 @Injectable()
 export class UserService {
@@ -11,5 +14,13 @@ export class UserService {
   });
   datass;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
+  requestApiToken(user, pass): Observable<JwtResponse> {
+    const dataReq: UserSession = {};
+    dataReq.contra = pass;
+    dataReq.correo = user;
+    const data = JSON.stringify([dataReq]);
+    console.log('http://chobezin.com/php/CondominiosAdmin/login2.php?json=' + data)
+   return this.http.get('http://chobezin.com/php/CondominiosAdmin/login2.php?json=' + data);
+  }
 }

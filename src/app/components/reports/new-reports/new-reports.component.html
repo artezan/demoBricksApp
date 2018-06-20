@@ -28,7 +28,7 @@
             <div class="table-height">
               <!-- todos -->
               <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect" [changeToTable]=false></app-general-table>
             </div>
           </mat-tab>
           <mat-tab label="Inquilinos">
@@ -59,8 +59,9 @@
   <div class="col-sm">
     <mat-card>
       <mat-card-title>Reportes</mat-card-title>
-       <!-- Mes -->
-       <mat-form-field style="margin-right: 3%" appearance="outline">
+      <div style="height: 50%;">
+         <!-- Mes -->
+       <mat-form-field class="mr-3"  appearance="outline">
         <mat-label> Mes</mat-label>
         <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="months" #Mes="ngModel" id="Mes"
           name="Mes" required multiple>
@@ -79,18 +80,20 @@
         </mat-select>
         <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field class="mr-3" appearance="outline">
         <mat-label>Año</mat-label>
         <input  matInput type="number" [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
         <mat-error *ngIf="year.dirty || year.touched">anotar Año</mat-error>
 
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field class="mr-3" appearance="outline">
         <mat-label>Conciliacion</mat-label>
         <input  matInput type="number" [(ngModel)]="balanceBefore" #before="ngModel" id="before" name="before" required>
         <mat-error *ngIf="before.dirty || before.touched">anotar conciliacion</mat-error>
 
       </mat-form-field>
+      </div>
+
       <mat-card-subtitle>Reportes Seleccionados</mat-card-subtitle>
       <mat-chip-list style="margin: 3%;">
         <mat-chip *ngIf="arrReports.length === 0">No hay reportes seleccionados</mat-chip>
@@ -105,7 +108,7 @@
 
       </mat-chip-list>
       <mat-card-content>
-        <div style="height: 39.2em !important;">
+        <div >
           <!-- Reporte -->
           <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rowsReport" [columns]="columnsReport"
             (select)="selectReport($event)" [selected]="arrReports" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0] [rowDeselect]="rowDeselect"></app-general-table>
