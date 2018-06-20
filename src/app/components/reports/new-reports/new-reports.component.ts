@@ -338,7 +338,6 @@ export class NewReportsComponent implements OnInit {
   }
   dataPdf() {
     this.arrReports.forEach(report => {
-      console.log(report.reportId);
 
       if (report.reportId === 1) {
         const colum: PdfColum[] = [
