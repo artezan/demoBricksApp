@@ -1050,5 +1050,6 @@ export class NewReportsComponent implements OnInit {
       }
     };
     pdfMake.createPdf(docDefinition).open();
+    pdfMake.createPdf(docDefinition).download('Recibo');
   }
 }

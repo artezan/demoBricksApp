@@ -485,7 +485,7 @@ export class ListEgressComponent implements OnInit {
         }
       };
       pdfMake.createPdf(docDefinition).open();
-      // pdfMake.createPdf(docDefinition).download('Recibo');
+       pdfMake.createPdf(docDefinition).download('Recibo');
     });
   }
 }
