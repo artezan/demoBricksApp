@@ -18,6 +18,8 @@ export class PropietariesService {
     dataReq.condominio = id;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<Propietary[]>(END_POINT.PROPIETARIES_GET + data);
   }
@@ -35,6 +37,8 @@ export class PropietariesService {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     // salida = entrada  --- borar entrada
     dataReq.telefonoCel = dataReq.TelefonoCel;
     delete dataReq.TelefonoCel;
@@ -57,6 +61,8 @@ export class PropietariesService {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return data;
   }

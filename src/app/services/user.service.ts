@@ -20,7 +20,6 @@ export class UserService {
     dataReq.contra = pass;
     dataReq.correo = user;
     const data = JSON.stringify([dataReq]);
-    console.log('http://chobezin.com/php/CondominiosAdmin/login2.php?json=' + data)
-   return this.http.get('http://chobezin.com/php/CondominiosAdmin/login2.php?json=' + data);
+   return this.http.get('https://chobezin.com/php/CondominiosAdmin/login2.php?json=' + data);
   }
 }

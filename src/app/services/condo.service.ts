@@ -24,6 +24,8 @@ return this.http.get(encodeURI(END_POINT.CONDO_NEW + data));
     const userData = localStorage.getItem('userKey');
     condo.correo = JSON.parse(userData)[0].correo;
     condo.contra = JSON.parse(userData)[0].contra;
+    condo.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([condo]);
     return this.http.get(encodeURI(END_POINT.CONDO_EDIT + data));
   }
@@ -34,6 +36,8 @@ return this.http.get(encodeURI(END_POINT.CONDO_NEW + data));
     dataReq.Id_Condominio = id;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<Condo>(END_POINT.CONDO_GET_BY_ID + data);
   }
@@ -42,6 +46,8 @@ return this.http.get(encodeURI(END_POINT.CONDO_NEW + data));
     const userData = localStorage.getItem('userKey');
     condo.correo = JSON.parse(userData)[0].correo;
     condo.contra = JSON.parse(userData)[0].contra;
+    condo.jwt = JSON.parse(userData)[0].jwt;
+
     condo.ciudad = condo.Ciudad;
     delete condo.Ciudad;
     const data = JSON.stringify([condo]);

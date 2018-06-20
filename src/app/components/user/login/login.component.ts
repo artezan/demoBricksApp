@@ -1,3 +1,4 @@
+import { UserSession } from './../../../models/user-session.model';
 import { UserService } from './../../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
@@ -22,21 +23,22 @@ export class LoginComponent implements OnInit {
     this.controllerMenu.menuSettings(true, true, '');
   }
   login() {
-    const userKey = JSON.stringify([
-      {
-        correo: 'asdf',
-        contra: '3da541559918a808c2402bba5012f6c60b27661c'
-      }
-    ]);
-    localStorage.setItem('userKey', userKey);
     this.userService
       .requestApiToken(
         this.emailInput,
         '3da541559918a808c2402bba5012f6c60b27661c'
       )
       .subscribe(res => {
-        console.log(res);
+        const userKey = JSON.stringify([
+          {
+            correo: this.emailInput,
+            contra: '3da541559918a808c2402bba5012f6c60b27661c',
+            jwt: res.jwt
+          }
+        ]);
+        localStorage.setItem('userKey', userKey);
+        this.router.navigate(['list-condo']);
       });
-    this.router.navigate(['list-condo']);
+
   }
 }

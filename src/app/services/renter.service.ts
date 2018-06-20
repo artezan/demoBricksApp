@@ -18,6 +18,8 @@ export class RenterService {
     dataReq.Id_Condominio = id;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<Renter[]>(END_POINT.RENTER_GET + data);
   }
@@ -35,6 +37,8 @@ export class RenterService {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     // salida -- entrada
     const data = JSON.stringify([dataReq]);
     return data;

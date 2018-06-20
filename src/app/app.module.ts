@@ -142,11 +142,11 @@ import { ApiTokenInterceptor } from './_config/api-jwt-interceptor';
     MatDividerModule
   ],
   providers: [UserService,
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: ApiTokenInterceptor,
-    //   multi: true
-    // },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiTokenInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })

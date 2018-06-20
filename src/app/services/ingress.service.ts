@@ -19,6 +19,8 @@ export class IngressService {
     dataReq.Id_Condominio = id;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<Ingress[]>(END_POINT.PAYMENTS_GET + data);
   }
@@ -28,6 +30,8 @@ export class IngressService {
     dataReq = payment;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<any>(END_POINT.PAYMENTS_NEW + data);
   }
@@ -37,6 +41,8 @@ export class IngressService {
     dataReq = payment;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get(
       'http://chobezin.com/php/CondominiosAdmin/registrarAbonoDepartamento.php?json=' +
@@ -50,6 +56,8 @@ export class IngressService {
     dataReq.Id_Condominio = id;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<Ingress[]>(END_POINT.PAYMENTS_DELETE + data);
   }
@@ -59,6 +67,8 @@ export class IngressService {
     dataReq = debit;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get(END_POINT.DEBIT_NEW + data);
   }

@@ -17,6 +17,8 @@ export class ApartmentService {
     dataReq.Id_Condominio = id;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<Apartment[]>(END_POINT.APART_GET + data);
   }
@@ -34,6 +36,8 @@ export class ApartmentService {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     dataReq.DiaExtemporaneo = dataReq.DiaExtemporanea;
     delete dataReq.DiaExtemporanea;
     const data = JSON.stringify([dataReq]);
@@ -43,6 +47,8 @@ export class ApartmentService {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     dataReq.Id_Departamento = dataReq.Id_Depa;
     delete dataReq.Id_Depa;
     dataReq.Accion = 'Modificacion';

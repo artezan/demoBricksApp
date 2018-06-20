@@ -18,6 +18,8 @@ export class EgressService {
     dataReq.Id_Condominio = id;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<Egress[]>(END_POINT.EGRESS_GET + data);
   }
@@ -30,7 +32,7 @@ export class EgressService {
     return this.http.get(encodeURI(END_POINT.EGRESS_VAR + data));
   }
   payEgress(idCondo, idEgress): Observable<any> {
-    const dateNow = '2018-06-11' // new Date(Date.now());
+    const dateNow = '2018-06-11'; // new Date(Date.now())
     const userData = localStorage.getItem('userKey');
     const dataReq: any = {};
     dataReq.Id_Condominio = idCondo;
@@ -38,6 +40,8 @@ export class EgressService {
     dataReq.FechaCobrado = dateNow;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<any>(END_POINT.EGRESS_PAY + data);
   }
@@ -48,6 +52,8 @@ export class EgressService {
     dataReq.Id_Egreso = idEgress;
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     const data = JSON.stringify([dataReq]);
     return this.http.get<any>(END_POINT.EGRESS_TRANSIT + data);
   }
@@ -56,6 +62,8 @@ export class EgressService {
     const userData = localStorage.getItem('userKey');
     dataReq.correo = JSON.parse(userData)[0].correo;
     dataReq.contra = JSON.parse(userData)[0].contra;
+    dataReq.jwt = JSON.parse(userData)[0].jwt;
+
     dataReq.Año = dataReq.year.toString();
     delete dataReq.year;
     dataReq.NumCheque = dataReq.NumeroCheque;
