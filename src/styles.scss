@@ -31,6 +31,28 @@ body {
   margin-top: 2%;
   margin-bottom: -2%;
 }
+.btn2 {
+  margin:5px !important;
+}
+.toogle-btns2 {
+  position: fixed;
+  top: auto;
+  bottom: 0%;
+  z-index: 3;
+  text-align: center !important;
+  display: flex;
+  flex-wrap: wrap;
+  /* padding: 5%; */
+  padding-top: 5%;
+  padding-right: 5%;
+  /* padding-bottom: 5%; */
+  padding-left: 30%;
+
+}
+.space-buttons {
+  min-height: 100px !important;
+}
+
 
 @media (max-width: 800px) {
   .mat-chip-list-wrapper {
