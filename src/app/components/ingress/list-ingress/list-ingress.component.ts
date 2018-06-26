@@ -1,3 +1,6 @@
+import { RenterService } from './../../../services/renter.service';
+import { PdfEmailService } from './../../../services/pdf-email.service';
+import { EmailSend } from './../../../models/email-send.model';
 import { CondoService } from './../../../services/condo.service';
 import { GeneralAlertComponent } from './../../shared/general-alert/general-alert.component';
 import { NewEditDepaComponent } from './../../depa/new-edit-depa/new-edit-depa.component';
@@ -49,6 +52,7 @@ export class ListIngressComponent implements OnInit {
   activeFilters = { Interior: '', Pagado: '', Year: 0, Mes: 0 };
   // pdf
   propietary;
+  isSend = false;
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -58,7 +62,9 @@ export class ListIngressComponent implements OnInit {
     public snackBar: MatSnackBar,
     public apartmentServices: ApartmentService,
     public dialog: MatDialog,
-    public condoService: CondoService
+    public condoService: CondoService,
+    private pdfEmailService: PdfEmailService,
+    private renterService: RenterService
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -223,6 +229,19 @@ export class ListIngressComponent implements OnInit {
         );
         this.propietary = depaSelect.NombrePropietario;
         this.pdf();
+      });
+    }
+  }
+  generateDocEmail() {
+    if (this.ingressSelect[0].Pagado === '0') {
+      this.openSnackBar('Seleccione un ingreso pagado');
+    } else {
+      this.apartmentServices.getData(this.id).subscribe(data => {
+        const depaSelect = data.find(
+          apartment => apartment.Id_Depa === this.ingressSelect[0].Id_Depa
+        );
+        this.propietary = depaSelect.NombrePropietario;
+        this.sendPdfEmail();
       });
     }
   }
@@ -569,5 +588,61 @@ export class ListIngressComponent implements OnInit {
     };
     pdfMake.createPdf(docDefinition).open();
     pdfMake.createPdf(docDefinition).download('Recibo');
+    return pdfMake.createPdf(docDefinition);
   }
+  sendPdfEmail() {
+    console.log(this.ingressSelect[0]);
+    this.renterService.getData(this.id).subscribe(renterArr => {
+      const renter = renterArr.filter(item => {
+        if (this.ingressSelect[0].Id_Inquilino === item.Id_Inquilino) {
+          return item;
+        }
+      });
+      if (renter) {
+        this.pdf().getBuffer(dataURL => {
+          const f = new File([dataURL], 'Recibo.pdf', {
+            type: 'application/pdf'
+          });
+          const formData: FormData = new FormData();
+          formData.append('file[]', f);
+          formData.append(
+            'Asunto',
+            'Recibo de ' + this.ingressSelect[0].Concepto
+          );
+          formData.append(
+            'Mensaje',
+            'Hola ' +
+              renter[0].NombreInquilino +
+              ' ' +
+              renter[0].ApellidoPaterno +
+              ' te adjuntamos tu recibo. Saludos'
+          );
+          formData.append('Destinatarios[0]', renter[0].CorreoElectronico);
+          this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
+            this.openSnackBar(c.respuesta);
+          });
+        });
+      }
+    });
+  }
+  // detectFiles(event){
+  //   var cargando = false
+  //   var loading = this.loadingCtrl.create({
+  //     content: 'Cargando archivos...' });
+  //   let formData= new FormData();
+  //   for (var i = event.target.files.length - 1; i >= 0; i--) {
+  //     this.name_arr.push(event.target.files.item(i).name);
+  //     this.path_arr.push(event.target.files.item(i).webkitRelativePath);
+  //     this.type_arr.push(event.target.files.item(i).type);
+  //     formData.append('file[]', event.target.files[i])
+  //   }
+  //   loading.present();
+  //   this.http.post('https://theartezan.xyz/pdf/files.php', formData).subscribe(data=>{
+  //     cargando=data.ok
+  //     if (cargando==true) {
+  //       loading.dismiss();
+  //       this.p=100;
+  //     }
+
+  //   })
 }

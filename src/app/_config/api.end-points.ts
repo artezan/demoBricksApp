@@ -27,6 +27,7 @@ const condoById = 'datosCondominio.php?json=';
 const egressPay = 'pagarEgreso.php?json=';
 const egressTransit = 'entransitoEgreso.php?json=';
 const newDebit = 'registrarPorPagar.php?json=';
+const emailSend = 'mail.php';
 
 export const END_POINT = ({
   // condo
@@ -65,5 +66,7 @@ export const END_POINT = ({
   EGRESS_PAY: urlAPI + egressPay,
   EGRESS_TRANSIT: urlAPI + egressTransit,
   // debit
-  DEBIT_NEW: urlAPI + newDebit
+  DEBIT_NEW: urlAPI + newDebit,
+  // email
+  EMAIL_SEND: urlAPI + emailSend
 });

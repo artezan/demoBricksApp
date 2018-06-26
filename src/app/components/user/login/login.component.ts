@@ -3,6 +3,8 @@ import { UserService } from './../../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { ControllerMenuService } from '../../shared/general-menu/controller-menu.service';
+import * as sha1 from 'js-sha1';
+
 
 @Component({
   selector: 'app-login',
@@ -23,16 +25,17 @@ export class LoginComponent implements OnInit {
     this.controllerMenu.menuSettings(true, true, '');
   }
   login() {
+    const pass = sha1(this.passInput);
     this.userService
       .requestApiToken(
         this.emailInput,
-        '3da541559918a808c2402bba5012f6c60b27661c'
+        pass
       )
       .subscribe(res => {
         const userKey = JSON.stringify([
           {
             correo: this.emailInput,
-            contra: '3da541559918a808c2402bba5012f6c60b27661c',
+            contra: pass,
             jwt: res.jwt
           }
         ]);

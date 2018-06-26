@@ -5,14 +5,13 @@
   </mat-chip-list>
 </mat-toolbar>
 
-
 <div class="toogle-btns2">
   <button mat-raised-button class="btn2" routerLink="/new-payment" color="accent">Nuevo Pago</button>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button (click)="generateDoc()" id="edit" [disabled]="!ingressSelect" class="btn2" color="primary">Recibo</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button (click)="edit()" id="edit" [disabled]="!ingressSelect" class="btn2" color="primary">Enviar Recibo</button>
+    <button mat-raised-button (click)="generateDocEmail()" id="edit" [disabled]="!ingressSelect" class="btn2" color="primary">Enviar Recibo</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button (click)="deletePayment()" id="edit" [disabled]="!ingressSelect" class="btn2" color="warn">Eliminar</button>
@@ -119,4 +118,5 @@
 
 <app-general-table [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns" (select)="select($event)"></app-general-table>
 <div class="space-buttons" ></div>
+
 

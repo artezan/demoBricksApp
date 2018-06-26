@@ -32,7 +32,6 @@ export class NewEditDepaComponent implements OnInit {
       this.id = data['Id_Condominio'];
     });
     if (this.apartmentService.apartementSelect.length !== 0) {
-      console.log( this.apartmentService.apartementSelect[0])
       this.apartment = this.apartmentService.apartementSelect[0];
       this.isNew = false;
       if (

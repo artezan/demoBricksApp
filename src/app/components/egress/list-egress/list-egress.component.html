@@ -9,10 +9,10 @@
 <div class="toogle-btns2">
   <button mat-raised-button class="btn2" routerLink="/new-egress-variable" color="accent">Egreso Variable</button>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button  id="recibo" (click)="pdf()" [disabled]="isTransit" class="btn2" color="primary">Poliza</button>
+    <button mat-raised-button  id="recibo" (click)="pdf(false)" [disabled]="isTransit" class="btn2" color="primary">Poliza</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
-    <button mat-raised-button  id="edit" disabled class="btn2" color="primary">Enviar Recibo</button>
+    <button mat-raised-button  id="edit" (click)="pdf(true)"  [disabled]="isTransit" class="btn2" color="primary">Enviar Recibo</button>
   </span>
   <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage2($event)">
     <button mat-raised-button (click)="pay()" id="pay" [disabled]=" isPay" class="btn2" color="warn">Pagar</button>

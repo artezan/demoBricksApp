@@ -2,7 +2,7 @@
   <button mat-raised-button id="enviar" class="btn"  [disabled]="!arrReports.length || !arrUsers.length || !months.length || !yearInput"
     color="accent" (click)="send()">Eviar</button>
 
-    <button mat-raised-button (click)="dataPdf()" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !balanceBefore " class="btn" color="primary">Solo Imprimir</button>
+    <button mat-raised-button (click)="dataPdf(); isToSend = false" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !balanceBefore " class="btn" color="primary">Solo Imprimir</button>
 
 </div>
 

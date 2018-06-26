@@ -9,7 +9,7 @@
     <mat-form-field appearance="outline">
     <mat-select [(value)]="apartment.Id_Propietario" placeholder=" Seleccione Propietarios" aria-label="State"  [(ngModel)]="apartment.Id_Propietario" #Id_Propietario="ngModel" id="Id_Propietario" name="Id_Propietario" required>
       <span *ngFor="let state of propietaries | async">
-        <mat-option   *ngIf="state.error !==''"  [value]="state.Id_Propietario" >{{ state.NombrePropietario }}</mat-option>
+        <mat-option   *ngIf="state.error !==''"  [value]="state.Id_Propietario" >{{ state.NombrePropietario }} {{state.ApellidoPaterno}} </mat-option>
         <!-- <mat-option     value="cesar" >cesar</mat-option>
         <mat-option     value="state.NombrePropietario" >a</mat-option> -->
       </span>

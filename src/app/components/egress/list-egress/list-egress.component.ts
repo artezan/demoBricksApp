@@ -1,3 +1,5 @@
+import { PdfEmailService } from './../../../services/pdf-email.service';
+import { PropietariesService } from './../../../services/propietaries.service';
 import { Providers } from './../../../models/provider.model';
 import { ProvidersService } from './../../../services/providers.service';
 import { EgressService } from './../../../services/egress.service';
@@ -47,7 +49,9 @@ export class ListEgressComponent implements OnInit {
     private router: Router,
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private providersService: ProvidersService
+    private providersService: ProvidersService,
+    private propietaryService: PropietariesService,
+    private pdfEmailService: PdfEmailService
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -310,7 +314,7 @@ export class ListEgressComponent implements OnInit {
     this.rows = [...this.rows];
   }
   // PDF
-  pdf() {
+  pdf(isToSend) {
     this.providersService.getData(this.idCondo).subscribe(res => {
       const providerSelect = res.filter(provider => {
         if (provider.Id_Proveedor === this.egressSelect[0].Id_Proveedor) {
@@ -435,7 +439,7 @@ export class ListEgressComponent implements OnInit {
               {
                 text: 'Firma de Recibido ',
                 bold: true,
-                style: 'rightme',
+                style: 'rightme'
               }
             ]
           },
@@ -484,8 +488,43 @@ export class ListEgressComponent implements OnInit {
           }
         }
       };
-      pdfMake.createPdf(docDefinition).open();
-       pdfMake.createPdf(docDefinition).download('Recibo');
+      // pdfMake.createPdf(docDefinition).open();
+      //  pdfMake.createPdf(docDefinition).download('Recibo');
+      if (isToSend) {
+        this.sendReport(
+          pdfMake.createPdf(docDefinition),
+          'Poliza de Egreso',
+          providerSelect[0]
+        );
+      }
     });
+  }
+  sendReport(pdf, title, provider) {
+    console.log(provider);
+    // this.propietaryService.getData(this.idCondo).subscribe(arrPropietary => {
+    //   const propietary = arrPropietary.find(
+    //     item => item.Id_Propietario === provider.Id_Propietario
+    //   );
+    //   pdf.getBuffer(dataURL => {
+    //     const f = new File([dataURL], 'Recibo.pdf', {
+    //       type: 'application/pdf'
+    //     });
+    //     const formData: FormData = new FormData();
+    //     formData.append('file[]', f);
+    //     formData.append('Asunto', 'Recibo de ' + title);
+    //     formData.append(
+    //       'Mensaje',
+    //       'Hola ' +
+    //         propietary.NombrePropietario +
+    //         ' ' +
+    //         propietary.ApellidoPaterno +
+    //         ' te adjuntamos tu reporte. Saludos'
+    //     );
+    //     formData.append('Destinatarios[0]', propietary.CorreoElectronico);
+    //     this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
+    //       this.openSnackBar(c.respuesta);
+    //     });
+    //   });
+    // });
   }
 }

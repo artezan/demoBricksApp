@@ -17,6 +17,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { logoImgB64 } from '../../../_config/logo-img-b64';
 import { IngressService } from '../../../services/ingress.service';
 import { Ingress } from '../../../models/ingress.model';
+import { PdfEmailService } from '../../../services/pdf-email.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 interface PdfColum {
   name: string;
@@ -57,6 +58,7 @@ export class NewReportsComponent implements OnInit {
   months = [];
   yearInput: number;
   balanceBefore: number;
+  isToSend = false;
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -67,7 +69,8 @@ export class NewReportsComponent implements OnInit {
     public propietariesService: PropietariesService,
     public dialog: MatDialog,
     public ingressService: IngressService,
-    public egressService: EgressService
+    public egressService: EgressService,
+    private pdfEmailService: PdfEmailService
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -330,6 +333,8 @@ export class NewReportsComponent implements OnInit {
     });
     const sub = dialogRef.componentInstance.buttons.subscribe(res => {
       if (res === 'ok') {
+        this.isToSend = true;
+        this.dataPdf();
         this.openSnackBar('Reportes enviados correctamente');
       }
     });
@@ -338,7 +343,6 @@ export class NewReportsComponent implements OnInit {
   }
   dataPdf() {
     this.arrReports.forEach(report => {
-
       if (report.reportId === 1) {
         const colum: PdfColum[] = [
           {
@@ -1051,5 +1055,32 @@ export class NewReportsComponent implements OnInit {
     };
     pdfMake.createPdf(docDefinition).open();
     pdfMake.createPdf(docDefinition).download('Recibo');
+    if (this.isToSend) {
+      this.sendReport(pdfMake.createPdf(docDefinition), title);
+    }
+  }
+  sendReport(pdf, title) {
+    this.arrUsers.forEach((user, i) => {
+      pdf.getBuffer(dataURL => {
+        const f = new File([dataURL], 'Recibo.pdf', {
+          type: 'application/pdf'
+        });
+        const formData: FormData = new FormData();
+        formData.append('file[]', f);
+        formData.append('Asunto', 'Recibo de ' + title);
+        formData.append(
+          'Mensaje',
+          'Hola ' +
+            user.Nombre +
+            ' ' +
+            user.ApellidoPaterno +
+            ' te adjuntamos tu reporte. Saludos'
+        );
+        formData.append('Destinatarios[0]', user.CorreoElectronico);
+        this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
+          this.openSnackBar(c.respuesta);
+        });
+      });
+    });
   }
 }
