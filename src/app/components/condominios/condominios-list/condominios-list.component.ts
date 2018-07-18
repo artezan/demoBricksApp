@@ -1,13 +1,15 @@
+import { ExcellKeys } from './../../../_config/excellKeys';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { CondoService } from '../../../services/condo.service';
 import { Condo } from '../../../models/condo';
 import { ControllerMenuService } from '../../shared/general-menu/controller-menu.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { UserService } from '../../../services/user.service';
 import * as XLSX from 'xlsx';
 import { END_POINT } from '../../../_config/api.end-points';
+import { GeneralAlertComponent } from '../../shared/general-alert/general-alert.component';
 
 @Component({
   selector: 'app-condominios-list',
@@ -31,7 +33,8 @@ export class CondominiosListComponent implements OnInit {
     private controllerMenu: ControllerMenuService,
     public snackBar: MatSnackBar,
     public userService: UserService,
-    public http: HttpClient
+    public http: HttpClient,
+    public dialog: MatDialog
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -179,7 +182,12 @@ export class CondominiosListComponent implements OnInit {
       // /* save data */
       // this.dataXls = (XLSX.utils.sheet_to_json(ws, {header: 1}));
       const dataExcelJson = this.exelToJson(wb);
-      this.uplodadData(dataExcelJson);
+
+      if (this.validateExcel(dataExcelJson)) {
+        this.uplodadData(dataExcelJson);
+      } else {
+        this.messageError();
+      }
     };
     reader.readAsBinaryString(target.files[0]);
   }
@@ -299,10 +307,83 @@ export class CondominiosListComponent implements OnInit {
     this.updateTable();
     this.openSnackBar('Condominio agregado desde Excel');
   }
+  messageError(): void {
+    const dialogRef = this.dialog.open(GeneralAlertComponent, {
+      maxWidth: '50%',
+      minWidth: '20%',
+      data: {
+        header: 'Error al importar Excel',
+        subHeader: 'Formato no valido',
+        body: ' <p> Verificar que el archivo de excel sea el correcto </p> ',
+        isform: false,
+        hideButtonCancel: true
+      }
+    });
+    const sub = dialogRef.componentInstance.buttons.subscribe(res => {
+      if (res === 'ok') {
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.loadingIndicator = false;
+    });
+  }
   // helper
   updateTable() {
     this.getData();
     this.rows = [...this.rows];
+  }
+  validateExcel(jsonExcel: Array<{ data: any[]; name: string }>): boolean {
+    let isExcellValid = true;
+    const namesSheets = [
+      'Condominio',
+      'Propietarios',
+      'Departamentos',
+      'Inquilinos',
+      'Proveedores',
+      'Servicios'
+    ];
+    const arrSheetsNames = jsonExcel.map(item => item.name);
+    namesSheets.forEach(nameSheet => {
+      const isValid = arrSheetsNames.find(name => name === nameSheet);
+      if (!isValid) {
+        isExcellValid = false;
+      }
+    });
+    if (isExcellValid === true) {
+      const isOneCondo = jsonExcel.find(item => item.name === 'Condominio')
+        .data;
+      if (isOneCondo.length !== 1) {
+        isExcellValid = false;
+      }
+    }
+    if (isExcellValid === true) {
+      const condo = jsonExcel.find(sheet => sheet.name === 'Condominio').data;
+      const isValidCondo = this.validArr(Object.keys(condo[0]), 'Condominio');
+      const prop = jsonExcel.find(sheet => sheet.name === 'Propietarios').data;
+      const isValidProp = this.validArr(Object.keys(prop[0]), 'Propietarios');
+      const apartment = jsonExcel.find(sheet => sheet.name === 'Departamentos')
+        .data;
+      const isValidApartment = this.validArr(
+        Object.keys(apartment[0]),
+        'Departamentos'
+      );
+      if (!isValidApartment || !isValidCondo || !isValidProp) {
+        isExcellValid = false;
+      }
+    }
+    return isExcellValid;
+  }
+  validArr(arr: string[], name: string): boolean {
+    let isValidSheet = true;
+    const keys = ExcellKeys.find(item => item.name === name).keys;
+    keys.forEach(key => {
+      const isValid = arr.find(item => item === key);
+      if (!isValid) {
+        isValidSheet = false;
+      }
+    });
+    return isValidSheet;
   }
   // excel to json
 }

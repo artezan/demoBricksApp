@@ -4,7 +4,7 @@
     <span *ngIf="dataInput.body" [innerHTML]="dataInput.body"></span>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button color="primary" (click)="buttonsResponse('ok')" mat-button mat-dialog-close>Si</button>
-  <button color="warn" mat-button mat-dialog-close (click)="buttonsResponse('cancel')" >Cancelar</button>
+  <button color="primary"   (click)="buttonsResponse('ok')" mat-button mat-dialog-close>Ok</button>
+  <button color="warn" *ngIf="!dataInput.hideButtonCancel" mat-button mat-dialog-close (click)="buttonsResponse('cancel')" >Cancelar</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
 </mat-dialog-actions>

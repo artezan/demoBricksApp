@@ -13,6 +13,9 @@ export class GeneralAlertComponent implements OnInit {
     subHeader?: string;
     body: string;
     isform?: boolean;
+    hideButtonCancel?: boolean;
+
+
   };
   constructor(
     public dialogRef: MatDialogRef<GeneralAlertComponent>,
@@ -22,6 +25,7 @@ export class GeneralAlertComponent implements OnInit {
       subHeader?: string;
       body: string;
       isform?: boolean;
+      hideButtonCancel?: boolean;
     }
   ) {
     this.dataInput = data;
