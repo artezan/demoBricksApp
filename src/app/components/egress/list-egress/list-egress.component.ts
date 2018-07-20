@@ -488,7 +488,7 @@ export class ListEgressComponent implements OnInit {
           }
         }
       };
-      // pdfMake.createPdf(docDefinition).open();
+       pdfMake.createPdf(docDefinition).open();
       //  pdfMake.createPdf(docDefinition).download('Recibo');
       if (isToSend) {
         this.sendReport(
@@ -501,30 +501,31 @@ export class ListEgressComponent implements OnInit {
   }
   sendReport(pdf, title, provider) {
     console.log(provider);
-    // this.propietaryService.getData(this.idCondo).subscribe(arrPropietary => {
-    //   const propietary = arrPropietary.find(
-    //     item => item.Id_Propietario === provider.Id_Propietario
-    //   );
-    //   pdf.getBuffer(dataURL => {
-    //     const f = new File([dataURL], 'Recibo.pdf', {
-    //       type: 'application/pdf'
-    //     });
-    //     const formData: FormData = new FormData();
-    //     formData.append('file[]', f);
-    //     formData.append('Asunto', 'Recibo de ' + title);
-    //     formData.append(
-    //       'Mensaje',
-    //       'Hola ' +
-    //         propietary.NombrePropietario +
-    //         ' ' +
-    //         propietary.ApellidoPaterno +
-    //         ' te adjuntamos tu reporte. Saludos'
-    //     );
-    //     formData.append('Destinatarios[0]', propietary.CorreoElectronico);
-    //     this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
-    //       this.openSnackBar(c.respuesta);
-    //     });
-    //   });
-    // });
+    this.propietaryService.getData(this.idCondo).subscribe(arrPropietary => {
+      const propietary = arrPropietary.find(
+        item => item.Id_Propietario === provider.Id_Propietario
+      );
+      pdf.getBuffer(dataURL => {
+        const f = new File([dataURL], 'Recibo.pdf', {
+          type: 'application/pdf'
+        });
+        const formData: FormData = new FormData();
+        formData.append('file[]', f);
+        formData.append('Asunto', 'Recibo de ' + title);
+        formData.append(
+          'Mensaje',
+          'Hola ' +
+            propietary.NombrePropietario +
+            ' ' +
+            propietary.ApellidoPaterno +
+            ' te adjuntamos tu reporte. Saludos'
+        );
+        formData.append('Destinatarios[0]', propietary.CorreoElectronico);
+        this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
+          this.openSnackBar(c.respuesta);
+        });
+      });
+    });
   }
+
 }

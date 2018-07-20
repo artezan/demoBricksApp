@@ -2,6 +2,11 @@
 <h3 mat-dialog-title>{{dataInput.subHeader}}</h3>
 <mat-dialog-content>
     <span *ngIf="dataInput.body" [innerHTML]="dataInput.body"></span>
+    <span *ngIf="dataInput.isform">
+      <mat-form-field style="width: 100%" >
+        <textarea style="width: 100%" matInput [(ngModel)]="message" placeholder="Mensaje"></textarea>
+      </mat-form-field>
+    </span>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button color="primary"   (click)="buttonsResponse('ok')" mat-button mat-dialog-close>Ok</button>

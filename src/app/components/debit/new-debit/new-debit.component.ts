@@ -43,6 +43,28 @@ export class NewDebitComponent implements OnInit {
   };
   conceptoArr = [];
   concepto;
+  conceptoExtras = [
+    {
+      Total: 0,
+      Concepto: 'Fondo de contingencia'
+    },
+    {
+      Total: 0,
+      Concepto: 'Pago adeudos'
+    },
+    {
+      Total: 0,
+      Concepto: 'Pago extraordinario'
+    },
+    {
+      Total: 0,
+      Concepto: 'Pago extemporaneo (multa)'
+    },
+    {
+      Total: 0,
+      Concepto: 'Pago tiempo'
+    }
+  ];
 
   constructor(
     private router: Router,
@@ -97,6 +119,9 @@ export class NewDebitComponent implements OnInit {
     this.newDebit.Año = this.newDebit.Year;
     this.newDebit.Id_Depa = this.depaSelect;
     this.newDebit.Id_Condominio = this.id;
+    this.newDebit.Total = this.newDebit.Total.toString();
+    this.newDebit.Periodo = this.concepto.Periodo;
+    console.log(this.newDebit)
     this.ingressService.newDebit(this.newDebit).subscribe(res => {
       const toast: NavigationExtras = {
         queryParams: {
@@ -108,7 +133,7 @@ export class NewDebitComponent implements OnInit {
   }
   getConcepto(idDepa) {
     if (idDepa === 'def') {
-      this.conceptoArr[0] = 'def';
+      this.conceptoArr[0] = idDepa;
     } else {
       // tslint:disable-next-line:prefer-const
       let arrOptions = [];
@@ -127,6 +152,19 @@ export class NewDebitComponent implements OnInit {
                 No: item.NumeroRecibo
               });
             }
+          }
+        });
+        this.conceptoExtras.forEach(c => {
+          const pos = arrOptions.indexOf(c.Concepto);
+          if (pos === -1 ) {
+            const dateNowMonth = new Date(Date.now()).getMonth() + 1;
+            const dateNowYear = new Date(Date.now()).getFullYear();
+            arrOptions.push(c.Concepto);
+            selectConcept.push({
+              Total: 0,
+              Concepto: c.Concepto,
+              Periodo: dateNowMonth + '/' + dateNowYear
+            });
           }
         });
       });

@@ -1,8 +1,8 @@
 <div class="toogle-btns">
   <button mat-raised-button id="enviar" class="btn"  [disabled]="!arrReports.length || !arrUsers.length || !months.length || !yearInput"
-    color="accent" (click)="send()">Eviar</button>
+    color="accent" (click)="send()">Enviar</button>
 
-    <button mat-raised-button (click)="dataPdf(); isToSend = false" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !balanceBefore " class="btn" color="primary">Solo Imprimir</button>
+    <button mat-raised-button (click)="dataPdf(); isToSend = false" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !conciliation " class="btn" color="primary">Solo Imprimir</button>
 
 </div>
 
@@ -82,16 +82,27 @@
       </mat-form-field>
       <mat-form-field class="mr-3" appearance="outline">
         <mat-label>Año</mat-label>
-        <input  matInput type="number" [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
+        <mat-select  multiple  [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
+          <span *ngFor="let year of yearOptions" >
+             <mat-option [value]="year" > {{year}} </mat-option>
+          </span>
+
+        </mat-select>
         <mat-error *ngIf="year.dirty || year.touched">anotar Año</mat-error>
 
       </mat-form-field>
       <mat-form-field class="mr-3" appearance="outline">
         <mat-label>Conciliacion</mat-label>
-        <input  matInput type="number" [(ngModel)]="balanceBefore" #before="ngModel" id="before" name="before" required>
+        <input  matInput type="number" [(ngModel)]="conciliation" #before="ngModel" id="before" name="before" required>
         <mat-error *ngIf="before.dirty || before.touched">anotar conciliacion</mat-error>
 
       </mat-form-field>
+      <mat-form-field class="mr-3" appearance="outline">
+          <mat-label>Saldo Real</mat-label>
+          <input  matInput type="number" [(ngModel)]="realBalance" #before="ngModel" id="before" name="before" required>
+          <mat-error *ngIf="before.dirty || before.touched">anotar saldo real</mat-error>
+
+        </mat-form-field>
       </div>
 
       <mat-card-subtitle>Reportes Seleccionados</mat-card-subtitle>

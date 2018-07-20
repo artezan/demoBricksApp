@@ -49,7 +49,7 @@
 
     </mat-form-field>
     <!-- NO Rec -->
-    
+
 
     <mat-form-field appearance="outline">
       <mat-label>No. Recibo Inicial</mat-label>
@@ -63,7 +63,7 @@
       <mat-card-actions>
         <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
             <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
-            <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
+            <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" >Editar</button>
         </span>
         <button  mat-raised-button color="warn" routerLink="/list-condo">Cancelar</button>
       </mat-card-actions>

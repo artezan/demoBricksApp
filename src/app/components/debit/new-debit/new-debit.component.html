@@ -6,50 +6,58 @@
     <mat-card-title>Complete los campos</mat-card-title>
     <div class="flex-container">
       <!-- Depa -->
-    <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline">
         <mat-label> Depa </mat-label>
 
-      <mat-select  placeholder=" Selecciona Depa" aria-label="State"  [(ngModel)]="depaSelect" #Id_Provider="ngModel" id="Id_Provider" name="Id_Provider" required>
-        <span *ngFor="let state of depaOptions$ | async">
-          <mat-option   *ngIf="state.error !==''"  [value]="state.Id_Depa" >{{ state.Interior }}</mat-option>
-        </span>
+        <mat-select placeholder=" Selecciona Depa" aria-label="State" [(ngModel)]="depaSelect" #Id_Provider="ngModel" id="Id_Provider"
+          name="Id_Provider" required>
+          <span *ngFor="let state of depaOptions$ | async">
+            <mat-option *ngIf="state.error !==''" [value]="state.Id_Depa">{{ state.Interior }}</mat-option>
+          </span>
         </mat-select>
         <mat-error *ngIf="Id_Provider.dirty || Id_Provider.touched">Selecciona Depa</mat-error>
       </mat-form-field>
-    <!-- Inquilino-->
+      <!-- Inquilino-->
 
       <mat-form-field appearance="outline">
         <mat-label> Inquilino </mat-label>
-      <mat-select  (selectionChange)="getConcepto(Id_Provider.value)" placeholder=" Selecciona Inquilino" aria-label="State" [(ngModel)]="renterSelect"
-        #Id_Depa="ngModel" id="Id_Depa" name="Id_Depa" required>
-        <mat-option value= 'Sin Inquilino'>Sin Inquilino</mat-option>
-        <span *ngFor="let state of renterOptions$ | async">
-          <mat-option *ngIf="state.error !==''" [value]="state.Id_Depa">{{ state.NombreInquilino }}</mat-option>
-        </span>
-      </mat-select>
-      <mat-error *ngIf="Id_Depa.dirty || Id_Depa.touched">Selecciona Inquilino</mat-error>
-    </mat-form-field>
+        <mat-select (selectionChange)="getConcepto(Id_Provider.value)" placeholder=" Selecciona Inquilino" aria-label="State" [(ngModel)]="renterSelect"
+          #Id_Depa="ngModel" id="Id_Depa" name="Id_Depa" required>
+          <mat-option value='Sin Inquilino'>Sin Inquilino</mat-option>
+          <span *ngFor="let state of renterOptions$ | async">
+            <mat-option *ngIf="state.error !==''" [value]="state.Id_Depa">{{ state.NombreInquilino }}</mat-option>
+          </span>
+        </mat-select>
+        <mat-error *ngIf="Id_Depa.dirty || Id_Depa.touched">Selecciona Inquilino</mat-error>
+      </mat-form-field>
 
       <!-- Concepto OTRO -->
-   <!-- Concep -->
-   <mat-form-field appearance="outline" >
-    <mat-label>Concepto</mat-label>
+      <!-- Concep -->
+      <mat-form-field appearance="outline">
+        <mat-label>Concepto</mat-label>
 
-  <mat-select  (selectionChange)="changeTotal(Concepto.value)" value='def' placeholder=" Seleccione Concepto" [(ngModel)]="concepto"
-    #Concepto="ngModel" id="Concepto" name="Concepto" required>
-    <mat-option value="def">Otro</mat-option>
-    <span *ngFor="let state of conceptoArr">
-      <mat-option [value]="state">{{ state.Concepto }}</mat-option>
-    </span>
-  </mat-select>
-  <mat-error *ngIf="Concepto.dirty || Concepto.touched">Selecciona Concepto</mat-error>
-</mat-form-field>
+        <mat-select (selectionChange)="changeTotal(Concepto.value)" value='def' placeholder=" Seleccione Concepto" [(ngModel)]="concepto"
+          #Concepto="ngModel" id="Concepto" name="Concepto" required>
+          <mat-option value="def">Otro</mat-option>
+          <!-- <mat-option value="Fondo de contingencia">Fondo de contingencia</mat-option>
+          <mat-option value="Pago adeudos">Pago adeudos</mat-option>
+          <mat-option value="Pago a gas">Pago a gas</mat-option>
+          <mat-option value="Pago extraordinario">Pago extraordinario</mat-option>
+          <mat-option value="Pago extemporaneo (multa)">Pago extemporaneo (multa)</mat-option>
+          <mat-option value="Pago tiempo">Pago tiempo</mat-option> -->
+          <span *ngFor="let state of conceptoArr">
+            <mat-option [value]="state">{{ state.Concepto }}</mat-option>
+          </span>
+        </mat-select>
+        <mat-error *ngIf="Concepto.dirty || Concepto.touched">Selecciona Concepto</mat-error>
+      </mat-form-field>
 
-        <mat-form-field *ngIf="Concepto.value === 'def'  "  appearance="outline">
-            <mat-label>Anote Concepto en específico</mat-label>
-            <input matInput  placeholder=" " [(ngModel)]="extra2"  #DiaExtemporanea2="ngModel"  id="DiaExtemporanea2" name="DiaExtemporanea2" required>
-            <mat-error *ngIf="DiaExtemporanea2.dirty || DiaExtemporanea2.touched">Anote Concepto</mat-error>
-            </mat-form-field>
+      <mat-form-field *ngIf="Concepto.value === 'def'   " appearance="outline">
+        <mat-label>Anote Concepto en específico</mat-label>
+        <input matInput placeholder=" " [(ngModel)]="extra2" #DiaExtemporanea2="ngModel" id="DiaExtemporanea2" name="DiaExtemporanea2"
+          required>
+        <mat-error *ngIf="DiaExtemporanea2.dirty || DiaExtemporanea2.touched">Anote Concepto</mat-error>
+      </mat-form-field>
 
       <!-- Total -->
 
@@ -84,7 +92,7 @@
       <!-- year -->
       <mat-form-field appearance="outline">
         <mat-label>Año</mat-label>
-        <input  matInput type="number" [(ngModel)]="newDebit.Year" #year="ngModel" id="year" name="year" required>
+        <input matInput type="number" [(ngModel)]="newDebit.Year" #year="ngModel" id="year" name="year" required>
         <mat-error *ngIf="year.dirty || year.touched">Anotar Año</mat-error>
 
       </mat-form-field>

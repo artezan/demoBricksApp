@@ -65,7 +65,7 @@
       <mat-card-actions>
         <span [matTooltip]=errorToShow [matTooltipClass]="'tooltip-size'" (mouseenter)="getPopMessage($event)">
           <button *ngIf="isNew" id="submitUser" mat-raised-button color="primary" (click)="newCondo()" [disabled]="!newUserForm.form.valid">Crear</button>
-          <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" [disabled]="!newUserForm.form.valid">Editar</button>
+          <button *ngIf="!isNew" id="submitUser" mat-raised-button color="primary" (click)="editCondo()" >Editar</button>
         </span>
         <button mat-raised-button color="warn" routerLink="/list-propietaries">Cancelar</button>
       </mat-card-actions>

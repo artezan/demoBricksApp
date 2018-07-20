@@ -56,9 +56,32 @@ export class NewReportsComponent implements OnInit {
   arrReports = [];
   rowDeselect = [];
   months = [];
-  yearInput: number;
-  balanceBefore: number;
+  yearInput: number[] = [];
+  yearOptions: number[] = [];
   isToSend = false;
+  /**
+   * num of files
+   */
+  n = 0;
+  pdfArray: File[] = [];
+  /**
+   * buffer de documentos pdfs
+   */
+  arrBuff = [];
+  /**
+   * mensaje en correo
+   */
+  message: string;
+  titleDoc: any[] = [];
+  /**
+   * saldo real
+   */
+  realBalance: number;
+  /**
+   * saldo conciliacion
+   */
+  conciliation: number;
+
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -72,6 +95,13 @@ export class NewReportsComponent implements OnInit {
     public egressService: EgressService,
     private pdfEmailService: PdfEmailService
   ) {
+    const year = new Date(Date.now()).getFullYear();
+    this.yearOptions[5] = year;
+    this.yearOptions[4] = year - 1;
+    this.yearOptions[3] = year - 2;
+    this.yearOptions[2] = year - 3;
+    this.yearOptions[1] = year - 4;
+    this.yearOptions[0] = year - 5;
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
         this.openSnackBar(params.res.toString());
@@ -136,14 +166,16 @@ export class NewReportsComponent implements OnInit {
       }
     });
     propietary.forEach(item => {
-      arrRows.push({
-        Nombre: item.NombrePropietario,
-        ApellidoPaterno: item.ApellidoPaterno,
-        CorreoElectronico: item.CorreoElectronico,
-        Id: item.Id_Propietario,
-        EsJunta: item.EsJunta,
-        type: 'propietary'
-      });
+      if (item.error !== '') {
+        arrRows.push({
+          Nombre: item.NombrePropietario,
+          ApellidoPaterno: item.ApellidoPaterno,
+          CorreoElectronico: item.CorreoElectronico,
+          Id: item.Id_Propietario,
+          EsJunta: item.EsJunta,
+          type: 'propietary'
+        });
+      }
     });
     this.rows = arrRows;
     this.rows2 = arrRows;
@@ -168,7 +200,7 @@ export class NewReportsComponent implements OnInit {
         reportId: 2
       },
       {
-        // Ingresos Por pagar
+        // Adeudos
         Reporte: 'Reporte Adeudos Resumen',
         Cantidad: 1,
         reportId: 3
@@ -179,7 +211,7 @@ export class NewReportsComponent implements OnInit {
         reportId: 4
       },
       {
-        // Ingresos Por pagar
+        // Adeudos
         Reporte: 'Reporte Adeudos Desgloce',
         Cantidad: 1,
         reportId: 5
@@ -328,11 +360,12 @@ export class NewReportsComponent implements OnInit {
         subHeader:
           'Desea enviar ' + stringReport + ' a los siguientes usuarios:',
         body: '<p>' + stringUsers + '</p> ',
-        isform: false
+        isform: true
       }
     });
     const sub = dialogRef.componentInstance.buttons.subscribe(res => {
-      if (res === 'ok') {
+      if (res.options === 'ok') {
+        this.message = res.message;
         this.isToSend = true;
         this.dataPdf();
         this.openSnackBar('Reportes enviados correctamente');
@@ -379,7 +412,7 @@ export class NewReportsComponent implements OnInit {
         ];
         this.pdfReportIngress(report, '1', colum, [250, 250]);
       }
-      // Ingresos Pagado 0
+      // Ingresos Pagado 0 / Adeudos
       if (report.reportId === 3) {
         const colum: PdfColum[] = [
           {
@@ -393,7 +426,7 @@ export class NewReportsComponent implements OnInit {
             type: 'money'
           }
         ];
-        this.pdfReportIngress(report, '0', colum, [250, 250]);
+        this.pdfReportAdeudo(report, '0', colum, [250, 250]);
       }
       // desgloce ingr pagado 1
       if (report.reportId === 4) {
@@ -421,7 +454,7 @@ export class NewReportsComponent implements OnInit {
         ];
         this.pdfReportIngress(report, '1', colum, [125, 125, 125, 125]);
       }
-      // desgloce ingr pagado 0
+      // desgloce ingr pagado 0 / Adeudo
       if (report.reportId === 5) {
         const colum: PdfColum[] = [
           {
@@ -435,17 +468,12 @@ export class NewReportsComponent implements OnInit {
             type: 'normal'
           },
           {
-            name: 'Periodo',
-            prop: 'Periodo',
-            type: 'normal'
-          },
-          {
             name: 'Total',
             prop: 'Total',
             type: 'money'
           }
         ];
-        this.pdfReportIngress(report, '0', colum, [125, 125, 125, 125]);
+        this.pdfReportAdeudo(report, '0', colum, [125, 125, 125, 125]);
       }
       // Reporte Egresos Variables
       if (report.reportId === 6) {
@@ -720,6 +748,43 @@ export class NewReportsComponent implements OnInit {
     });
   }
 
+  private pdfReportAdeudo(
+    report: any,
+    isPay: string,
+    colum: PdfColum[],
+    withColums: number[]
+  ) {
+    this.months.forEach(month => {
+      this.yearInput.forEach(yearReport => {
+        this.ingressService.getData(this.id).subscribe(ingress => {
+          const ingressPerMonth = ingress.filter(item => {
+            if (item.Periodo) {
+              const m = +item.Periodo.substring(0, item.Periodo.indexOf('/'));
+              const year = +item.Periodo.substring(
+                item.Periodo.indexOf('/') + 1
+              );
+              if (
+                m === +month &&
+                year === +yearReport &&
+                item.Pagado === isPay
+              ) {
+                return item;
+              }
+            }
+          });
+          const data = this.generateTablePdf(colum, ingressPerMonth);
+          this.exportToPdf(
+            report.Reporte,
+            month,
+            yearReport,
+            data.table,
+            withColums,
+            data.total
+          );
+        });
+      });
+    });
+  }
   private pdfReportIngress(
     report: any,
     isPay: string,
@@ -727,32 +792,36 @@ export class NewReportsComponent implements OnInit {
     withColums: number[]
   ) {
     this.months.forEach(month => {
-      this.ingressService.getData(this.id).subscribe(ingress => {
-        const ingressPerMonth = ingress.filter(item => {
-          if (item.Periodo) {
-            const m = +item.Periodo.substring(0, item.Periodo.indexOf('/'));
-            const year = +item.Periodo.substring(item.Periodo.indexOf('/') + 1);
-            if (
-              m === +month &&
-              year === +this.yearInput &&
-              item.Pagado === isPay
-            ) {
-              return item;
+      this.yearInput.forEach(yearReport => {
+        this.ingressService.getData(this.id).subscribe(ingress => {
+          const ingressPerMonth = ingress.filter(item => {
+            if (item.FechaPagado) {
+              const m = new Date(item.FechaPagado).getMonth() + 1;
+              const year = new Date(item.FechaPagado).getFullYear();
+              if (
+                m === +month &&
+                year === +yearReport &&
+                item.Pagado === isPay
+              ) {
+                return item;
+              }
             }
-          }
+          });
+          const data = this.generateTablePdf(colum, ingressPerMonth);
+          this.exportToPdf(
+            report.Reporte,
+            month,
+            yearReport,
+            data.table,
+            withColums,
+            data.total,
+            'Fecha'
+          );
         });
-        const data = this.generateTablePdf(colum, ingressPerMonth);
-        this.exportToPdf(
-          report.Reporte,
-          month,
-          this.yearInput,
-          data.table,
-          withColums,
-          data.total
-        );
       });
     });
   }
+
   /**
    *
    * @param report nombre reporte
@@ -771,140 +840,184 @@ export class NewReportsComponent implements OnInit {
     check = false
   ) {
     this.months.forEach(month => {
-      this.egressService.getData(this.id).subscribe(egress => {
-        const egressPerMonth = egress.filter(item => {
-          // filtrar por variable o fijo
-          if (item.Mes && item.Año && !state && !check) {
-            if (
-              +item.Mes === +month &&
-              +item.Año === +this.yearInput &&
-              item.Variable === itemVariable
-            ) {
-              return item;
+      this.yearInput.forEach(yearReport => {
+        this.egressService.getData(this.id).subscribe(egress => {
+          const egressPerMonth = egress.filter(item => {
+            // filtrar por variable o fijo
+            if (item.Mes && item.Año && !state && !check) {
+              if (
+                +item.Mes === +month &&
+                +item.Año === yearReport &&
+                item.Variable === itemVariable
+              ) {
+                return item;
+              }
+              // filtar variable o fijo y pagado o no
+            } else if (item.Mes && item.Año && state && !check) {
+              if (
+                +item.Mes === +month &&
+                +item.Año === yearReport &&
+                item.Variable === itemVariable &&
+                item.Estado === state
+              ) {
+                return item;
+              }
+              // filtrar todos pagados y transito
+            } else if ('' === itemVariable && state && check) {
+              const dateCheck = new Date(item.FechaCobrado);
+              const m = dateCheck.getMonth() + 1;
+              const y = dateCheck.getFullYear();
+              if (+month === m && yearReport === y && state === item.Estado) {
+                return item;
+              } else if (
+                +item.Mes === +month &&
+                +item.Año === yearReport &&
+                item.Estado === state
+              ) {
+                return item;
+              }
+              // filtrar en transito
             }
-            // filtar variable o fijo y pagado o no
-          } else if (item.Mes && item.Año && state && !check) {
-            if (
-              +item.Mes === +month &&
-              +item.Año === +this.yearInput &&
-              item.Variable === itemVariable &&
-              item.Estado === state
-            ) {
-              return item;
-            }
-            // filtrar todos pagados y transito
-          } else if ('' === itemVariable && state && check) {
-            const dateCheck = new Date(item.FechaCobrado);
-            const m = dateCheck.getMonth() + 1;
-            const y = dateCheck.getFullYear();
-            if (
-              +month === m &&
-              +this.yearInput === y &&
-              state === item.Estado
-            ) {
-              return item;
-            } else if (
-              +item.Mes === +month &&
-              +item.Año === +this.yearInput &&
-              item.Estado === state
-            ) {
-              return item;
-            }
-            // filtrar en transito
-          }
+          });
+          const data = this.generateTablePdf(colum, egressPerMonth);
+          this.exportToPdf(
+            report.Reporte,
+            month,
+            yearReport,
+            data.table,
+            withColums,
+            data.total
+          );
         });
-        const data = this.generateTablePdf(colum, egressPerMonth);
-        this.exportToPdf(
-          report.Reporte,
-          month,
-          this.yearInput,
-          data.table,
-          withColums,
-          data.total
-        );
       });
     });
   }
   private pdfReportFinal(report: any, colum: PdfColum[], withColums: number[]) {
     this.months.forEach(month => {
-      let ingressTotal = 0;
-      let ingressTotalNoPay = 0;
-      let ingressTotalPay = 0;
-      let egressTotal = 0;
-      let egressTotalFixed = 0;
-      let egressTotalVariable = 0;
-      this.ingressService.getData(this.id).subscribe(arrIngress => {
-        arrIngress.forEach(ingress => {
-          if (ingress.Pagado === '1') {
-            ingressTotal += +ingress.Total;
-            ingressTotalPay += +ingress.Total;
-          } else if (ingress.Pagado === '0') {
-            ingressTotal += +ingress.Total;
-            ingressTotalNoPay += +ingress.Total;
-          }
-        });
-        this.egressService.getData(this.id).subscribe(arrEgress => {
-          arrEgress.forEach(egress => {
-            if (egress.Variable === '1') {
-              egressTotal += +egress.Monto;
-              egressTotalVariable += +egress.Monto;
-            } else if (egress.Variable === '0') {
-              egressTotal += +egress.Monto;
-              egressTotalFixed += +egress.Monto;
+      this.yearInput.forEach(yearReport => {
+        /**
+         * todos los ingresos pagados a la fecha del reporte
+         */
+        let ingressTotalPay = 0;
+        /** total de egresos pagados */
+        let egressTotalPay = 0;
+        /**total de egresos real */
+        let egressTotalReal = 0;
+        /**
+         * total cheques anteriores cobrados
+         */
+        let egressTotalBeforePay = 0;
+        /**
+         * total de cheques en transito
+         */
+        let egressTotalTransit = 0;
+        this.ingressService.getData(this.id).subscribe(arrIngress => {
+          arrIngress.forEach(ingress => {
+            const ingressMonth = new Date(ingress.FechaPagado).getMonth() + 1;
+            const ingressYear = new Date(ingress.FechaPagado).getFullYear();
+            if (
+              ingress.Pagado === '1' &&
+               +ingressMonth <= +month &&
+               +ingressYear <= +yearReport
+            ) {
+              ingressTotalPay += +ingress.Total;
             }
           });
-          const rows = [
-            {
-              subTitle: 'Ingresos no pagados',
-              conciliation: (ingressTotalNoPay + this.balanceBefore).toString(),
-              real: ingressTotalNoPay.toString()
-            },
-            {
-              subTitle: 'Ingresos Pagados',
-              conciliation: (ingressTotalPay + this.balanceBefore).toString(),
-              real: ingressTotalPay.toString()
-            },
-            {
-              subTitle: 'Total Ingresos',
-              conciliation: (ingressTotal + this.balanceBefore).toString(),
-              real: ingressTotal.toString()
-            },
-            {
-              subTitle: 'Egresos Fijos',
-              conciliation: (egressTotalFixed + this.balanceBefore).toString(),
-              real: egressTotalFixed.toString()
-            },
-            {
-              subTitle: 'Egresos  Variables',
-              conciliation: (
-                egressTotalVariable + this.balanceBefore
-              ).toString(),
-              real: egressTotalVariable.toString()
-            },
-            {
-              subTitle: 'Total Egresos',
-              conciliation: (egressTotal + this.balanceBefore).toString(),
-              real: egressTotal.toString()
-            },
-            {
-              subTitle: 'Total General',
-              conciliation: (
-                egressTotal +
-                ingressTotal +
-                this.balanceBefore
-              ).toString(),
-              real: (egressTotal + ingressTotal).toString()
-            }
-          ];
-          const data = this.generateTablePdf(colum, rows);
-          this.exportToPdf(
-            report.Reporte,
-            month,
-            this.yearInput,
-            data.table,
-            withColums,
-            data.total
-          );
+          this.egressService.getData(this.id).subscribe(arrEgress => {
+            arrEgress.forEach(egress => {
+              const egressMonth = new Date(egress.FechaCobrado).getMonth() + 1;
+              const egressYear = new Date(egress.FechaCobrado).getFullYear();
+              if (
+                egress.Estado === 'Pagado' &&
+                +yearReport === +egressYear &&
+                +egressMonth === +month &&
+                +egress.Año === +yearReport &&
+                +egress.Mes === +month
+              ) {
+                egressTotalPay += +egress.Monto;
+              }
+              if (+egress.Mes === +month && +egress.Año === +yearReport) {
+                egressTotalReal += +egress.Monto;
+              }
+              // pagados y fecha reporte = fecha cobrado y periodo < fecha reporte
+              if (
+                egress.Estado === 'Pagado' &&
+                +yearReport === +egressYear &&
+                +egressMonth === +month &&
+                +egress.Año < +yearReport &&
+                +egress.Mes < +month
+              ) {
+                egressTotalBeforePay += +egress.Monto;
+              }
+              // (egresos no cobrados y egreso periodo <= fecha reporte)
+              //  o (egr cobrados y perido = fecha reporte y fecha cobro > fecha repo )
+              if (
+                (egress.Estado !== 'Pagado' &&
+                  +egress.Mes <= +month &&
+                  +egress.Año <= +yearReport) ||
+                (egress === 'Pagado' &&
+                  +egress.Mes <= +month &&
+                  +egress.Año <= +yearReport &&
+                  +egressMonth > +month &&
+                  +egressYear > +yearReport)
+              ) {
+                egressTotalTransit += +egress.Monto;
+              }
+            });
+            /**
+             * Saldo final conciliacion
+             */
+            const finalBalnceConcilation =
+              this.conciliation +
+              ingressTotalPay -
+              egressTotalPay -
+              egressTotalBeforePay;
+            /**
+             *  saldo final real
+             */
+            const finalBalanceReal =
+              this.realBalance + ingressTotalPay - egressTotalReal;
+            const rows = [
+              {
+                subTitle: 'Saldo Anterior',
+                conciliation: this.conciliation.toString(),
+                real: this.realBalance.toString()
+              },
+              {
+                subTitle: 'Ingresos',
+                conciliation: ingressTotalPay.toString(),
+                real: ingressTotalPay.toString()
+              },
+              {
+                subTitle: 'Egresos',
+                conciliation: egressTotalPay.toString(),
+                real: egressTotalReal.toString()
+              },
+              {
+                subTitle: 'Cheques Cobrados',
+                conciliation: egressTotalBeforePay.toString(),
+                real: '--------'
+              },
+              {
+                subTitle: 'Saldo Final',
+                conciliation: finalBalnceConcilation.toString(),
+                real: finalBalanceReal.toString()
+              },
+              {
+                subTitle: 'Cheques en Tránsito',
+                conciliation: egressTotalTransit.toString(),
+                real: egressTotalTransit.toString()
+              }
+            ];
+            const data = this.generateTablePdf(colum, rows);
+            this.exportToPdf(
+              report.Reporte,
+              month,
+              yearReport,
+              data.table,
+              withColums
+            );
+          });
         });
       });
     });
@@ -941,8 +1054,32 @@ export class NewReportsComponent implements OnInit {
    * @param month periodo mes
    * @param data datos de tabla
    * @param withTable whith de c/u columna
+   * @param total total
+   * @param dateOrPeriod Periodo o Fecha
    */
-  exportToPdf(title, month, year, data, withTable: Array<any>, total?: number) {
+  exportToPdf(
+    title,
+    month,
+    year,
+    data,
+    withTable: Array<any>,
+    total?: number,
+    dateOrPeriod = 'Periodo'
+  ) {
+    let totalTilte;
+    if (!total) {
+      totalTilte = '';
+    } else {
+      totalTilte = [
+        {
+          text: 'Total: ',
+          bold: true
+        },
+        {
+          text: ' $ ' + total.toString()
+        }
+      ];
+    }
     const docDefinition = {
       header: [
         {
@@ -967,7 +1104,7 @@ export class NewReportsComponent implements OnInit {
           style: 'subheader2'
         },
         {
-          text: 'Periodo: ' + month + '/' + year,
+          text: dateOrPeriod + ': ' + month + '/' + year,
           style: 'subheader2'
         },
         // linea
@@ -1012,15 +1149,7 @@ export class NewReportsComponent implements OnInit {
           }
         },
         {
-          text: [
-            {
-              text: 'Total: ',
-              bold: true
-            },
-            {
-              text: ' $ ' + total.toString()
-            }
-          ],
+          text: totalTilte,
           alignment: 'justify'
         }
       ],
@@ -1054,31 +1183,52 @@ export class NewReportsComponent implements OnInit {
       }
     };
     pdfMake.createPdf(docDefinition).open();
-    pdfMake.createPdf(docDefinition).download('Recibo');
-    if (this.isToSend) {
-      this.sendReport(pdfMake.createPdf(docDefinition), title);
+    this.n++;
+    this.arrBuff.push(pdfMake.createPdf(docDefinition));
+    this.titleDoc.push(title.replace(/\s/g, '') + year + '.pdf');
+    // pdfMake.createPdf(docDefinition).download('Recibo');
+    // solo cuando es el ultimo doc entra
+    if (
+      this.isToSend &&
+      this.n ===
+        this.arrReports.length * this.months.length * this.yearInput.length
+    ) {
+      this.sendReport();
     }
   }
-  sendReport(pdf, title) {
-    this.arrUsers.forEach((user, i) => {
-      pdf.getBuffer(dataURL => {
-        const f = new File([dataURL], 'Recibo.pdf', {
-          type: 'application/pdf'
-        });
-        const formData: FormData = new FormData();
-        formData.append('file[]', f);
-        formData.append('Asunto', 'Recibo de ' + title);
-        formData.append(
-          'Mensaje',
-          'Hola ' +
-            user.Nombre +
-            ' ' +
-            user.ApellidoPaterno +
-            ' te adjuntamos tu reporte. Saludos'
-        );
-        formData.append('Destinatarios[0]', user.CorreoElectronico);
-        this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
-          this.openSnackBar(c.respuesta);
+  sendReport() {
+    // cada usuario
+    this.arrUsers.forEach(user => {
+      // crea el form
+      const formData: FormData = new FormData();
+      // por cada doc genera el buffer
+      this.arrBuff.forEach((a, i) => {
+        // deben de quedar adentro del getbuffer
+        a.getBuffer(dataURL => {
+          const f = new File([dataURL], this.titleDoc[i], {
+            type: 'application/pdf'
+          });
+          // registra cada file
+          formData.append('file[]', f);
+          // cuando es el ultimo manda correo
+          if (i + 1 === this.n) {
+            formData.append('Asunto', 'Reportes para ' + user.Nombre);
+            formData.append(
+              'Mensaje',
+              'Hola ' +
+                user.Nombre +
+                ' ' +
+                user.ApellidoPaterno +
+                ' te adjuntamos tu reporte. Saludos'
+            );
+            if (this.message !== undefined) {
+              formData.append('Mensaje', this.message);
+            }
+            formData.append('Destinatarios[0]', user.CorreoElectronico);
+            this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
+              this.openSnackBar(c.respuesta);
+            });
+          }
         });
       });
     });

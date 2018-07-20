@@ -1,3 +1,4 @@
+import { PropietariesService } from './../../../services/propietaries.service';
 import { RenterService } from './../../../services/renter.service';
 import { PdfEmailService } from './../../../services/pdf-email.service';
 import { EmailSend } from './../../../models/email-send.model';
@@ -64,7 +65,8 @@ export class ListIngressComponent implements OnInit {
     public dialog: MatDialog,
     public condoService: CondoService,
     private pdfEmailService: PdfEmailService,
-    private renterService: RenterService
+    private depaService: ApartmentService,
+    private propietariesService: PropietariesService
   ) {
     this.route.queryParams.subscribe(params => {
       if (Object.keys(params).length !== 0) {
@@ -155,6 +157,7 @@ export class ListIngressComponent implements OnInit {
     });
   }
   generateRows(data: Ingress[]) {
+    console.log(data);
     let isPayment: string;
     this.realData = data;
     const arrRows: Ingress[] = [];
@@ -169,7 +172,7 @@ export class ListIngressComponent implements OnInit {
         const month = item.Periodo.substring(0, item.Periodo.indexOf('/'));
         arrRows.push({
           Id_Pago: item.Id_Pago,
-          NumeroRecibo: item.NumeroRecibo,
+          NumeroRecibo: item.NumeroCheque,
           Interior: item.Interior,
           NombreInquilino: item.NombreInquilino,
           ApellidoPaterno: item.ApellidoPaterno,
@@ -411,7 +414,7 @@ export class ListIngressComponent implements OnInit {
           style: 'subheader2'
         },
         {
-          text: 'Recibo No: ' + this.ingressSelect[0].NumeroRecibo,
+          text: 'Recibo No: ' + this.ingressSelect[0].NumeroCheque,
           style: 'subheader2'
         },
         {
@@ -587,40 +590,44 @@ export class ListIngressComponent implements OnInit {
       }
     };
     pdfMake.createPdf(docDefinition).open();
-    pdfMake.createPdf(docDefinition).download('Recibo');
+    // pdfMake.createPdf(docDefinition).download('Recibo');
     return pdfMake.createPdf(docDefinition);
   }
   sendPdfEmail() {
-    console.log(this.ingressSelect[0]);
-    this.renterService.getData(this.id).subscribe(renterArr => {
-      const renter = renterArr.filter(item => {
-        if (this.ingressSelect[0].Id_Inquilino === item.Id_Inquilino) {
-          return item;
-        }
-      });
-      if (renter) {
-        this.pdf().getBuffer(dataURL => {
-          const f = new File([dataURL], 'Recibo.pdf', {
-            type: 'application/pdf'
-          });
-          const formData: FormData = new FormData();
-          formData.append('file[]', f);
-          formData.append(
-            'Asunto',
-            'Recibo de ' + this.ingressSelect[0].Concepto
+    this.apartmentServices.getData(this.id).subscribe(depaArr => {
+      const depa = depaArr.find(
+        item => item.Id_Depa === this.ingressSelect[0].Id_Depa
+      );
+      if (depa) {
+        this.propietariesService.getData(this.id).subscribe(propArr => {
+          const prop = propArr.find(
+            p => p.Id_Propietario === depa.Id_Propietario
           );
-          formData.append(
-            'Mensaje',
-            'Hola ' +
-              renter[0].NombreInquilino +
-              ' ' +
-              renter[0].ApellidoPaterno +
-              ' te adjuntamos tu recibo. Saludos'
-          );
-          formData.append('Destinatarios[0]', renter[0].CorreoElectronico);
-          this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
-            this.openSnackBar(c.respuesta);
-          });
+          if (prop) {
+            this.pdf().getBuffer(dataURL => {
+              const f = new File([dataURL], 'Recibo.pdf', {
+                type: 'application/pdf'
+              });
+              const formData: FormData = new FormData();
+              formData.append('file[]', f);
+              formData.append(
+                'Asunto',
+                'Recibo de ' + this.ingressSelect[0].Concepto
+              );
+              formData.append(
+                'Mensaje',
+                'Hola ' +
+                  prop.NombrePropietario +
+                  ' ' +
+                  prop.ApellidoPaterno +
+                  ' te adjuntamos tu recibo. Saludos'
+              );
+              formData.append('Destinatarios[0]', prop.CorreoElectronico);
+              this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
+                this.openSnackBar(c.respuesta);
+              });
+            });
+          }
         });
       }
     });

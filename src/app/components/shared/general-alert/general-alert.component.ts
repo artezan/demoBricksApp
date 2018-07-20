@@ -7,15 +7,15 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
   styleUrls: ['./general-alert.component.scss']
 })
 export class GeneralAlertComponent implements OnInit {
+  message: string;
   buttons = new EventEmitter();
   public dataInput: {
     header: string;
     subHeader?: string;
     body: string;
     isform?: boolean;
+    bodyForm?: string;
     hideButtonCancel?: boolean;
-
-
   };
   constructor(
     public dialogRef: MatDialogRef<GeneralAlertComponent>,
@@ -25,6 +25,7 @@ export class GeneralAlertComponent implements OnInit {
       subHeader?: string;
       body: string;
       isform?: boolean;
+      bodyForm?: string;
       hideButtonCancel?: boolean;
     }
   ) {
@@ -34,7 +35,11 @@ export class GeneralAlertComponent implements OnInit {
     this.dialogRef.close();
   }
   buttonsResponse(options: string) {
-    this.buttons.emit(options);
+    if (this.dataInput.isform) {
+      this.buttons.emit({options: options, message: this.message});
+    } else {
+      this.buttons.emit(options);
+    }
   }
 
   ngOnInit() {}

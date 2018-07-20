@@ -36,7 +36,7 @@
         <button mat-icon-button *ngIf="!isHideExit">
           <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
         </button>
-        <span *ngIf="!isHideExit">Salir</span>
+        <span (click)="logout()" *ngIf="!isHideExit">Salir</span>
 
       </mat-toolbar-row>
 
