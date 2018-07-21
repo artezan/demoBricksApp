@@ -367,7 +367,7 @@ export class NewReportsComponent implements OnInit {
         reports.push(report.Reporte);
       });
       const stringReport = reports.toString();
-      const stringUsers = users.toString();
+      const stringUsers = users.join('<br>');
       const dialogRef = this.dialog.open(GeneralAlertComponent, {
         maxWidth: maxWidth,
         minWidth: minWidth,
@@ -375,7 +375,7 @@ export class NewReportsComponent implements OnInit {
         data: {
           header: 'Enviar Reportes',
           subHeader:
-            'Desea enviar ' + stringReport + ' a los siguientes usuarios:',
+            'Desea enviar: ' + stringReport + ' a los siguientes usuarios:',
           body: '<p>' + stringUsers + '</p> ',
           isform: true
         }
