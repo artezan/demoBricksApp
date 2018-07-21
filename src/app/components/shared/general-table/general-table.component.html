@@ -41,8 +41,8 @@
  </ng-template>
 <ng-template #list>
   <mat-card>
-      <mat-form-field style="width: 100%">
-          <input matInput appearance="outline" (keyup)="changeMovil($event)" placeholder="Filtrar">
+      <mat-form-field style="width: 100%" appearance="outline">
+          <input matInput  (keyup)="changeMovil($event)" placeholder="Filtrar">
         </mat-form-field>
     <mat-selection-list #option (selectionChange)="handleSelection($event)">
       <mat-list-option [selected]=row.isSelect (click)="onClickList(row)" *ngFor="let row of rows">

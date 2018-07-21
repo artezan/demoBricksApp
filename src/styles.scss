@@ -69,8 +69,22 @@ body {
     position: fixed;
     top: auto;
     /* right: 2%; */
-    bottom: 0%;
+   bottom: 0%;
     z-index: 999;
+    text-align: center !important;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5%;
+    // justify-content: space-around;
+  }
+}
+@media (max-height: 480px) {
+  .toogle-btns {
+    position: fixed;
+    top: auto;
+    /* right: 2%; */
+   bottom: 0%;
+    z-index: -1;
     text-align: center !important;
     display: flex;
     flex-wrap: wrap;
