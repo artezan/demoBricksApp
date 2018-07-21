@@ -81,7 +81,7 @@ body {
 @media (max-height: 480px) {
   .toogle-btns {
     position: fixed;
-    top: auto;
+    top: 100%;
     /* right: 2%; */
    bottom: 0%;
     z-index: -1;

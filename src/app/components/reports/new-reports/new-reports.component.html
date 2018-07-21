@@ -1,138 +1,165 @@
-<div class="toogle-btns">
-  <button mat-raised-button id="enviar" class="btn" [disabled]="!arrReports.length || !arrUsers.length || !months.length || !yearInput.length || !conciliation || !realBalance"
-    color="accent" (click)="send()">Enviar</button>
-
-  <button mat-raised-button (click)="dataPdf(); isToSend = false" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !conciliation || !realBalance"
-    class="btn" color="primary">Solo Imprimir</button>
-
-</div>
-
-<div class="row">
-  <div class="col-lg">
-    <mat-card class="card-size">
-      <mat-card-title>Destinatarios</mat-card-title>
-      <mat-card-subtitle>Usuarios Seleccionados</mat-card-subtitle>
-      <mat-chip-list style="margin: 3%;">
-        <mat-chip *ngIf="arrUsers.length === 0">No hay usuarios seleccionados</mat-chip>
-        <span *ngIf="arrUsers.length > 0 ">
-          <mat-chip *ngFor="let item of arrUsers" color="primary" class="chips-font" selected="true" (removed)="remove(item)" [removable]="removable">{{item.Nombre}}
-            <mat-icon matChipRemove *ngIf="removable">
-              cancel
-            </mat-icon>
-          </mat-chip>
-        </span>
-
-      </mat-chip-list>
-      <mat-card-content>
-        <mat-tab-group (selectedTabChange)="updateSel($event)" class="demo-tab-group">
-          <mat-tab label="Todos">
-            <div class="table-height">
-              <!-- todos -->
-              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"
-                [changeToTable]=false></app-general-table>
-            </div>
-          </mat-tab>
-          <mat-tab label="Inquilinos">
-            <div class="table-height">
-              <!-- Inquilinos -->
-              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect">
-              </app-general-table>
-            </div>
-          </mat-tab>
-          <mat-tab label="Propietarios">
-            <div class="table-height">
-              <!-- Propietarios -->
-              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
-            </div>
-          </mat-tab>
-          <mat-tab label="Junta">
-            <div class="table-height">
-              <!-- Propietarios2 -->
-              <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
-            </div>
-          </mat-tab>
-        </mat-tab-group>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <div class="col-sm">
-    <mat-card class="card-size">
-      <mat-card-title>Reportes</mat-card-title>
-      <div >
-        <!-- Mes -->
-        <mat-form-field class="mr-3" appearance="outline">
-          <mat-label> Mes</mat-label>
-          <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="months" #Mes="ngModel" id="Mes" name="Mes"
-            required multiple>
-            <mat-option value="1">Enero</mat-option>
-            <mat-option value="2">Febrero</mat-option>
-            <mat-option value="3">Marzo</mat-option>
-            <mat-option value="4">Abril</mat-option>
-            <mat-option value="5">Mayo</mat-option>
-            <mat-option value="6">Junio</mat-option>
-            <mat-option value="7">Julio</mat-option>
-            <mat-option value="8">Agosto</mat-option>
-            <mat-option value="9">Septiembre</mat-option>
-            <mat-option value="10">Octubre</mat-option>
-            <mat-option value="11">Noviembre</mat-option>
-            <mat-option value="12">Diciembre</mat-option>
-          </mat-select>
-          <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
-        </mat-form-field>
-        <mat-form-field class="mr-3" appearance="outline">
-          <mat-label>Año</mat-label>
-          <mat-select multiple [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
-            <span *ngFor="let year of yearOptions">
-              <mat-option [value]="year"> {{year}} </mat-option>
-            </span>
-
-          </mat-select>
-          <mat-error *ngIf="year.dirty || year.touched">anotar Año</mat-error>
-
-        </mat-form-field>
-        <mat-form-field class="mr-3" appearance="outline">
-          <mat-label>Conciliacion</mat-label>
-          <input matInput type="number" [(ngModel)]="conciliation" #before="ngModel" id="before" name="before" required>
-          <mat-error *ngIf="before.dirty || before.touched">anotar conciliacion</mat-error>
-
-        </mat-form-field>
-        <mat-form-field class="mr-3" appearance="outline">
-          <mat-label>Saldo Real</mat-label>
-          <input matInput type="number" [(ngModel)]="realBalance" #before="ngModel" id="before" name="before" required>
-          <mat-error *ngIf="before.dirty || before.touched">anotar saldo real</mat-error>
-
-        </mat-form-field>
+<div *ngIf="(isDevice$ | async) && isEmail ; then first else second"></div>
+<ng-template #first>
+  <mat-card style="margin: 5%">
+    <h3>Desea enviar los siguientes reportes:</h3>
+  <p *ngFor="let report of arrReports"> {{report.Reporte}} </p>
+  <h3>A estos destinatarios:</h3>
+    <p *ngFor="let user of arrUsers"> {{user.Nombre}}</p>
+  <div style=" display: flex;
+  flex-direction: column;">
+    <mat-form-field appearance="outline">
+      <mat-label>Mensage</mat-label>
+      <textarea matInput #message></textarea>
+    </mat-form-field>
+    <div align="end">
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="sendMovil(message.value)">Enviar</button>
+            <button mat-raised-button color="warn" (click)="isEmail = false">Cancelar</button>
+        </mat-card-actions>
       </div>
 
-      <mat-card-subtitle>Reportes Seleccionados</mat-card-subtitle>
-      <mat-chip-list style="margin: 3%;">
-        <mat-chip *ngIf="arrReports.length === 0">No hay reportes seleccionados</mat-chip>
-        <span *ngIf="arrReports.length > 0 ">
-          <mat-chip *ngFor="let item of arrReports" color="primary" class="chips-font" selected="true" (removed)="removeReport(item)"
-            [removable]="removable">{{item.Reporte}}
-            <mat-icon matChipRemove *ngIf="removable">
-              cancel
-            </mat-icon>
-          </mat-chip>
-        </span>
+  </div>
+  </mat-card>
 
-      </mat-chip-list>
-      <mat-card-content>
-        <div>
-          <!-- Reporte -->
-          <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rowsReport" [columns]="columnsReport"
-            (select)="selectReport($event)" [selected]="arrReports" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0]
-            [rowDeselect]="rowDeselect"></app-general-table>
-          <div class="space-buttons"></div>
+</ng-template>
+<ng-template #second>
+  <div class="toogle-btns">
+    <button *ngIf="!(isDevice$ | async)" mat-raised-button id="enviar" class="btn" [disabled]="!arrReports.length || !arrUsers.length || !months.length || !yearInput.length || !conciliation || !realBalance"
+      color="accent" (click)="send()">Enviar</button>
+    <button *ngIf="(isDevice$ | async)" mat-raised-button id="enviar" class="btn" color="accent" (click)="isEmail = true">Enviar</button>
 
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <button mat-raised-button (click)="dataPdf(); isToSend = false" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !conciliation || !realBalance"
+      class="btn" color="primary">Solo Imprimir</button>
+
   </div>
 
+  <div class="row">
+    <div class="col-lg">
+      <mat-card class="card-size">
+        <mat-card-title>Destinatarios</mat-card-title>
+        <mat-card-subtitle>Usuarios Seleccionados</mat-card-subtitle>
+        <mat-chip-list style="margin: 3%;">
+          <mat-chip *ngIf="arrUsers.length === 0">No hay usuarios seleccionados</mat-chip>
+          <span *ngIf="arrUsers.length > 0 ">
+            <mat-chip *ngFor="let item of arrUsers" color="primary" class="chips-font" selected="true" (removed)="remove(item)" [removable]="removable">{{item.Nombre}}
+              <mat-icon matChipRemove *ngIf="removable">
+                cancel
+              </mat-icon>
+            </mat-chip>
+          </span>
 
-</div>
+        </mat-chip-list>
+        <mat-card-content>
+          <mat-tab-group (selectedTabChange)="updateSel($event)" class="demo-tab-group">
+            <mat-tab label="Todos">
+              <div class="table-height">
+                <!-- todos -->
+                <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                  (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"
+                  [changeToTable]=false></app-general-table>
+              </div>
+            </mat-tab>
+            <mat-tab label="Inquilinos">
+              <div class="table-height">
+                <!-- Inquilinos -->
+                <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                  (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect">
+                </app-general-table>
+              </div>
+            </mat-tab>
+            <mat-tab label="Propietarios">
+              <div class="table-height">
+                <!-- Propietarios -->
+                <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                  (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
+              </div>
+            </mat-tab>
+            <mat-tab label="Junta">
+              <div class="table-height">
+                <!-- Propietarios2 -->
+                <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
+                  (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"></app-general-table>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-sm">
+      <mat-card class="card-size">
+        <mat-card-title>Reportes</mat-card-title>
+        <div>
+          <!-- Mes -->
+          <mat-form-field class="mr-3" appearance="outline">
+            <mat-label> Mes</mat-label>
+            <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="months" #Mes="ngModel" id="Mes" name="Mes"
+              required multiple>
+              <mat-option value="1">Enero</mat-option>
+              <mat-option value="2">Febrero</mat-option>
+              <mat-option value="3">Marzo</mat-option>
+              <mat-option value="4">Abril</mat-option>
+              <mat-option value="5">Mayo</mat-option>
+              <mat-option value="6">Junio</mat-option>
+              <mat-option value="7">Julio</mat-option>
+              <mat-option value="8">Agosto</mat-option>
+              <mat-option value="9">Septiembre</mat-option>
+              <mat-option value="10">Octubre</mat-option>
+              <mat-option value="11">Noviembre</mat-option>
+              <mat-option value="12">Diciembre</mat-option>
+            </mat-select>
+            <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
+          </mat-form-field>
+          <mat-form-field class="mr-3" appearance="outline">
+            <mat-label>Año</mat-label>
+            <mat-select multiple [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
+              <span *ngFor="let year of yearOptions">
+                <mat-option [value]="year"> {{year}} </mat-option>
+              </span>
+
+            </mat-select>
+            <mat-error *ngIf="year.dirty || year.touched">anotar Año</mat-error>
+
+          </mat-form-field>
+          <mat-form-field class="mr-3" appearance="outline">
+            <mat-label>Conciliacion</mat-label>
+            <input matInput type="number" [(ngModel)]="conciliation" #before="ngModel" id="before" name="before" required>
+            <mat-error *ngIf="before.dirty || before.touched">anotar conciliacion</mat-error>
+
+          </mat-form-field>
+          <mat-form-field class="mr-3" appearance="outline">
+            <mat-label>Saldo Real</mat-label>
+            <input matInput type="number" [(ngModel)]="realBalance" #before="ngModel" id="before" name="before" required>
+            <mat-error *ngIf="before.dirty || before.touched">anotar saldo real</mat-error>
+
+          </mat-form-field>
+        </div>
+
+        <mat-card-subtitle>Reportes Seleccionados</mat-card-subtitle>
+        <mat-chip-list style="margin: 3%;">
+          <mat-chip *ngIf="arrReports.length === 0">No hay reportes seleccionados</mat-chip>
+          <span *ngIf="arrReports.length > 0 ">
+            <mat-chip *ngFor="let item of arrReports" color="primary" class="chips-font" selected="true" (removed)="removeReport(item)"
+              [removable]="removable">{{item.Reporte}}
+              <mat-icon matChipRemove *ngIf="removable">
+                cancel
+              </mat-icon>
+            </mat-chip>
+          </span>
+
+        </mat-chip-list>
+        <mat-card-content>
+          <div>
+            <!-- Reporte -->
+            <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rowsReport" [columns]="columnsReport"
+              (select)="selectReport($event)" [selected]="arrReports" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0]
+              [rowDeselect]="rowDeselect"></app-general-table>
+            <div class="space-buttons"></div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+  </div>
+</ng-template>

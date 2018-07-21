@@ -35,11 +35,20 @@ export class GeneralTableComponent implements OnInit, OnChanges {
   food;
   @Input() selected = [];
   @Input() changeToTable = false;
+  isDevice: boolean;
   isDevice$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
   arrHelp = [];
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(private breakpointObserver: BreakpointObserver) {
+    this.isDevice$.subscribe(isDev => {
+         if (isDev) {
+           this.isDevice = true;
+         } else {
+           this.isDevice = false;
+         }
+    });
+  }
   change(event: { value: string; name: string }) {
     this.rows = this.rows2;
     this.dataTemp = this.rows;
@@ -66,7 +75,7 @@ export class GeneralTableComponent implements OnInit, OnChanges {
     const arr = [];
     this.rows = this.rows2;
     this.dataTemp = this.rows;
-    const value: string = event.target.value;
+    const value: string = event.target.value.toLowerCase();
     const keys = this.columns.map(colum => colum.prop);
     if (value && value.trim() !== '') {
       this.rows.forEach(row => {

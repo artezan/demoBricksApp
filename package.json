@@ -10,7 +10,8 @@
     "e2e": "ng e2e",
     "build:artezan": "ng build --prod --base-href https://theartezan.xyz/bricks/",
     "build:github": "ng build --prod --base-href /demoBricksApp/",
-    "postinstall": "ng build --aot --prod"
+    "postinstall": "ng build --aot --prod",
+    "serve:ngrok": "ng serve --disable-host-check"
   },
   "private": true,
   "dependencies": {

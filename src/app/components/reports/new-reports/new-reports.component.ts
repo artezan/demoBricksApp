@@ -88,6 +88,7 @@ export class NewReportsComponent implements OnInit {
   isDevice$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
+  isEmail = false;
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -349,49 +350,49 @@ export class NewReportsComponent implements OnInit {
     }
   }
   send() {
-    this.isDevice$.subscribe(isDev => {
-      let maxWidth = '50%';
-      let minWidth = '20%';
-      let height = '';
-      if (isDev) {
-         maxWidth = '50%';
-         minWidth = '100%';
-         height = '100%';
-      }
-      const users = [];
-      const reports = [];
-      this.arrUsers.forEach(user => {
-        users.push(user.Nombre);
-      });
-      this.arrReports.forEach(report => {
-        reports.push(report.Reporte);
-      });
-      const stringReport = reports.toString();
-      const stringUsers = users.join('<br>');
-      const dialogRef = this.dialog.open(GeneralAlertComponent, {
-        maxWidth: maxWidth,
-        minWidth: minWidth,
-        height: height,
-        data: {
-          header: 'Enviar Reportes',
-          subHeader:
-            'Desea enviar: ' + stringReport + ' a los siguientes usuarios:',
-          body: '<p>' + stringUsers + '</p> ',
-          isform: true
-        }
-      });
-      const sub = dialogRef.componentInstance.buttons.subscribe(res => {
-        if (res.options === 'ok') {
-          this.message = res.message;
-          this.isToSend = true;
-          this.dataPdf();
-          this.openSnackBar('Reportes enviados correctamente');
-        }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {});
+    const maxWidth = '50%';
+    const minWidth = '20%';
+    const height = '';
+    const users = [];
+    const reports = [];
+    this.arrUsers.forEach(user => {
+      users.push(user.Nombre);
     });
+    this.arrReports.forEach(report => {
+      reports.push(report.Reporte);
+    });
+    const stringReport = reports.toString();
+    const stringUsers = users.join('<br>');
+    const dialogRef = this.dialog.open(GeneralAlertComponent, {
+      maxWidth: maxWidth,
+      minWidth: minWidth,
+      height: height,
+      data: {
+        header: 'Enviar Reportes',
+        subHeader:
+          'Desea enviar: ' + stringReport + ' a los siguientes usuarios:',
+        body: '<p>' + stringUsers + '</p> ',
+        isform: true
+      }
+    });
+    const sub = dialogRef.componentInstance.buttons.subscribe(res => {
+      if (res.options === 'ok') {
+        this.message = res.message;
+        this.isToSend = true;
+        this.dataPdf();
+        this.openSnackBar('Reportes enviados correctamente');
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {});
   }
+  sendMovil(value: string) {
+    this.message = value;
+    this.isToSend = true;
+    this.dataPdf();
+    this.openSnackBar('Reportes enviados correctamente');
+  }
+
   dataPdf() {
     this.arrReports.forEach(report => {
       if (report.reportId === 1) {
@@ -1204,7 +1205,7 @@ export class NewReportsComponent implements OnInit {
     this.n++;
     this.arrBuff.push(pdfMake.createPdf(docDefinition));
     this.titleDoc.push(title.replace(/\s/g, '') + year + '.pdf');
-     pdfMake.createPdf(docDefinition).download(title.replace(/\s/g, ''));
+    pdfMake.createPdf(docDefinition).download(title.replace(/\s/g, ''));
     // solo cuando es el ultimo doc entra
     if (
       this.isToSend &&

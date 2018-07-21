@@ -1,3 +1,11 @@
+<span [hidden]="!isDevice">
+<mat-form-field    style="width: 100%" appearance="outline">
+    <mat-label>Filtrar</mat-label>
+    <input matInput  (keyup)="changeMovil($event)" placeholder="">
+    <mat-icon matSuffix color="primary">search</mat-icon>
+  </mat-form-field>
+</span>
+
  <div *ngIf="(isDevice$ | async) ; then list else table" ></div>
  <ng-template #table>
     <ngx-datatable
@@ -40,10 +48,8 @@
   </ngx-datatable>
  </ng-template>
 <ng-template #list>
+
   <mat-card>
-      <mat-form-field style="width: 100%" appearance="outline">
-          <input matInput  (keyup)="changeMovil($event)" placeholder="Filtrar">
-        </mat-form-field>
     <mat-selection-list #option (selectionChange)="handleSelection($event)">
       <mat-list-option [selected]=row.isSelect (click)="onClickList(row)" *ngFor="let row of rows">
         <h3 matLine><b> {{columns[itemsToShow[0]].name}}: </b>{{row[columns[itemsToShow[0]].prop]}}</h3>
