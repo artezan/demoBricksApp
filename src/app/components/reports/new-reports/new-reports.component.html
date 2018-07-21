@@ -1,14 +1,15 @@
 <div class="toogle-btns">
-  <button mat-raised-button id="enviar" class="btn"  [disabled]="!arrReports.length || !arrUsers.length || !months.length || !yearInput"
+  <button mat-raised-button id="enviar" class="btn" [disabled]="!arrReports.length || !arrUsers.length || !months.length || !yearInput.length || !conciliation || !realBalance"
     color="accent" (click)="send()">Enviar</button>
 
-    <button mat-raised-button (click)="dataPdf(); isToSend = false" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !conciliation " class="btn" color="primary">Solo Imprimir</button>
+  <button mat-raised-button (click)="dataPdf(); isToSend = false" id="edit" [disabled]="!arrReports.length || !months.length || !yearInput || !conciliation || !realBalance"
+    class="btn" color="primary">Solo Imprimir</button>
 
 </div>
 
 <div class="row">
   <div class="col-lg">
-    <mat-card>
+    <mat-card class="card-size">
       <mat-card-title>Destinatarios</mat-card-title>
       <mat-card-subtitle>Usuarios Seleccionados</mat-card-subtitle>
       <mat-chip-list style="margin: 3%;">
@@ -28,14 +29,16 @@
             <div class="table-height">
               <!-- todos -->
               <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect" [changeToTable]=false></app-general-table>
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"
+                [changeToTable]=false></app-general-table>
             </div>
           </mat-tab>
           <mat-tab label="Inquilinos">
             <div class="table-height">
               <!-- Inquilinos -->
               <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rows" [columns]="columns"
-                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect"> </app-general-table>
+                (select)="select($event)" [selected]="arrUsers" [selectionType]="selectionType" [checkColum]=true [rowDeselect]="rowDeselect">
+              </app-general-table>
             </div>
           </mat-tab>
           <mat-tab label="Propietarios">
@@ -57,49 +60,49 @@
     </mat-card>
   </div>
   <div class="col-sm">
-    <mat-card>
+    <mat-card class="card-size">
       <mat-card-title>Reportes</mat-card-title>
-      <div style="height: 50%;">
-         <!-- Mes -->
-       <mat-form-field class="mr-3"  appearance="outline">
-        <mat-label> Mes</mat-label>
-        <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="months" #Mes="ngModel" id="Mes"
-          name="Mes" required multiple>
-          <mat-option value="1">Enero</mat-option>
-          <mat-option value="2">Febrero</mat-option>
-          <mat-option value="3">Marzo</mat-option>
-          <mat-option value="4">Abril</mat-option>
-          <mat-option value="5">Mayo</mat-option>
-          <mat-option value="6">Junio</mat-option>
-          <mat-option value="7">Julio</mat-option>
-          <mat-option value="8">Agosto</mat-option>
-          <mat-option value="9">Septiembre</mat-option>
-          <mat-option value="10">Octubre</mat-option>
-          <mat-option value="11">Noviembre</mat-option>
-          <mat-option value="12">Diciembre</mat-option>
-        </mat-select>
-        <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
-      </mat-form-field>
-      <mat-form-field class="mr-3" appearance="outline">
-        <mat-label>Año</mat-label>
-        <mat-select  multiple  [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
-          <span *ngFor="let year of yearOptions" >
-             <mat-option [value]="year" > {{year}} </mat-option>
-          </span>
+      <div >
+        <!-- Mes -->
+        <mat-form-field class="mr-3" appearance="outline">
+          <mat-label> Mes</mat-label>
+          <mat-select placeholder=" Seleccione Mes" placeholder=" Seleccione Mes" [(ngModel)]="months" #Mes="ngModel" id="Mes" name="Mes"
+            required multiple>
+            <mat-option value="1">Enero</mat-option>
+            <mat-option value="2">Febrero</mat-option>
+            <mat-option value="3">Marzo</mat-option>
+            <mat-option value="4">Abril</mat-option>
+            <mat-option value="5">Mayo</mat-option>
+            <mat-option value="6">Junio</mat-option>
+            <mat-option value="7">Julio</mat-option>
+            <mat-option value="8">Agosto</mat-option>
+            <mat-option value="9">Septiembre</mat-option>
+            <mat-option value="10">Octubre</mat-option>
+            <mat-option value="11">Noviembre</mat-option>
+            <mat-option value="12">Diciembre</mat-option>
+          </mat-select>
+          <mat-error *ngIf="Mes.dirty || Mes.touched">Anotar Mes</mat-error>
+        </mat-form-field>
+        <mat-form-field class="mr-3" appearance="outline">
+          <mat-label>Año</mat-label>
+          <mat-select multiple [(ngModel)]="yearInput" #year="ngModel" id="year" name="year" required>
+            <span *ngFor="let year of yearOptions">
+              <mat-option [value]="year"> {{year}} </mat-option>
+            </span>
 
-        </mat-select>
-        <mat-error *ngIf="year.dirty || year.touched">anotar Año</mat-error>
+          </mat-select>
+          <mat-error *ngIf="year.dirty || year.touched">anotar Año</mat-error>
 
-      </mat-form-field>
-      <mat-form-field class="mr-3" appearance="outline">
-        <mat-label>Conciliacion</mat-label>
-        <input  matInput type="number" [(ngModel)]="conciliation" #before="ngModel" id="before" name="before" required>
-        <mat-error *ngIf="before.dirty || before.touched">anotar conciliacion</mat-error>
+        </mat-form-field>
+        <mat-form-field class="mr-3" appearance="outline">
+          <mat-label>Conciliacion</mat-label>
+          <input matInput type="number" [(ngModel)]="conciliation" #before="ngModel" id="before" name="before" required>
+          <mat-error *ngIf="before.dirty || before.touched">anotar conciliacion</mat-error>
 
-      </mat-form-field>
-      <mat-form-field class="mr-3" appearance="outline">
+        </mat-form-field>
+        <mat-form-field class="mr-3" appearance="outline">
           <mat-label>Saldo Real</mat-label>
-          <input  matInput type="number" [(ngModel)]="realBalance" #before="ngModel" id="before" name="before" required>
+          <input matInput type="number" [(ngModel)]="realBalance" #before="ngModel" id="before" name="before" required>
           <mat-error *ngIf="before.dirty || before.touched">anotar saldo real</mat-error>
 
         </mat-form-field>
@@ -119,10 +122,11 @@
 
       </mat-chip-list>
       <mat-card-content>
-        <div >
+        <div>
           <!-- Reporte -->
           <app-general-table class="table-height-general " [loadingIndicator]="loadingIndicator" [rows]="rowsReport" [columns]="columnsReport"
-            (select)="selectReport($event)" [selected]="arrReports" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0] [rowDeselect]="rowDeselect"></app-general-table>
+            (select)="selectReport($event)" [selected]="arrReports" [selectionType]="selectionType" [checkColum]=true [itemsToShow]=[0]
+            [rowDeselect]="rowDeselect"></app-general-table>
           <div class="space-buttons"></div>
 
         </div>

@@ -61,6 +61,47 @@ export class GeneralTableComponent implements OnInit, OnChanges {
       this.rows = this.rows2;
     }
   }
+  // movil
+  changeMovil(event) {
+    const arr = [];
+    this.rows = this.rows2;
+    this.dataTemp = this.rows;
+    const value: string = event.target.value;
+    const keys = this.columns.map(colum => colum.prop);
+    if (value && value.trim() !== '') {
+      this.rows.forEach(row => {
+        Object.keys(row).forEach(key => {
+          const pos = row[key].toString().toLowerCase().indexOf(value);
+          const pos2 = arr.indexOf(row);
+          if (pos !== -1 && pos2 === -1) {
+            arr.push(row);
+          }
+        });
+      });
+      this.rows = arr;
+    } else {
+      this.rows = this.rows2;
+    }
+    // this.rows = this.rows2;
+    // this.dataTemp = this.rows;
+    // const val = event.value;
+    // const colName = event.name;
+    // // filter our data
+    // if (val && val.trim() !== '') {
+    //   this.rows = this.dataTemp.filter(d => {
+    //     if (d[colName] !== '') {
+    //       return (
+    //         d[colName]
+    //           .toString()
+    //           .toLowerCase()
+    //           .indexOf(val) !== -1 || !val
+    //       );
+    //     }
+    //   });
+    // } else {
+    //   this.rows = this.rows2;
+    // }
+  }
   ngOnInit() {
     this.rows2 = this.rows;
   }

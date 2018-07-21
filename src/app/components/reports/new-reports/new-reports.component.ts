@@ -18,6 +18,9 @@ import { logoImgB64 } from '../../../_config/logo-img-b64';
 import { IngressService } from '../../../services/ingress.service';
 import { Ingress } from '../../../models/ingress.model';
 import { PdfEmailService } from '../../../services/pdf-email.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 interface PdfColum {
   name: string;
@@ -81,7 +84,10 @@ export class NewReportsComponent implements OnInit {
    * saldo conciliacion
    */
   conciliation: number;
-
+  /** dispositivo */
+  isDevice$: Observable<boolean> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(map(result => result.matches));
   constructor(
     private controllerMenu: ControllerMenuService,
     public userService: UserService,
@@ -93,7 +99,8 @@ export class NewReportsComponent implements OnInit {
     public dialog: MatDialog,
     public ingressService: IngressService,
     public egressService: EgressService,
-    private pdfEmailService: PdfEmailService
+    private pdfEmailService: PdfEmailService,
+    private breakpointObserver: BreakpointObserver
   ) {
     const year = new Date(Date.now()).getFullYear();
     this.yearOptions[5] = year;
@@ -342,37 +349,48 @@ export class NewReportsComponent implements OnInit {
     }
   }
   send() {
-    const users = [];
-    const reports = [];
-    this.arrUsers.forEach(user => {
-      users.push(user.Nombre);
-    });
-    this.arrReports.forEach(report => {
-      reports.push(report.Reporte);
-    });
-    const stringReport = reports.toString();
-    const stringUsers = users.toString();
-    const dialogRef = this.dialog.open(GeneralAlertComponent, {
-      maxWidth: '50%',
-      minWidth: '20%',
-      data: {
-        header: 'Enviar Reportes',
-        subHeader:
-          'Desea enviar ' + stringReport + ' a los siguientes usuarios:',
-        body: '<p>' + stringUsers + '</p> ',
-        isform: true
+    this.isDevice$.subscribe(isDev => {
+      let maxWidth = '50%';
+      let minWidth = '20%';
+      let height = '';
+      if (isDev) {
+         maxWidth = '50%';
+         minWidth = '100%';
+         height = '100%';
       }
-    });
-    const sub = dialogRef.componentInstance.buttons.subscribe(res => {
-      if (res.options === 'ok') {
-        this.message = res.message;
-        this.isToSend = true;
-        this.dataPdf();
-        this.openSnackBar('Reportes enviados correctamente');
-      }
-    });
+      const users = [];
+      const reports = [];
+      this.arrUsers.forEach(user => {
+        users.push(user.Nombre);
+      });
+      this.arrReports.forEach(report => {
+        reports.push(report.Reporte);
+      });
+      const stringReport = reports.toString();
+      const stringUsers = users.toString();
+      const dialogRef = this.dialog.open(GeneralAlertComponent, {
+        maxWidth: maxWidth,
+        minWidth: minWidth,
+        height: height,
+        data: {
+          header: 'Enviar Reportes',
+          subHeader:
+            'Desea enviar ' + stringReport + ' a los siguientes usuarios:',
+          body: '<p>' + stringUsers + '</p> ',
+          isform: true
+        }
+      });
+      const sub = dialogRef.componentInstance.buttons.subscribe(res => {
+        if (res.options === 'ok') {
+          this.message = res.message;
+          this.isToSend = true;
+          this.dataPdf();
+          this.openSnackBar('Reportes enviados correctamente');
+        }
+      });
 
-    dialogRef.afterClosed().subscribe(result => {});
+      dialogRef.afterClosed().subscribe(result => {});
+    });
   }
   dataPdf() {
     this.arrReports.forEach(report => {
@@ -917,8 +935,8 @@ export class NewReportsComponent implements OnInit {
             const ingressYear = new Date(ingress.FechaPagado).getFullYear();
             if (
               ingress.Pagado === '1' &&
-               +ingressMonth <= +month &&
-               +ingressYear <= +yearReport
+              +ingressMonth <= +month &&
+              +ingressYear <= +yearReport
             ) {
               ingressTotalPay += +ingress.Total;
             }
