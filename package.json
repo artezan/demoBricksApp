@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:artezan": "ng build --prod --base-href /bricks/",
+    "build:artezan": "ng build --prod --base-href https://theartezan.xyz/bricks/",
     "build:github": "ng build --prod --base-href /demoBricksApp/",
     "postinstall": "ng build --aot --prod"
   },

@@ -1204,7 +1204,7 @@ export class NewReportsComponent implements OnInit {
     this.n++;
     this.arrBuff.push(pdfMake.createPdf(docDefinition));
     this.titleDoc.push(title.replace(/\s/g, '') + year + '.pdf');
-    // pdfMake.createPdf(docDefinition).download('Recibo');
+     pdfMake.createPdf(docDefinition).download(title.replace(/\s/g, ''));
     // solo cuando es el ultimo doc entra
     if (
       this.isToSend &&
