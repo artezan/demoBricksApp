@@ -308,15 +308,25 @@ export class NewReportsComponent implements OnInit {
     });
   }
   remove(item) {
-    const idFinded = this.arrUsers.findIndex(user => user.Id === item.Id);
-    this.arrUsers.splice(idFinded, 1);
-    this.arrUsers = [...this.arrUsers];
-    this.rowDeselect[0] = item;
-    this.rowDeselect[0].isSelect = true;
-    this.rowDeselect = [...this.rowDeselect];
+    if (this.isDevice) {
+      const idFinded = this.arrUsers.findIndex(user => user.Id === item.Id);
+      this.arrUsers.splice(idFinded, 1);
+      this.rowDeselect[0] = item;
+      this.rowDeselect[0].isSelect = true;
+      this.rowDeselect = [...this.rowDeselect];
+    } else {
+      const idFinded = this.arrUsers.findIndex(user => user.Id === item.Id);
+      this.arrUsers.splice(idFinded, 1);
+      this.arrUsers = [...this.arrUsers];
+      this.rowDeselect[0] = item;
+      this.rowDeselect[0].isSelect = true;
+      this.rowDeselect = [...this.rowDeselect];
+    }
   }
   removeReport(item) {
-    const idFinded = this.arrReports.findIndex(report => report.reportId === item.reportId);
+    const idFinded = this.arrReports.findIndex(
+      report => report.reportId === item.reportId
+    );
     this.arrReports.splice(idFinded, 1);
     this.arrReports = [...this.arrReports];
     this.rowDeselect[0] = item;
