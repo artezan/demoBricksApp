@@ -134,7 +134,10 @@ export class GeneralTableComponent implements OnInit, OnChanges {
         if (this.selectionType === 'multiClick') {
           this.isDevice$.subscribe(isDev => {
             if (isDev) {
-              this.deselectList(changes.rowDeselect.currentValue);
+              if (changes.rowDeselect.previousValue !== changes.rowDeselect.currentValue) {
+                 this.deselectList(changes.rowDeselect.currentValue);
+              }
+
             }
           });
         }

@@ -45,7 +45,7 @@ export class IngressService {
 
     const data = JSON.stringify([dataReq]);
     return this.http.get(
-      'https://chobezin.com/php/CondominiosAdmin/registrarAbonoDepartamento.php?json=' +
+     END_POINT.PAYMENTS_ADD  +
         data
     );
   }

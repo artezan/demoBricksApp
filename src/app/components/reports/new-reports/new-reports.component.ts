@@ -88,6 +88,7 @@ export class NewReportsComponent implements OnInit {
   isDevice$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
+  isDevice;
   isEmail = false;
   constructor(
     private controllerMenu: ControllerMenuService,
@@ -103,6 +104,9 @@ export class NewReportsComponent implements OnInit {
     private pdfEmailService: PdfEmailService,
     private breakpointObserver: BreakpointObserver
   ) {
+    this.isDevice$.subscribe(isDev => {
+      this.isDevice = isDev;
+    });
     const year = new Date(Date.now()).getFullYear();
     this.yearOptions[5] = year;
     this.yearOptions[4] = year - 1;
@@ -304,14 +308,16 @@ export class NewReportsComponent implements OnInit {
     });
   }
   remove(item) {
-    this.arrUsers.splice(this.arrUsers.indexOf(item.Id), 1);
+    const idFinded = this.arrUsers.findIndex(user => user.Id === item.Id);
+    this.arrUsers.splice(idFinded, 1);
     this.arrUsers = [...this.arrUsers];
     this.rowDeselect[0] = item;
     this.rowDeselect[0].isSelect = true;
     this.rowDeselect = [...this.rowDeselect];
   }
   removeReport(item) {
-    this.arrReports.splice(this.arrReports.indexOf(item.Reporte), 1);
+    const idFinded = this.arrReports.findIndex(report => report.reportId === item.reportId);
+    this.arrReports.splice(idFinded, 1);
     this.arrReports = [...this.arrReports];
     this.rowDeselect[0] = item;
     this.rowDeselect[0].isSelect = true;
@@ -461,17 +467,22 @@ export class NewReportsComponent implements OnInit {
             type: 'normal'
           },
           {
-            name: 'Fecha de Pago',
-            prop: 'FechaPagado',
+            name: 'Periodo',
+            prop: 'Periodo',
             type: 'normal'
           },
           {
-            name: 'Total',
+            name: 'Monto',
             prop: 'Total',
             type: 'money'
+          },
+          {
+            name: 'Fecha de Pago',
+            prop: 'FechaPagado',
+            type: 'normal'
           }
         ];
-        this.pdfReportIngress(report, '1', colum, [125, 125, 125, 125]);
+        this.pdfReportIngress(report, '1', colum, [100, 100, 100, 100, 100]);
       }
       // desgloce ingr pagado 0 / Adeudo
       if (report.reportId === 5) {
@@ -804,6 +815,13 @@ export class NewReportsComponent implements OnInit {
       });
     });
   }
+  /**
+   *
+   * @param report nombre
+   * @param isPay si esta pagado 1/0
+   * @param colum datos
+   * @param withColums 500px / colum num
+   */
   private pdfReportIngress(
     report: any,
     isPay: string,
@@ -826,6 +844,8 @@ export class NewReportsComponent implements OnInit {
               }
             }
           });
+          // ordenar por departamento
+          ingressPerMonth.sort();
           const data = this.generateTablePdf(colum, ingressPerMonth);
           this.exportToPdf(
             report.Reporte,
@@ -936,8 +956,8 @@ export class NewReportsComponent implements OnInit {
             const ingressYear = new Date(ingress.FechaPagado).getFullYear();
             if (
               ingress.Pagado === '1' &&
-              +ingressMonth <= +month &&
-              +ingressYear <= +yearReport
+              +ingressMonth === +month &&
+              +ingressYear === +yearReport
             ) {
               ingressTotalPay += +ingress.Total;
             }
@@ -1201,11 +1221,16 @@ export class NewReportsComponent implements OnInit {
         }
       }
     };
-    pdfMake.createPdf(docDefinition).open();
+
     this.n++;
     this.arrBuff.push(pdfMake.createPdf(docDefinition));
-    this.titleDoc.push(title.replace(/\s/g, '') + year + '.pdf');
-    pdfMake.createPdf(docDefinition).download(title.replace(/\s/g, ''));
+    this.titleDoc.push(
+      title.replace(/\s/g, '') + '_' + month + '_' + year + '.pdf'
+    );
+    pdfMake
+      .createPdf(docDefinition)
+      .download(title.replace(/\s/g, '') + '_' + month + '_' + year + '.pdf');
+    pdfMake.createPdf(docDefinition).open();
     // solo cuando es el ultimo doc entra
     if (
       this.isToSend &&
@@ -1221,6 +1246,7 @@ export class NewReportsComponent implements OnInit {
       // crea el form
       const formData: FormData = new FormData();
       // por cada doc genera el buffer
+      let index = 0;
       this.arrBuff.forEach((a, i) => {
         // deben de quedar adentro del getbuffer
         a.getBuffer(dataURL => {
@@ -1230,7 +1256,8 @@ export class NewReportsComponent implements OnInit {
           // registra cada file
           formData.append('file[]', f);
           // cuando es el ultimo manda correo
-          if (i + 1 === this.n) {
+          index++;
+          if (index === this.n) {
             formData.append('Asunto', 'Reportes para ' + user.Nombre);
             formData.append(
               'Mensaje',
@@ -1245,6 +1272,11 @@ export class NewReportsComponent implements OnInit {
             }
             formData.append('Destinatarios[0]', user.CorreoElectronico);
             this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
+              // reset values
+              this.n = 0;
+              this.arrBuff.length = 0;
+              this.titleDoc.length = 0;
+              // respuesta
               this.openSnackBar(c.respuesta);
             });
           }

@@ -9,7 +9,7 @@
         <p>
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput placeholder="Placeholder" [(ngModel)]="emailInput" #email="ngModel" id="email" name="email" required>
+            <input matInput placeholder="Correo" [(ngModel)]="emailInput" #email="ngModel" id="email" name="email" required>
             <mat-icon matSuffix color="primary">account_circle
             </mat-icon>
             <mat-error *ngIf="email.dirty || email.touched">Anotar Email</mat-error>

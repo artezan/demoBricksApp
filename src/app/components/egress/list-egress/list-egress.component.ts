@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { PdfEmailService } from './../../../services/pdf-email.service';
 import { PropietariesService } from './../../../services/propietaries.service';
 import { Providers } from './../../../models/provider.model';
@@ -14,6 +15,7 @@ import { GeneralDialogComponent } from '../../shared/general-dialog/general-dial
 import * as pdfMake from 'pdfmake/build/pdfmake.js';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { logoImgB64 } from '../../../_config/logo-img-b64';
+import { Propietary } from '../../../models/propietary';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -40,6 +42,9 @@ export class ListEgressComponent implements OnInit {
   idCondo: string;
   isPay = true;
   isTransit = true;
+  isToSend = false;
+  propietaries$: Observable<Propietary[]>;
+  arrUser: Propietary[];
 
   constructor(
     private controllerMenu: ControllerMenuService,
@@ -133,6 +138,7 @@ export class ListEgressComponent implements OnInit {
       this.idCondo = params.Id_Condominio;
       this.getData(params['Id_Condominio']);
     });
+    this.propietaries$ = this.propietaryService.getData(this.idCondo);
   }
   getData(id) {
     this.loadingIndicator = true;
@@ -488,7 +494,7 @@ export class ListEgressComponent implements OnInit {
           }
         }
       };
-       pdfMake.createPdf(docDefinition).open();
+      pdfMake.createPdf(docDefinition).open();
       //  pdfMake.createPdf(docDefinition).download('Recibo');
       if (isToSend) {
         this.sendReport(
@@ -500,11 +506,9 @@ export class ListEgressComponent implements OnInit {
     });
   }
   sendReport(pdf, title, provider) {
+    console.log(this.egressSelect);
     console.log(provider);
-    this.propietaryService.getData(this.idCondo).subscribe(arrPropietary => {
-      const propietary = arrPropietary.find(
-        item => item.Id_Propietario === provider.Id_Propietario
-      );
+    this.arrUser.forEach(prop => {
       pdf.getBuffer(dataURL => {
         const f = new File([dataURL], 'Recibo.pdf', {
           type: 'application/pdf'
@@ -515,17 +519,18 @@ export class ListEgressComponent implements OnInit {
         formData.append(
           'Mensaje',
           'Hola ' +
-            propietary.NombrePropietario +
+            prop.NombrePropietario +
             ' ' +
-            propietary.ApellidoPaterno +
+            prop.ApellidoPaterno +
             ' te adjuntamos tu reporte. Saludos'
         );
-        formData.append('Destinatarios[0]', propietary.CorreoElectronico);
+        formData.append('Destinatarios[0]', prop.CorreoElectronico);
         this.pdfEmailService.sendPdfEmail(formData).subscribe(c => {
           this.openSnackBar(c.respuesta);
+          this.arrUser.length = 0;
+          this.isToSend = false;
         });
       });
     });
   }
-
 }

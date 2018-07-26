@@ -25,6 +25,7 @@ const paymentNew = 'registrarPago.php?json=';
 const paymentDelete = 'eliminarIngreso.php?json=';
 const condoById = 'datosCondominio.php?json=';
 const egressPay = 'pagarEgreso.php?json=';
+const addPay = 'registrarAbonoDepartamento.php?json=';
 const egressTransit = 'entransitoEgreso.php?json=';
 const newDebit = 'registrarPorPagar.php?json=';
 const emailSend = 'mail.php';
@@ -51,6 +52,7 @@ export const END_POINT = ({
   PAYMENTS_GET: urlAPI + paymentsGet,
   PAYMENTS_NEW: urlAPI + paymentNew,
   PAYMENTS_DELETE: urlAPI + paymentDelete,
+  PAYMENTS_ADD: urlAPI + addPay,
   // provider
   PROVIDER_GET: urlAPI + providerGet,
   PROVIDER_NEW: urlAPI + providerNew,
