@@ -590,7 +590,7 @@ export class ListIngressComponent implements OnInit {
       }
     };
     pdfMake.createPdf(docDefinition).open();
-    // pdfMake.createPdf(docDefinition).download('Recibo');
+   pdfMake.createPdf(docDefinition).download('Recibo');
     return pdfMake.createPdf(docDefinition);
   }
   sendPdfEmail() {
