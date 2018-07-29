@@ -1160,14 +1160,13 @@ export class NewReportsComponent implements OnInit {
           bold: true
         },
         {
-          text: ' $ ' + total.toFixed(4)
+          text: ' $ ' + total.toFixed(2)
         },
         {
-          text: '  Recuento de elementos : ',
-          bold: true
+          text: '  Recuento de elementos : '
         },
         {
-          text:  data.length - 1
+          text: data.length - 1
         }
       ];
     }
