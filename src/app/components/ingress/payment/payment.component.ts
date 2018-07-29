@@ -79,7 +79,12 @@ export class PaymentComponent implements OnInit {
     private apartmentService: ApartmentService,
     private renterService: RenterService,
     private ingressService: IngressService
-  ) {}
+  ) {
+    const dateNow = new Date(Date.now());
+    this.yearInput = dateNow.getFullYear();
+    this.monthInput = (dateNow.getMonth() + 1).toString();
+    this.dayInput = dateNow.getDate();
+  }
   ngOnInit() {
     this.userService.userDataSelect.subscribe(data => {
       this.id = data['Id_Condominio'];

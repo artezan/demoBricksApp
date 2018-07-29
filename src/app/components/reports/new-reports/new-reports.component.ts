@@ -508,6 +508,11 @@ export class NewReportsComponent implements OnInit {
             type: 'normal'
           },
           {
+            name: 'Periodo',
+            prop: 'Periodo',
+            type: 'normal'
+          },
+          {
             name: 'Total',
             prop: 'Total',
             type: 'money'
@@ -733,6 +738,11 @@ export class NewReportsComponent implements OnInit {
             type: 'normal'
           },
           {
+            prop: 'Periodo',
+            name: 'Periodo',
+            type: 'normal'
+          },
+          {
             name: 'Monto',
             prop: 'Monto',
             type: 'money'
@@ -742,7 +752,7 @@ export class NewReportsComponent implements OnInit {
           report,
           '',
           colum,
-          [125, 125, 125, 125],
+          [100, 100, 100, 100, 100],
           'En transito',
           true
         );
@@ -771,6 +781,11 @@ export class NewReportsComponent implements OnInit {
             type: 'normal'
           },
           {
+            prop: 'Periodo',
+            name: 'Periodo',
+            type: 'normal'
+          },
+          {
             name: 'Monto',
             prop: 'Monto',
             type: 'money'
@@ -780,7 +795,7 @@ export class NewReportsComponent implements OnInit {
           report,
           '',
           colum,
-          [100, 100, 100, 100, 100],
+          [83, 83, 83, 83, 83, 83],
           'Pagado',
           true
         );
@@ -812,6 +827,17 @@ export class NewReportsComponent implements OnInit {
               }
             }
           });
+          // ordenar por departamento
+          function compare(a: Ingress, b: Ingress) {
+            if (a.Interior < b.Interior) {
+              return -1;
+            }
+            if (a.Interior > b.Interior) {
+              return 1;
+            }
+            return 0;
+          }
+          ingressPerMonth.sort(compare);
           const data = this.generateTablePdf(colum, ingressPerMonth);
           this.exportToPdf(
             report.Reporte,
@@ -855,7 +881,16 @@ export class NewReportsComponent implements OnInit {
             }
           });
           // ordenar por departamento
-          ingressPerMonth.sort();
+          function compare(a: Ingress, b: Ingress) {
+            if (a.Interior < b.Interior) {
+              return -1;
+            }
+            if (a.Interior > b.Interior) {
+              return 1;
+            }
+            return 0;
+          }
+          ingressPerMonth.sort(compare);
           const data = this.generateTablePdf(colum, ingressPerMonth);
           this.exportToPdf(
             report.Reporte,
@@ -1125,7 +1160,14 @@ export class NewReportsComponent implements OnInit {
           bold: true
         },
         {
-          text: ' $ ' + total.toString()
+          text: ' $ ' + total.toFixed(4)
+        },
+        {
+          text: '  Recuento de elementos : ',
+          bold: true
+        },
+        {
+          text:  data.length - 1
         }
       ];
     }

@@ -439,6 +439,38 @@ export class ListEgressComponent implements OnInit {
           {
             columns: [
               {
+                text: 'Hecho Por: ',
+                bold: true
+              },
+              {
+                text: 'Revisado Por: ',
+                bold: true
+              },
+              {
+                text: 'Autorizado Por: ',
+                bold: true
+              }
+            ]
+          },
+          {
+            columns: [
+              {
+                text: this.egressSelect[0].HechoPor,
+              },
+              {
+                text: this.egressSelect[0].RevisadoPor,
+              },
+              {
+                text: this.egressSelect[0].AutorizadoPor,
+              }
+            ]
+          },
+          {
+            text: '\n'
+          },
+          {
+            columns: [
+              {
                 text: ' Concepto: ',
                 bold: true
               },
@@ -495,7 +527,7 @@ export class ListEgressComponent implements OnInit {
         }
       };
       pdfMake.createPdf(docDefinition).open();
-        pdfMake.createPdf(docDefinition).download('Recibo');
+      pdfMake.createPdf(docDefinition).download('Recibo');
       if (isToSend) {
         this.sendReport(
           pdfMake.createPdf(docDefinition),
