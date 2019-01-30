@@ -1,50 +1,134 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="openMenu">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="openMenu"
+  >
     <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list>
-      <a class="a-activate" mat-list-item routerLink="/list-condo" (click)="close()">Condominios</a>
-      <a [ngClass]="{'a-active': menuSelect === 'departamento'}" (click)="close()" mat-list-item routerLink="/list-depa">Departamentos</a>
-      <a [ngClass]="{'a-active': menuSelect === 'propietarios'}" (click)="close()" mat-list-item routerLink="/list-propietaries">Propietarios</a>
-      <a [ngClass]="{'a-active': menuSelect === 'inquilinos'}" (click)="close()" mat-list-item routerLink="/list-renter">Inquilinos</a>
-      <hr>
-      <a [ngClass]="{'a-active': menuSelect === 'proveedores'}" (click)="close()" mat-list-item routerLink="/list-providers">Proveedores</a>
-      <a [ngClass]="{'a-active': menuSelect === 'servicios'}" (click)="close()" mat-list-item routerLink="/list-services">Servicios</a>
-      <a [ngClass]="{'a-active': menuSelect === 'adeudo'}" (click)="close()" mat-list-item routerLink="/new-debit">Nuevo adeudo</a>
-      <hr>
+      <a
+        class="a-activate"
+        mat-list-item
+        routerLink="/list-condo"
+        (click)="close()"
+        >Condominios</a
+      >
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'departamento' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/list-depa"
+        >Departamentos</a
+      >
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'propietarios' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/list-propietaries"
+        >Propietarios</a
+      >
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'inquilinos' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/list-renter"
+        >Inquilinos</a
+      >
+      <hr />
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'proveedores' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/list-providers"
+        >Proveedores</a
+      >
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'servicios' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/list-services"
+        >Servicios</a
+      >
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'adeudo' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/new-debit"
+        >Nuevo adeudo</a
+      >
+      <hr />
 
-      <a [ngClass]="{'a-active': menuSelect === 'ingresos'}" (click)="close()" mat-list-item routerLink="/list-ingress">Ingresos
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'ingresos' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/list-ingress"
+        >Ingresos
       </a>
-      <a [ngClass]="{'a-active': menuSelect === 'egresos'}" (click)="close()" mat-list-item routerLink="/list-egress">Egresos </a>
-      <hr>
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'egresos' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/list-egress"
+        >Egresos
+      </a>
+      <hr />
 
-      <a [ngClass]="{'a-active': menuSelect === 'reports'}" (click)="close()" mat-list-item routerLink="/new-reports">Reportes </a>
-
+      <a
+        [ngClass]="{ 'a-active': menuSelect === 'reports' }"
+        (click)="close()"
+        mat-list-item
+        routerLink="/new-reports"
+        >Reportes
+      </a>
     </mat-nav-list>
-
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary" [class.mat-elevation-z8]=true class="top-bar">
+    <mat-toolbar
+      color="primary"
+      [class.mat-elevation-z8]="true"
+      class="top-bar"
+    >
       <mat-toolbar-row>
-        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async) && (!isHide) ">
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="(isHandset$ | async) && !isHide"
+        >
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
-        <span>BricksApp</span>
+        <!-- <span>BricksApp</span> -->
+        <img
+          *ngIf="!isHideExit"
+          src="https://golemtechnology.com/bricks/bricksApp/assets/solo-edificio.png"
+          class="icon-logo"
+          alt="edf"
+        />
+        <img
+          *ngIf="!isHideExit"
+          src="https://golemtechnology.com/bricks/bricksApp/assets/solo-letras.png"
+          class="icon-words"
+          alt="edf"
+        />
 
         <span *ngIf="!isHide" class="example-spacer1"></span>
         <span *ngIf="isHide" class="example-spacer"></span>
         <button mat-icon-button *ngIf="!isHideExit">
-          <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
+          <mat-icon class="example-icon" (click)="logout()"
+            >exit_to_app</mat-icon
+          >
         </button>
         <span (click)="logout()" *ngIf="!isHideExit">Salir</span>
-
       </mat-toolbar-row>
-
     </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
 
 <!--
 <mat-sidenav-container class="sidenav-container">

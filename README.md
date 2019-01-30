@@ -1,6 +1,15 @@
 # BricksApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.7.
+This project was generated with [Angular CLI]
+
+# Requisitos
+
+1. Instalar Node.js
+2. ejecutar npm i
+
+# First Step
+
+Run npm i
 
 ## Development server
 
@@ -13,6 +22,8 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+Para el dominio _http://bricks.golemtechnology.com/bricksApp/_ ejecutar `npm run build:bricksapp`
 
 ## Running unit tests
 

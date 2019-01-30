@@ -9,8 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:artezan": "ng build --prod --base-href https://theartezan.xyz/bricks/",
+    "build:bricksapp": "ng build --prod --base-href http://bricks.golemtechnology.com/bricksApp/",
     "build:github": "ng build --prod --base-href /demoBricksApp/",
-    "postinstall": "ng build --aot --prod",
     "serve:ngrok": "ng serve --disable-host-check"
   },
   "private": true,
@@ -29,7 +29,7 @@
     "@angular/platform-browser-dynamic": "^6.0.0",
     "@angular/router": "^6.0.0",
     "@swimlane/ngx-datatable": "^13.0.1",
-    "cesar-table-artezan": "^13.0.5",
+    "cesar-table-artezan": "^13.0.12",
     "core-js": "^2.5.4",
     "express": "^4.16.3",
     "js-sha1": "^0.6.0",

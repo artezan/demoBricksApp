@@ -28,8 +28,24 @@
   align-items: flex-end
 }
 .a-active {
-  background-color: #e8eaf6 !important;
+  background-color: #B9DAE9 !important;
 }
 a:hover {
-  background-color: #e8eaf6 !important;
+  background-color: #E3F0F6 !important;
+}
+.icon-words{
+  width:100px;
+  margin-left: 1%;
+}
+.icon-logo {
+  width: 58px
+}
+@media (max-width: 900px) {
+  .icon-words{
+    width:76px;
+    margin-left: 1%;
+  }
+  .icon-logo {
+    width: 40px
+  }
 }
